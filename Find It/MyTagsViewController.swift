@@ -1,5 +1,5 @@
 //
-//  MyTagsViewController.swift
+//  MyitemsViewController.swift
 //  Find It
 //
 //  Created by Camden Madina on 2/21/17.
@@ -7,29 +7,98 @@
 //
 
 import UIKit
+import Firebase
 
-class MyTagsViewController: UIViewController {
-
+class MyTagsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ChangeStatusProtocol{
+    
+    
+    @IBOutlet weak var itemsTableView: UITableView!
+    
+    private var currentUserID:String?
+    private var currentUser: FIRDatabaseReference?
+    private var didLoad:Bool = false
+    
+    var items = [NSDictionary]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        loadUser()
+        
+        setupTableView()
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
     }
-    */
-
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "tagCell", for: indexPath) as! TagCustomTableViewCell
+        let row = indexPath.row
+        
+        if items.count != 0 {
+            let item = items[row]
+            let status = item["status"] as? String
+            
+            cell.itemIdentificationLabel.text = item["id"] as? String
+            cell.itemNameLabel.text = item["name"] as? String
+            
+            if status == "in-possesion" {
+                cell.statusImageView.image = UIImage(named: "okay-status-icon")
+            }else{
+                cell.statusImageView.image = UIImage(named: "lost-status-icon")
+            }
+        }
+        
+        return cell
+    }
+    
+    func loadDelegates(){
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let detailViewController = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? TagDetailViewController {
+            // Set the delegate - which would be me (that is, I conform to the protocol)
+            detailViewController.delegate = self
+        }
+    }
+    
+    func changeItemStatus() {
+        print("PROTOCOL WORKS")
+        //let selectedRow = itemsTableView.indexPathForSelectedRow?.row
+        
+    }
+    
+    func loadUser(){
+        self.currentUserID = DataService.dataService.AUTH_REF.currentUser?.uid
+        self.currentUser = DataService.dataService.USER_REF.child(currentUserID!)
+    }
+    
+    func setupTableView(){
+        self.itemsTableView.delegate = self
+        self.itemsTableView.dataSource = self
+        
+        
+        
+        self.currentUser?.child("items").observe(.childAdded, with: { (snapshot) in
+            let item = snapshot.value as! NSDictionary
+            self.items.insert(item, at: 0)
+            self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.left)
+        })
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "TagDetailSegue"{
+            let selectedRow = itemsTableView.indexPathForSelectedRow?.row
+            if let destinationViewController = segue.destination as? TagDetailViewController{
+                destinationViewController.itemDetails = self.items[selectedRow!]
+            }
+        }
+    }
 }

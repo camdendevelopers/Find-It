@@ -7,6 +7,14 @@ target 'Find It' do
 
   # Pods for Find It
   pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+  pod 'Firebase/Database'
+
+  pod 'FacebookCore'
+  pod 'FacebookLogin'
+  pod 'FacebookShare'
+
+  pod 'NVActivityIndicatorView'
 
   target 'Find ItTests' do
     inherit! :search_paths
