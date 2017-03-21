@@ -15,7 +15,7 @@ import FacebookLogin
 
 class DataService {
     static let dataService = DataService()
-    //private var STORAGE_REF = FIRStorage.storage().reference()
+    var STORAGE_REF = FIRStorage.storage().reference()
     var BASE_REF = FIRDatabase.database().reference()
     var USER_REF = FIRDatabase.database().reference().child("users")
     var ITEM_REF = FIRDatabase.database().reference().child("items")

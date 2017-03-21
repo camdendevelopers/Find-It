@@ -19,12 +19,8 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     //Declare Variables
     private var imagePicker =  UIImagePickerController()
-    private var imageInfo: [String : AnyObject]?
     private var imageSelected: UIImage?
-    
-    private var currentUserID:String?
-    private var currentUser: FIRDatabaseReference?
-    private var item:[String: Any]?
+    private var imageInfo: [String: AnyObject]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,9 +32,6 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         
         // 3. Setup image view
         setupImageView()
-        
-        // 4. Load the user
-        loadUser()
     }
     
     // MARK:- IBActions
@@ -49,33 +42,14 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     //ADDD THE ANIMATION INDICATOR
     @IBAction func nextButtonPressed(_ sender: Any) {
-        let key = DataService.dataService.ITEM_REF.childByAutoId().key
         let itemName = itemNameTextField.text
         let itemDescription = itemDescriptionTextField.text
-        var itemID = ShortCodeGenerator.getCode(length: 6)
-        
-        DataService.dataService.ITEM_REF.observe(.value, with: { (snapshot) in
-            if let databaseItems = snapshot.value as? [NSDictionary]{
-                for databaseItem in databaseItems{
-                    let databaseItemIDString = databaseItem["id"] as! String
-                    
-                    if itemID == databaseItemIDString {
-                        itemID = ShortCodeGenerator.getCode(length: 6)
-                    }
-                }
-            }
-        })
         
         guard itemName != "", itemDescription != "" else {
             present(Utilities.showErrorAlert(inDict: ["title": "Oops", "message": "You need to have details on both fields"]), animated: true, completion: nil)
             return
         }
         
-        self.item = ["status": "in-possesion", "id": itemID, "name": itemName!, "description": itemDescription!]
-        let childUpdates = ["/items/\(key)": item,
-                            "/users/\(currentUserID!)/items/\(key)/": item]
-        
-        DataService.dataService.BASE_REF.updateChildValues(childUpdates)
         performSegue(withIdentifier: "ConfirmAddTagSegue", sender: self)
     }
     
@@ -120,8 +94,7 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         self.present(alert, animated: true, completion: nil)
     }
     
-    func openCamera()
-    {
+    func openCamera(){
         if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerControllerSourceType.camera))
         {
             imagePicker.sourceType = UIImagePickerControllerSourceType.camera
@@ -135,19 +108,17 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
             present(alert, animated: true, completion: nil)
         }
     }
-    func openGallery()
-    {
+    
+    func openGallery(){
         imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
         self.present(imagePicker, animated: true, completion: nil)
     }
     
-     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        imageInfo = info as [String : AnyObject]?
-        picker.dismiss(animated: true, completion: nil)
-        itemImageView.image = info[UIImagePickerControllerEditedImage] as? UIImage
-        imageSelected = info[UIImagePickerControllerEditedImage] as? UIImage
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        self.imageInfo = info as [String: AnyObject]
+        self.itemImageView.image = info[UIImagePickerControllerOriginalImage]as! UIImage
         
-        //uploadImage(imageInfo!)
+        picker.dismiss(animated: true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -205,15 +176,8 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
             
         }
     }
-    
-    func loadUser(){
-        self.currentUserID = DataService.dataService.AUTH_REF.currentUser?.uid
-        self.currentUser = DataService.dataService.USER_REF.child(currentUserID!)
-    }
 
     // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
@@ -222,9 +186,8 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
                 destinationViewController.itemDescriptionText = itemDescriptionTextField.text!
                 destinationViewController.itemNameText = itemNameTextField.text!
                 destinationViewController.itemImage = itemImageView.image!
+                destinationViewController.imageInfo = self.imageInfo
             }
         }
     }
-    
-
 }
