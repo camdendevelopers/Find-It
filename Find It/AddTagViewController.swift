@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     // Declare IBOutlets
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemNameTextField: UITextField!
@@ -43,7 +43,6 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     // MARK:- IBActions
     @IBAction func cancelButtonPressed(_ sender: Any) {
-        print("return to myTagsViewController")
         self.dismiss(animated: true, completion: nil)
     }
     
@@ -89,7 +88,7 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     func imageViewTapped(){
         if DeviceType.IS_IPHONE_5 || DeviceType.IS_IPHONE_4_OR_LESS{
-            showErrorAlert(inDict: IPhoneTryUpload)
+            self.present(Utilities.showErrorAlert(inDict: IPhoneTryUpload), animated: true, completion: nil)
         }else{
             showAlertView()
         }
@@ -212,18 +211,6 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         self.currentUser = DataService.dataService.USER_REF.child(currentUserID!)
     }
 
-    // MARK:- Utilities for class
-    func showErrorAlert (inDict: [String:String]){
-        let title = inDict["title"]
-        let msg = inDict["message"]
-        
-        let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alert.addAction(action)
-        present(alert, animated: true, completion: nil)
-    }
-    
-    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation

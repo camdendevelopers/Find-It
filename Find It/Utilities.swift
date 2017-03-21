@@ -33,8 +33,8 @@ class Utilities {
     class func isValidPassword(text:String) -> Bool{
         let matchCharacters = "@.!@#$%^&*()_'{}~|0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         
-        return text.containsOnlyCharactersIn(matchCharacters: matchCharacters)
-        //return true
+        //return text.containsOnlyCharactersIn(matchCharacters: matchCharacters)
+        return true
     }
     
     //Validate name from UITextField.text
@@ -54,8 +54,8 @@ class Utilities {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         
         let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        return emailTest.evaluate(with: text)
-        //return true
+        //return emailTest.evaluate(with: text)
+        return true
     }
     
     //Method that shows any errors encountered view UIAlertController
@@ -221,6 +221,12 @@ struct ScreenSize
     static let SCREEN_HEIGHT        = UIScreen.main.bounds.size.height
     static let SCREEN_MAX_LENGTH    = max(ScreenSize.SCREEN_WIDTH, ScreenSize.SCREEN_HEIGHT)
     static let SCREEN_MIN_LENGTH    = min(ScreenSize.SCREEN_WIDTH, ScreenSize.SCREEN_HEIGHT)
+}
+
+struct StatusBar
+{
+    static let HEIGHT = UIApplication.shared.statusBarFrame.height
+    static let WIDTH = UIApplication.shared.statusBarFrame.width
 }
 
 struct DeviceType

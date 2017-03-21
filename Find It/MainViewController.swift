@@ -16,6 +16,8 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
     private var pageViewController: UIPageViewController?
     private var pageLabels = ["Page 1", "Page 2", "Page 3"]
     private var pageColors = [UIColor(red: 220.0/255.0, green: 198.0/255.0, blue: 224.0/255.0, alpha: 1.0),UIColor(red: 236.0/255.0, green: 100.0/255.0, blue: 75.0/255.0, alpha: 1.0),UIColor(red: 135.0/255.0, green: 211.0/255.0, blue: 124.0/255.0, alpha: 1.0)]
+    private var backgroundImageNames = ["tutorial-image-0","tutorial-image-1","tutorial-image-2"]
+    
     
     //Class IBOutlets
     @IBOutlet weak var pageControl: UIPageControl!
@@ -45,10 +47,9 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
         self.pageViewController?.dataSource = self
         self.pageViewController?.delegate = self
         self.pageViewController?.setViewControllers(viewControllers, direction: .forward, animated: false, completion: { _ in })
-        self.pageViewController?.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
-        self.addChildViewController(pageViewController!)
+        self.pageViewController?.view.frame = self.view.frame
+        
         self.view.addSubview((pageViewController?.view)!)
-        self.pageViewController?.didMove(toParentViewController: self)
         self.view.sendSubview(toBack: (self.pageViewController?.view)!)
     }
     
@@ -77,9 +78,11 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
     func viewController(at index: Int) -> TutorialViewController {
         // Create a new view controller and pass suitable data.
         let tutorialViewController: TutorialViewController? = self.storyboard?.instantiateViewController(withIdentifier: "TutorialController") as! TutorialViewController?
+        tutorialViewController?.backgroundImageName = self.backgroundImageNames[index]
         tutorialViewController?.descriptionText = self.pageLabels[index]
         tutorialViewController?.backgroundColor = self.pageColors[index]
         tutorialViewController?.index = index
+        
         return tutorialViewController!
     }
     
@@ -96,6 +99,7 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
         pendingIndex = itemController.index!
         
     }
+    
     
     // MARK:- Utilities for class
     @IBAction func prepareForUnwind(segue: UIStoryboardSegue){

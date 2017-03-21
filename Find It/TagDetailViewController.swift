@@ -24,13 +24,7 @@ class TagDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupLabels()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func backButtonPressed(_ sender: Any) {
@@ -39,11 +33,11 @@ class TagDetailViewController: UIViewController {
     
     @IBAction func statusButtonPressed(_ sender: Any) {
         self.delegate?.changeItemStatus()
+        _ = self.navigationController?.popViewController(animated: true)
     }
     
     func setupLabels(){
         self.title = "ID " + (itemDetails?["id"] as? String)!
-        //self.itemIdentificationLabel.text = itemDetails?["id"] as? String
         self.itemIdentificationLabel.isHidden = true
         self.itemNameLabel.text = itemDetails?["name"] as? String
         self.itemDescriptionLabel.text = itemDetails?["description"] as? String

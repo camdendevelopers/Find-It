@@ -61,18 +61,14 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         return cell
     }
     
-    func loadDelegates(){
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        if let detailViewController = storyboard.instantiateViewController(withIdentifier: "detailViewController") as? TagDetailViewController {
-            // Set the delegate - which would be me (that is, I conform to the protocol)
-            detailViewController.delegate = self
-        }
-    }
-    
     func changeItemStatus() {
-        print("PROTOCOL WORKS")
-        //let selectedRow = itemsTableView.indexPathForSelectedRow?.row
+        //print("PROTOCOL WORKS")
+        let selectedIndex = itemsTableView.indexPathForSelectedRow
+        let cell = itemsTableView.cellForRow(at: selectedIndex!) as! TagCustomTableViewCell
         
+        cell.statusImageView.image = UIImage(named: "lost-status-icon")
+        
+        //self.currentUser?.child("address").setValue(address)
     }
     
     func loadUser(){
@@ -85,11 +81,10 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         self.itemsTableView.dataSource = self
         
         
-        
         self.currentUser?.child("items").observe(.childAdded, with: { (snapshot) in
             let item = snapshot.value as! NSDictionary
             self.items.insert(item, at: 0)
-            self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.left)
+            self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.top)
         })
     }
     
@@ -98,6 +93,7 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
             let selectedRow = itemsTableView.indexPathForSelectedRow?.row
             if let destinationViewController = segue.destination as? TagDetailViewController{
                 destinationViewController.itemDetails = self.items[selectedRow!]
+                destinationViewController.delegate = self
             }
         }
     }

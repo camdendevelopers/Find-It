@@ -228,7 +228,8 @@ class AuthenticateViewController: UIViewController {
             case .cancelled:
                 self.activityIndicator?.stopAnimating()
                 print("Facebook login cancelled.")
-            case .success(let grantedPermissions, let declinedPermissions, let accessToken):
+            //case .success(let grantedPermissions, let declinedPermissions, let accessToken):
+            case .success( _, _, let accessToken):
                 print("Logged in!")
                 let credential = FIRFacebookAuthProvider.credential(withAccessToken: accessToken.authenticationToken)
                 FIRAuth.auth()?.signIn(with: credential, completion: { (user, error) in
@@ -263,7 +264,8 @@ class AuthenticateViewController: UIViewController {
             case .cancelled:
                 self.activityIndicator?.stopAnimating()
                 print("Facebook login cancelled.")
-            case .success(let grantedPermissions, let declinedPermissions, let accessToken):
+            //case .success(let grantedPermissions, let declinedPermissions, let accessToken):
+            case .success( _, _, let accessToken):
                 print("Logged in!")
                 let credential = FIRFacebookAuthProvider.credential(withAccessToken: accessToken.authenticationToken)
                 FIRAuth.auth()?.signIn(with: credential, completion: { (user, error) in
