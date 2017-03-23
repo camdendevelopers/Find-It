@@ -47,14 +47,31 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         if items.count != 0 {
             let item = items[row]
             let status = item["status"] as? String
+            let itemImageURL = item["itemImageURL"] as? String
             
-            cell.itemIdentificationLabel.text = item["id"] as? String
-            cell.itemNameLabel.text = item["name"] as? String
-            
-            if status == "in-possesion" {
-                cell.statusImageView.image = UIImage(named: "okay-status-icon")
-            }else{
-                cell.statusImageView.image = UIImage(named: "lost-status-icon")
+            DispatchQueue.global(qos: .userInitiated).async {
+                let itemImageReference = DataService.dataService.STORAGE.reference(withPath: itemImageURL!)
+                
+                itemImageReference.downloadURL(completion: { (url, error) in
+                    if let error = error{
+                        print("Error downloading: \(error)")
+                        return
+                    }else{
+                        let data = NSData(contentsOf: (url?.absoluteURL)!)
+                        cell.itemImageView.image = UIImage(data: data as! Data)
+                    }
+                })
+                
+                DispatchQueue.main.async {
+                    cell.itemIdentificationLabel.text = item["id"] as? String
+                    cell.itemNameLabel.text = item["name"] as? String
+                    
+                    if status == "in-possesion" {
+                        cell.statusImageView.image = UIImage(named: "okay-icon")
+                    }else{
+                        cell.statusImageView.image = UIImage(named: "lost-icon")
+                    }
+                }
             }
         }
         
@@ -66,7 +83,7 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         let selectedIndex = itemsTableView.indexPathForSelectedRow
         let cell = itemsTableView.cellForRow(at: selectedIndex!) as! TagCustomTableViewCell
         
-        cell.statusImageView.image = UIImage(named: "lost-status-icon")
+        cell.statusImageView.image = UIImage(named: "lost-icon")
         
         //self.currentUser?.child("address").setValue(address)
     }
@@ -76,10 +93,15 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         self.currentUser = DataService.dataService.USER_REF.child(currentUserID!)
     }
     
+    func loadItemImage(withURLString string:String, completion: (_ image: Data) -> Void){
+        let url = NSURL(string: string)
+        let data = NSData(contentsOf: url! as URL)
+        completion(data as! Data)
+    }
+    
     func setupTableView(){
         self.itemsTableView.delegate = self
         self.itemsTableView.dataSource = self
-        
         
         self.currentUser?.child("items").observe(.childAdded, with: { (snapshot) in
             let item = snapshot.value as! NSDictionary

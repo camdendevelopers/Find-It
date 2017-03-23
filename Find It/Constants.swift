@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 //MARK:- Client Side Error Messages
 let EmptyUserPasswordTextFields = ["title": "Could Not Sign In","message":"Email/password fields are empty."]
@@ -49,5 +50,24 @@ let FIRAuthErrorCodeInternalError                           = 17999
 //MARK:- Firbase Error Code for Facebook Authentication
 let FIRAuthErrorCodeInvalidCredential = ["title": "Could Not Sign In With Facebook", "message": "Error getting your information. Please try again later."]
 
-//MARK:- UIColors
+
+//MARK:- Colors and text for tutorial
+let kColor4990E2 = UIColor(red: 70.0/255.0, green: 142.0/255.0, blue: 229.0/255.0, alpha: 1.0)
+let kColorFF7D7D = UIColor(red: 255.0/255.0, green: 124.0/255.0, blue: 122.0/255.0, alpha: 1.0)
+let kColorE3CC00 = UIColor(red: 227.0/255.0, green: 204.0/255.0, blue: 0.0/255.0, alpha: 1.0)
+
+let kColor9B9B9B = UIColor(red: 155.0/255.0, green: 155.0/255.0, blue: 155.0/255.0, alpha: 1.0)
+let kColor4A4A4A = UIColor(red: 74.0/255.0, green: 74.0/255.0, blue: 74.0/255.0, alpha: 1.0)
+
+let titleText0 = "TAG YOUR ITEM"
+let descriptionText0 = "Get a unique ID and attach it to an item, and link it in the app"
+
+let titleText1 = "MARK LOST ITEMS"
+let descriptionText1 = "When you lose an item, mark it as lost through the app"
+
+let titleText2 = "REPORT FOUND ITEMS"
+let descriptionText2 = "When you find an item, report the ID to notify the owner"
+
+let titleText3 = "FIND LOST ITEM"
+let descriptionText3 = "Get notified of the location of your lost item when it is found"
 

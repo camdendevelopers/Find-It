@@ -17,6 +17,9 @@
 		8D1082561E5D0A8200F94393 /* AuthenticateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1082551E5D0A8200F94393 /* AuthenticateViewController.swift */; };
 		8D1082581E5D0A9100F94393 /* MyTagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1082571E5D0A9100F94393 /* MyTagsViewController.swift */; };
 		8D10825A1E5D0AA100F94393 /* ReportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1082591E5D0AA100F94393 /* ReportsViewController.swift */; };
+		8D38B0501E8461750081721B /* HalisR-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8D38B04D1E8460F00081721B /* HalisR-Black.otf */; };
+		8D38B0511E8461780081721B /* HalisR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8D38B04F1E84614C0081721B /* HalisR-Regular.otf */; };
+		8D38B0531E846ED60081721B /* HalisR-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8D38B0521E846ED10081721B /* HalisR-Light.otf */; };
 		8D6477AF1E6E4E3C00341FD4 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6477AE1E6E4E3C00341FD4 /* SettingsViewController.swift */; };
 		8D6477B51E6E4F1800341FD4 /* AddTagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6477B41E6E4F1800341FD4 /* AddTagViewController.swift */; };
 		8D6477B81E6E4F2A00341FD4 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6477B61E6E4F2A00341FD4 /* Utilities.swift */; };
@@ -74,6 +77,10 @@
 		8D1082551E5D0A8200F94393 /* AuthenticateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateViewController.swift; sourceTree = "<group>"; };
 		8D1082571E5D0A9100F94393 /* MyTagsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTagsViewController.swift; sourceTree = "<group>"; };
 		8D1082591E5D0AA100F94393 /* ReportsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportsViewController.swift; sourceTree = "<group>"; };
+		8D38B04D1E8460F00081721B /* HalisR-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HalisR-Black.otf"; sourceTree = "<group>"; };
+		8D38B04E1E8461210081721B /* SF-Compact-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Text-Regular.otf"; sourceTree = "<group>"; };
+		8D38B04F1E84614C0081721B /* HalisR-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HalisR-Regular.otf"; sourceTree = "<group>"; };
+		8D38B0521E846ED10081721B /* HalisR-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HalisR-Light.otf"; sourceTree = "<group>"; };
 		8D6477AE1E6E4E3C00341FD4 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		8D6477B41E6E4F1800341FD4 /* AddTagViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTagViewController.swift; sourceTree = "<group>"; };
 		8D6477B61E6E4F2A00341FD4 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -158,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				8D1082231E5CFF1A00F94393 /* AppDelegate.swift */,
+				8D38B04C1E8460A50081721B /* Fonts */,
 				8D6477BC1E6E502400341FD4 /* Introduction */,
 				8D6477BD1E6E503E00341FD4 /* Models */,
 				8D6477BE1E6E505800341FD4 /* My Tags */,
@@ -187,6 +195,17 @@
 				8D1082451E5CFF1A00F94393 /* Info.plist */,
 			);
 			path = "Find ItUITests";
+			sourceTree = "<group>";
+		};
+		8D38B04C1E8460A50081721B /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				8D38B04D1E8460F00081721B /* HalisR-Black.otf */,
+				8D38B0521E846ED10081721B /* HalisR-Light.otf */,
+				8D38B04F1E84614C0081721B /* HalisR-Regular.otf */,
+				8D38B04E1E8461210081721B /* SF-Compact-Text-Regular.otf */,
+			);
+			name = Fonts;
 			sourceTree = "<group>";
 		};
 		8D6477BC1E6E502400341FD4 /* Introduction */ = {
@@ -364,7 +383,10 @@
 				8D10822E1E5CFF1A00F94393 /* LaunchScreen.storyboard in Resources */,
 				8D6477C31E6F9B9A00341FD4 /* GoogleService-Info.plist in Resources */,
 				8D10822B1E5CFF1A00F94393 /* Assets.xcassets in Resources */,
+				8D38B0531E846ED60081721B /* HalisR-Light.otf in Resources */,
+				8D38B0501E8461750081721B /* HalisR-Black.otf in Resources */,
 				8D1082291E5CFF1A00F94393 /* Main.storyboard in Resources */,
+				8D38B0511E8461780081721B /* HalisR-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -692,6 +714,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 51BE6E3FB5F68DB2F86D5883 /* Pods-Find It.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = KD674EGM5X;
 				INFOPLIST_FILE = "Find It/Info.plist";
@@ -707,6 +730,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 486F12CF1DC7ED294519D454 /* Pods-Find It.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = KD674EGM5X;
 				INFOPLIST_FILE = "Find It/Info.plist";

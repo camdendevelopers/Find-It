@@ -14,17 +14,32 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
     // MARK:- Class variables
     private var isSignUp:Bool?
     private var pageViewController: UIPageViewController?
-    private var pageLabels = ["Page 1", "Page 2", "Page 3"]
-    private var pageColors = [UIColor(red: 220.0/255.0, green: 198.0/255.0, blue: 224.0/255.0, alpha: 1.0),UIColor(red: 236.0/255.0, green: 100.0/255.0, blue: 75.0/255.0, alpha: 1.0),UIColor(red: 135.0/255.0, green: 211.0/255.0, blue: 124.0/255.0, alpha: 1.0)]
-    private var backgroundImageNames = ["tutorial-image-0","tutorial-image-1","tutorial-image-2"]
+    //private var pageLabels = ["Page 1", "Page 2", "Page 3"]
+    private var pageTitles = [titleText0, titleText1, titleText2, titleText3]
+    private var pageDescriptions = [descriptionText0, descriptionText1, descriptionText2, descriptionText3]
+    private var pageColors = [kColor4990E2,kColorFF7D7D,kColorE3CC00,kColor4990E2]
+    private var backgroundImageNames = ["tutorial-icon-0","tutorial-icon-1","tutorial-icon-2","tutorial-icon-3"]
     
     
     //Class IBOutlets
     @IBOutlet weak var pageControl: UIPageControl!
+    @IBOutlet weak var signInButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupPageViewController()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UIApplication.shared.statusBarStyle = .lightContent
+        
+        setupButton()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        UIApplication.shared.statusBarStyle = .default
     }
     
     // MARK:- IB Actions
@@ -68,7 +83,7 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
         var index:Int = (viewController as? TutorialViewController)!.index!
         index += 1
         
-        guard pageLabels.count != index else {
+        guard pageTitles.count != index else {
             return nil
         }
         
@@ -79,7 +94,8 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
         // Create a new view controller and pass suitable data.
         let tutorialViewController: TutorialViewController? = self.storyboard?.instantiateViewController(withIdentifier: "TutorialController") as! TutorialViewController?
         tutorialViewController?.backgroundImageName = self.backgroundImageNames[index]
-        tutorialViewController?.descriptionText = self.pageLabels[index]
+        tutorialViewController?.descriptionText = self.pageDescriptions[index]
+        tutorialViewController?.titleText = self.pageTitles[index]
         tutorialViewController?.backgroundColor = self.pageColors[index]
         tutorialViewController?.index = index
         
@@ -91,6 +107,8 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if completed {
             pageControl.currentPage = pendingIndex
+            //CHECK HERE
+            pageControl.currentPageIndicatorTintColor = pageColors[pendingIndex]
         }
     }
     
@@ -104,6 +122,14 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
     // MARK:- Utilities for class
     @IBAction func prepareForUnwind(segue: UIStoryboardSegue){
         print("Hello")
+    }
+    
+    func setupButton(){
+          self.signInButton.layer.cornerRadius = self.signInButton.frame.size.height / 2
+        self.signInButton.clipsToBounds = true
+        self.signInButton.layer.masksToBounds = true
+        
+        
     }
     
     // MARK: - Navigation

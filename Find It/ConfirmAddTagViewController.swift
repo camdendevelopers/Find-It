@@ -61,7 +61,6 @@ class ConfirmAddTagViewController: UIViewController {
         let key = DataService.dataService.ITEM_REF.childByAutoId().key
         let itemName = itemNameLabel.text
         let itemDescription = itemDescriptionLabel.text
-        var imageURL = ""
         var itemID = ShortCodeGenerator.getCode(length: 6)
         
         // 2. Check database to make sure no duplicate tags, else create new one
@@ -94,25 +93,24 @@ class ConfirmAddTagViewController: UIViewController {
                     print("Error uploading: \(error)")
                     return
                 }else{
-                    imageURL = (metadata?.downloadURL()?.absoluteString)!
+                    print("SUCCES")
+                    let imageURL = (metadata?.downloadURL()?.absoluteString)!
+                    let item = ["status": "in-possesion", "id": itemID, "name": itemName!, "description": itemDescription!, "itemImageURL": imageURL]
+                    let childUpdates = ["/items/\(key)": item,
+                                        "/users/\(self.currentUserID!)/items/\(key)/": item]
+                    
+                    DataService.dataService.BASE_REF.updateChildValues(childUpdates)
                 }
             }
             
             DispatchQueue.main.async {
                 // Enable user iteraction
+                self.successView.isHidden = false
                 self.view.isUserInteractionEnabled = true
                 self.activityIndicator?.stopAnimating()
-                
-                // 4. Once image is uploaded, add item to database
-                self.successView.isHidden = false
-                
-                let item = ["status": "in-possesion", "id": itemID, "name": itemName!, "description": itemDescription!, "itemImageURL": imageURL]
-                let childUpdates = ["/items/\(key)": item,
-                                    "/users/\(self.currentUserID!)/items/\(key)/": item]
-                
-                DataService.dataService.BASE_REF.updateChildValues(childUpdates)
-                
                 sleep(1)
+                
+                // 4. Once image is uploaded, return to tag controller
                 self.navigationController?.dismiss(animated: true, completion: nil)
             }
         }

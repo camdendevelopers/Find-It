@@ -116,7 +116,7 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         self.imageInfo = info as [String: AnyObject]
-        self.itemImageView.image = info[UIImagePickerControllerOriginalImage]as! UIImage
+        self.itemImageView.image = info[UIImagePickerControllerOriginalImage] as? UIImage
         
         picker.dismiss(animated: true, completion: nil)
     }

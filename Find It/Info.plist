@@ -2,6 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>HalisR-Black.otf</string>
+		<string>HalisR-Regular.otf</string>
+	</array>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Allow Find It to access your photos to create tags.</string>
 	<key>CFBundleDevelopmentRegion</key>
