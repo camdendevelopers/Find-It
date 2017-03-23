@@ -27,32 +27,6 @@ class AuthenticateViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setupActivityIndicator()
-
-        //Add code to check if user is already logged in to skip
-        /*
-        if isSignUp == true{
-            performFacebookSignUp()
-        }else{
-            performFacebookSignIn()
-        }
-        */
-    
-        // 1. Show activity indicator while app checks for current user
-        //showActivityIndicator()
-        
-        /*
-        // 2. Perform action based on current user
-        if UserDefaults.standard.value(forKey: "uid") != nil && DataService.dataService.AUTH_REF.currentUser != nil && Reachability.isConnectedToNetwork(){
-            
-            //There is a current user previously logged in
-            self.performSegue(withIdentifier: "ToAppSegue", sender: self)
-        }else{
-            //No current user found
-            hideActivityIndicator()
-        }
-        */
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,6 +39,21 @@ class AuthenticateViewController: UIViewController {
             authenticateButton.setTitle("Sign In", for: .normal)
             descriptionLabel.text = "Sign in to access your account"
         }
+        
+        // 1. Show activity indicator while app checks for current user
+        self.activityIndicator?.startAnimating()
+        
+        
+        // 2. Perform action based on current user
+        if UserDefaults.standard.value(forKey: "uid") != nil && DataService.dataService.AUTH_REF.currentUser != nil && Reachability.isConnectedToNetwork(){
+            
+            //There is a current user previously logged in
+            self.performSegue(withIdentifier: "ToAppSegue", sender: self)
+        }else{
+            //No current user found
+            self.activityIndicator?.stopAnimating()
+        }
+        
     }
     
     // MARK:- IB Actions
@@ -307,7 +296,7 @@ class AuthenticateViewController: UIViewController {
         let frame = CGRect(x: (self.view.frame.width - height) / 2, y: (self.view.frame.height - height) / 2, width: height, height: height)
         
         // Instantiate the activity indicator
-        self.activityIndicator = NVActivityIndicatorView(frame: frame, type: .ballTrianglePath, color: .green, padding: 0)
+        self.activityIndicator = NVActivityIndicatorView(frame: frame, type: .ballTrianglePath, color: UIColor(red: 255.0/255.0, green: 125.0/255.0, blue: 125.0/255.0, alpha: 1.0), padding: 0)
         
         // Add it to view
         self.view.addSubview(self.activityIndicator!)

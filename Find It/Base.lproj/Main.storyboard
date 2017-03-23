@@ -501,7 +501,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Macbook Pro" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2KO-rG-ZNf">
-                                                    <rect key="frame" x="115" y="32" width="104" height="24"/>
+                                                    <rect key="frame" x="123" y="32" width="104" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="sK1-P2-yPc"/>
                                                     </constraints>
@@ -510,21 +510,21 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2ZG-UC-VvB">
-                                                    <rect key="frame" x="45" y="12" width="60" height="60"/>
+                                                    <rect key="frame" x="53" y="12" width="60" height="60"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="60" id="41Y-dZ-hco"/>
                                                         <constraint firstAttribute="height" constant="60" id="Anr-dg-gkf"/>
                                                     </constraints>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8FC-wX-qdT">
-                                                    <rect key="frame" x="10" y="30" width="25" height="25"/>
+                                                    <rect key="frame" x="18" y="30" width="25" height="25"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="25" id="2Xy-Yk-6M6"/>
                                                         <constraint firstAttribute="height" constant="25" id="5oU-z1-Ecb"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ID: BMS456" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1TY-T2-ZdU">
-                                                    <rect key="frame" x="115" y="12" width="71" height="18"/>
+                                                    <rect key="frame" x="123" y="12" width="71" height="18"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="18" id="Vry-5p-o15"/>
                                                     </constraints>
@@ -536,7 +536,7 @@
                                             <constraints>
                                                 <constraint firstItem="1TY-T2-ZdU" firstAttribute="top" secondItem="2ZG-UC-VvB" secondAttribute="top" id="4vA-Ke-yBd"/>
                                                 <constraint firstItem="2KO-rG-ZNf" firstAttribute="leading" secondItem="2ZG-UC-VvB" secondAttribute="trailing" constant="10" id="Sms-E8-Ds4"/>
-                                                <constraint firstItem="8FC-wX-qdT" firstAttribute="leading" secondItem="iSv-1X-dzw" secondAttribute="leading" constant="10" id="TMm-iP-tuu"/>
+                                                <constraint firstItem="8FC-wX-qdT" firstAttribute="leading" secondItem="iSv-1X-dzw" secondAttribute="leading" constant="18" id="TMm-iP-tuu"/>
                                                 <constraint firstItem="2ZG-UC-VvB" firstAttribute="centerY" secondItem="iSv-1X-dzw" secondAttribute="centerY" id="WCg-R5-WSw"/>
                                                 <constraint firstItem="2KO-rG-ZNf" firstAttribute="top" secondItem="1TY-T2-ZdU" secondAttribute="bottom" constant="2" id="aNk-Hh-yih"/>
                                                 <constraint firstItem="1TY-T2-ZdU" firstAttribute="leading" secondItem="2ZG-UC-VvB" secondAttribute="trailing" constant="10" id="bOQ-9z-qjD"/>
@@ -831,7 +831,7 @@
                                 <rect key="frame" x="0.0" y="406" width="375" height="106"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MARK LOST ITEMS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6mg-m8-Sgw">
-                                        <rect key="frame" x="105.5" y="44.5" width="164.5" height="17.5"/>
+                                        <rect key="frame" x="112" y="42" width="152" height="20"/>
                                         <fontDescription key="fontDescription" name="HalisR-Black" family="Halis R" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>

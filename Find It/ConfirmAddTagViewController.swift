@@ -78,7 +78,12 @@ class ConfirmAddTagViewController: UIViewController {
         
         // 3. Perform asynchronous call to upload image and tag
         DispatchQueue.global(qos: .userInitiated).async {
-            let image = self.imageInfo?[UIImagePickerControllerOriginalImage] as? UIImage
+            var image = self.imageInfo?[UIImagePickerControllerOriginalImage] as? UIImage
+            
+            if image == nil{
+                image = UIImage(named: "add-image-placeholder")
+            }
+        
             let imageData = UIImageJPEGRepresentation(image!, 0.8)
             
             
@@ -108,7 +113,7 @@ class ConfirmAddTagViewController: UIViewController {
                 self.successView.isHidden = false
                 self.view.isUserInteractionEnabled = true
                 self.activityIndicator?.stopAnimating()
-                sleep(1)
+                sleep(2)
                 
                 // 4. Once image is uploaded, return to tag controller
                 self.navigationController?.dismiss(animated: true, completion: nil)
@@ -135,7 +140,7 @@ class ConfirmAddTagViewController: UIViewController {
         let frame = CGRect(x: (self.view.frame.width - height) / 2, y: (self.view.frame.height - height) / 2, width: height, height: height)
         
         // Instantiate the activity indicator
-        self.activityIndicator = NVActivityIndicatorView(frame: frame, type: .ballTrianglePath, color: .green, padding: 0)
+        self.activityIndicator = NVActivityIndicatorView(frame: frame, type: .ballTrianglePath, color: UIColor(red: 255.0/255.0, green: 125.0/255.0, blue: 125.0/255.0, alpha: 1.0), padding: 0)
         
         // Add it to view
         self.view.addSubview(self.activityIndicator!)
