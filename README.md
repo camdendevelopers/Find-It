@@ -18,7 +18,7 @@ The following **additional** features are implemented:
 - [X] Added Firebase
 - [X] Tag creation flow
 
-##Important Messages
+## Important Messages
 
 1. If you don't have the correct library installed, you may see dependency errors when running the app. A simple 'pod install' in the folder directory should do the trick. In the event that you don't have the correct libraries installed. Follow these steps:
   - Open terminal and type 'brew install ruby'
