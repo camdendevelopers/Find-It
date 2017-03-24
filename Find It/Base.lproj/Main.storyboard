@@ -573,7 +573,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Item" style="plain" id="hJn-lQ-Cl0">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="vtA-6q-7Ud">
-                                <rect key="frame" x="369" y="9" width="25" height="25"/>
+                                <rect key="frame" x="334" y="9" width="25" height="25"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="settings-icon"/>
                                 <connections>
@@ -645,7 +645,6 @@
                                     <constraint firstAttribute="height" constant="25" id="XKd-J2-sVf"/>
                                     <constraint firstAttribute="width" constant="30" id="u2g-HV-3za"/>
                                 </constraints>
-                                <state key="normal" image="backward-icon"/>
                                 <connections>
                                     <action selector="backButtonPressed:" destination="XJj-Hk-VkQ" eventType="touchUpInside" id="YcZ-1L-YQq"/>
                                     <action selector="backButtonPressed:" destination="X8C-7t-NT2" eventType="touchUpInside" id="m0g-Oi-KZ6"/>
@@ -751,7 +750,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eMi-YZ-iGF" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="My Tags" image="tag-icon-inactive" selectedImage="tag-icon-active" id="hVY-xc-TN7"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Rdl-Jc-xsk">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Rdl-Jc-xsk">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -770,7 +769,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="kZU-6L-niQ" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Reports" image="find-icon-inactive" selectedImage="find-icon-active" id="70W-1o-jFL"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Wsz-BO-Ybz">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Wsz-BO-Ybz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -788,7 +787,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="5VB-XW-679" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="wFb-e8-tgd">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wFb-e8-tgd">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -831,7 +830,7 @@
                                 <rect key="frame" x="0.0" y="406" width="375" height="106"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MARK LOST ITEMS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6mg-m8-Sgw">
-                                        <rect key="frame" x="112" y="42" width="152" height="20"/>
+                                        <rect key="frame" x="106" y="44.5" width="164.5" height="17.5"/>
                                         <fontDescription key="fontDescription" name="HalisR-Black" family="Halis R" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -1316,7 +1315,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="l1R-b4-YNX" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="06c-PP-FUR">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="06c-PP-FUR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
