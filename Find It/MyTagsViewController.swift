@@ -12,6 +12,8 @@ import Firebase
 class MyTagsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ChangeStatusProtocol{
     
     
+    
+    
     @IBOutlet weak var itemsTableView: UITableView!
     
     private var currentUserID:String?

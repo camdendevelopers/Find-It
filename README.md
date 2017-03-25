@@ -4,6 +4,28 @@
 
 Time spent: 20 hours spent in total
 
+## Implementation Contributions
+Marcos Ortiz: 33.33%
+ - Implemented Firebase
+ - Login screen
+ - Add tag flow and upload
+
+Susan Seo: 33.33%
+ - Majority of UI design
+ - Model classes
+ - Tab bar implementation
+
+Jacob Rodenbusch: 33.33%
+ - My tags table view controller
+ - Detail screen that shows tag details
+ - Settings page
+
+## Grading Level
+ Same grade for all members
+
+## Differences
+None
+
 ## User Stories
 
 The following **required** functionality is completed:
@@ -24,6 +46,7 @@ The following **additional** features are implemented:
   - Open terminal and type 'brew install ruby'
   - Then 'sudo gem install cocoapods'
   - And finally 'pod install'
+  
 2. Firebase offers a storage SDK to upload and download images. It's a time consuming process and we have not yet optimized it. As a result, you will not be able to see your tag's image in the table view when the app loads. WILL BE COMING IN BETA. However, feel free to use the image picker when you add a tag.
 
 
