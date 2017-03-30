@@ -111,6 +111,7 @@ class AuthenticateViewController: UIViewController {
         }
         
         // 4. Call Firebase server to create a user with provided information
+        
         DataService.dataService.AUTH_REF.signIn(withEmail: email, password: password) { (user, error) in
             if let errorCode = (error as? NSError)?.code{
                 

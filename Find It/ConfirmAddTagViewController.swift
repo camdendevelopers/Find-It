@@ -85,11 +85,8 @@ class ConfirmAddTagViewController: UIViewController {
             }
         
             let imageData = UIImageJPEGRepresentation(image!, 0.8)
-            
-            
-            let imagePath = FIRAuth.auth()!.currentUser!.uid +
-            "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
             let metadata = FIRStorageMetadata()
+            let imagePath = FIRAuth.auth()!.currentUser!.uid + "/\(Int(Date.timeIntervalSinceReferenceDate * 1000)).jpg"
             metadata.contentType = "image/jpeg"
             
             

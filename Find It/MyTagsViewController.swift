@@ -49,18 +49,28 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         if items.count != 0 {
             let item = items[row]
             let status = item["status"] as? String
-            let itemImageURL = item["itemImageURL"] as? String
+            let itemImageURLString = item["itemImageURL"] as? String
             
             DispatchQueue.global(qos: .userInitiated).async {
-                let itemImageReference = DataService.dataService.STORAGE.reference(withPath: itemImageURL!)
+                /*
+                if let url = URL(fileURLWithPath: itemImageURLString!) as? URL{
+                    print("URL: \(url)")
+                    if let data = NSData(contentsOf: url) as Data?{
+                        print("Data:\(data)")
+                        cell .itemImageView.image = UIImage(data: data)
+                    }
+                }*/
                 
+                let itemImageReference = DataService.dataService.STORAGE.reference(withPath: itemImageURLString!)
                 itemImageReference.downloadURL(completion: { (url, error) in
                     if let error = error{
                         print("Error downloading: \(error)")
                         return
                     }else{
-                        let data = NSData(contentsOf: (url?.absoluteURL)!)
-                        cell.itemImageView.image = UIImage(data: data as! Data)
+                        //let bal = NSData(contentsOf: url!)
+                        //let data = NSData(contentsOf: (url?.absoluteURL)!)
+                        let data = NSData(contentsOf: url!)
+                        cell.itemImageView.image = UIImage(data: data! as Data)
                     }
                 })
                 
@@ -93,12 +103,6 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
     func loadUser(){
         self.currentUserID = DataService.dataService.AUTH_REF.currentUser?.uid
         self.currentUser = DataService.dataService.USER_REF.child(currentUserID!)
-    }
-    
-    func loadItemImage(withURLString string:String, completion: (_ image: Data) -> Void){
-        let url = NSURL(string: string)
-        let data = NSData(contentsOf: url! as URL)
-        completion(data as! Data)
     }
     
     func setupTableView(){
