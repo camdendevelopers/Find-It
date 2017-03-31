@@ -21,6 +21,7 @@ class TagDetailViewController: UIViewController {
     
     var delegate: ChangeStatusProtocol?
     var itemDetails:NSDictionary?
+    var currentUserID: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,20 +38,38 @@ class TagDetailViewController: UIViewController {
     }
     
     func setupLabels(){
-        self.title = "ID " + (itemDetails?["id"] as? String)!
-        self.itemIdentificationLabel.isHidden = true
-        self.itemNameLabel.text = itemDetails?["name"] as? String
-        self.itemDescriptionLabel.text = itemDetails?["description"] as? String
+        let itemID = itemDetails?["id"] as? String
+        let status = itemDetails?["status"] as? String
+        let itemName = itemDetails?["name"] as? String
+        let itemDescription = itemDetails?["description"] as? String
+        
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            
+            let itemImageReference = DataService.dataService.STORAGE.reference(withPath: "\(self.currentUserID!)/\(itemID!).jpg")
+            itemImageReference.downloadURL(completion: { (url, error) in
+                if let error = error{
+                    print("Error downloading: \(error)")
+                    return
+                }else{
+                    //let bal = NSData(contentsOf: url!)
+                    //let data = NSData(contentsOf: (url?.absoluteURL)!)
+                    let data = NSData(contentsOf: url!)
+                    self.itemImageView.image = UIImage(data: data! as Data)
+                }
+            })
+            
+            DispatchQueue.main.async {
+                self.title = "ID " + itemID!
+                self.itemIdentificationLabel.isHidden = true
+                self.itemNameLabel.text = itemName!
+                self.itemDescriptionLabel.text = itemDescription!
+                self.itemImageView.layer.cornerRadius = self.itemImageView.frame.size.height / 2
+                self.itemImageView.clipsToBounds = true
+                self.itemImageView.layer.masksToBounds = true
+                
+            }
+        }
+        
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

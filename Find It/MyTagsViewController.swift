@@ -48,20 +48,13 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         
         if items.count != 0 {
             let item = items[row]
+            let itemID = item["id"] as? String
             let status = item["status"] as? String
-            let itemImageURLString = item["itemImageURL"] as? String
+            //let itemImageURLString = item["itemImageURL"] as? String
             
             DispatchQueue.global(qos: .userInitiated).async {
-                /*
-                if let url = URL(fileURLWithPath: itemImageURLString!) as? URL{
-                    print("URL: \(url)")
-                    if let data = NSData(contentsOf: url) as Data?{
-                        print("Data:\(data)")
-                        cell .itemImageView.image = UIImage(data: data)
-                    }
-                }*/
                 
-                let itemImageReference = DataService.dataService.STORAGE.reference(withPath: itemImageURLString!)
+                let itemImageReference = DataService.dataService.STORAGE.reference(withPath: "\(self.currentUserID!)/\(itemID!).jpg")
                 itemImageReference.downloadURL(completion: { (url, error) in
                     if let error = error{
                         print("Error downloading: \(error)")
@@ -73,11 +66,15 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
                         cell.itemImageView.image = UIImage(data: data! as Data)
                     }
                 })
-                
+        
                 DispatchQueue.main.async {
                     cell.itemIdentificationLabel.text = item["id"] as? String
                     cell.itemNameLabel.text = item["name"] as? String
                     
+                    cell.itemImageView.layer.cornerRadius = cell.itemImageView.frame.size.height / 2
+                    cell.itemImageView.clipsToBounds = true
+                    cell.itemImageView.layer.masksToBounds = true
+       
                     if status == "in-possesion" {
                         cell.statusImageView.image = UIImage(named: "okay-icon")
                     }else{
@@ -122,6 +119,7 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
             if let destinationViewController = segue.destination as? TagDetailViewController{
                 destinationViewController.itemDetails = self.items[selectedRow!]
                 destinationViewController.delegate = self
+                destinationViewController.currentUserID = self.currentUserID!
             }
         }
     }
