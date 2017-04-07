@@ -29,11 +29,6 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         setupTableView()
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }

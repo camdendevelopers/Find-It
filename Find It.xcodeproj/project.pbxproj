@@ -17,6 +17,9 @@
 		8D1082561E5D0A8200F94393 /* AuthenticateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1082551E5D0A8200F94393 /* AuthenticateViewController.swift */; };
 		8D1082581E5D0A9100F94393 /* MyTagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1082571E5D0A9100F94393 /* MyTagsViewController.swift */; };
 		8D10825A1E5D0AA100F94393 /* ReportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1082591E5D0AA100F94393 /* ReportsViewController.swift */; };
+		8D1835211E97073C00B4C875 /* SearchTagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1835201E97073C00B4C875 /* SearchTagViewController.swift */; };
+		8D1835231E97074F00B4C875 /* ConfirmReportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1835221E97074F00B4C875 /* ConfirmReportViewController.swift */; };
+		8D1835251E97076700B4C875 /* ReportCustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1835241E97076700B4C875 /* ReportCustomTableViewCell.swift */; };
 		8D38B0501E8461750081721B /* HalisR-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8D38B04D1E8460F00081721B /* HalisR-Black.otf */; };
 		8D38B0511E8461780081721B /* HalisR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8D38B04F1E84614C0081721B /* HalisR-Regular.otf */; };
 		8D38B0531E846ED60081721B /* HalisR-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8D38B0521E846ED10081721B /* HalisR-Light.otf */; };
@@ -77,6 +80,9 @@
 		8D1082551E5D0A8200F94393 /* AuthenticateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateViewController.swift; sourceTree = "<group>"; };
 		8D1082571E5D0A9100F94393 /* MyTagsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTagsViewController.swift; sourceTree = "<group>"; };
 		8D1082591E5D0AA100F94393 /* ReportsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportsViewController.swift; sourceTree = "<group>"; };
+		8D1835201E97073C00B4C875 /* SearchTagViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTagViewController.swift; sourceTree = "<group>"; };
+		8D1835221E97074F00B4C875 /* ConfirmReportViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfirmReportViewController.swift; sourceTree = "<group>"; };
+		8D1835241E97076700B4C875 /* ReportCustomTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReportCustomTableViewCell.swift; sourceTree = "<group>"; };
 		8D38B04D1E8460F00081721B /* HalisR-Black.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HalisR-Black.otf"; sourceTree = "<group>"; };
 		8D38B04E1E8461210081721B /* SF-Compact-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Text-Regular.otf"; sourceTree = "<group>"; };
 		8D38B04F1E84614C0081721B /* HalisR-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HalisR-Regular.otf"; sourceTree = "<group>"; };
@@ -227,6 +233,7 @@
 				8D6477C01E6F861F00341FD4 /* DataService.swift */,
 				8D6477B71E6E4F2A00341FD4 /* Constants.swift */,
 				8D75314A1E79B53B00984419 /* TagCustomTableViewCell.swift */,
+				8D1835241E97076700B4C875 /* ReportCustomTableViewCell.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -247,6 +254,8 @@
 			isa = PBXGroup;
 			children = (
 				8D1082591E5D0AA100F94393 /* ReportsViewController.swift */,
+				8D1835201E97073C00B4C875 /* SearchTagViewController.swift */,
+				8D1835221E97074F00B4C875 /* ConfirmReportViewController.swift */,
 			);
 			name = Reports;
 			sourceTree = "<group>";
@@ -554,7 +563,9 @@
 				8D1082581E5D0A9100F94393 /* MyTagsViewController.swift in Sources */,
 				8D6477BB1E6E4F3500341FD4 /* ConfirmAddTagViewController.swift in Sources */,
 				8D10825A1E5D0AA100F94393 /* ReportsViewController.swift in Sources */,
+				8D1835211E97073C00B4C875 /* SearchTagViewController.swift in Sources */,
 				8D7531491E786B8200984419 /* AddressViewController.swift in Sources */,
+				8D1835231E97074F00B4C875 /* ConfirmReportViewController.swift in Sources */,
 				8D75314D1E7A3A3D00984419 /* TagDetailViewController.swift in Sources */,
 				8D7531471E786B7700984419 /* BasicInformationViewController.swift in Sources */,
 				8D1082561E5D0A8200F94393 /* AuthenticateViewController.swift in Sources */,
@@ -563,6 +574,7 @@
 				8D6477C11E6F861F00341FD4 /* DataService.swift in Sources */,
 				8D861A151E5E751E00BCD646 /* TutorialViewController.swift in Sources */,
 				8D1082541E5D0A7500F94393 /* MainViewController.swift in Sources */,
+				8D1835251E97076700B4C875 /* ReportCustomTableViewCell.swift in Sources */,
 				8D6477B51E6E4F1800341FD4 /* AddTagViewController.swift in Sources */,
 				8D6477AF1E6E4E3C00341FD4 /* SettingsViewController.swift in Sources */,
 			);

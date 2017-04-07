@@ -31,29 +31,18 @@ class Utilities {
     
     //Validate password from UITextField.text
     class func isValidPassword(text:String) -> Bool{
-        let matchCharacters = "@.!@#$%^&*()_'{}~|0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        //let matchCharacters = "@.!@#$%^&*()_'{}~|0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
         
         //return text.containsOnlyCharactersIn(matchCharacters: matchCharacters)
         return true
     }
-    
-    //Validate name from UITextField.text
-    class func getMemberType(code: String) -> String{
-        if code == "111111"{
-            return "New Member"
-        }else if code == "222222"{
-            return "Active Member"
-        }else{
-            return "Administrator"
-        }
-    }
-    
+
     //Validate name from UITextField.text
     class  func isValidEmail(text:String) -> Bool {
         // print("validate calendar: \(testStr)")
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        //let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
         
-        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        //let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         //return emailTest.evaluate(with: text)
         return true
     }

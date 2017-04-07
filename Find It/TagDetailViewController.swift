@@ -39,7 +39,7 @@ class TagDetailViewController: UIViewController {
     
     func setupLabels(){
         let itemID = itemDetails?["id"] as? String
-        let status = itemDetails?["status"] as? String
+        //let status = itemDetails?["status"] as? String
         let itemName = itemDetails?["name"] as? String
         let itemDescription = itemDetails?["description"] as? String
         

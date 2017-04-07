@@ -66,17 +66,9 @@ class SettingsViewController: UIViewController {
             }
             if let urlString = value?["profileImageURL"] as? String {
                 if urlString != "" {
-                    
                     self.loadProfileImage(withURLString: urlString, completion: { (data) in
                         self.profileImageView.image = UIImage(data: data)
                     })
-                    /*
-                     DispatchQueue.main.async(execute: {
-                     let url = NSURL(string: urlString!)
-                     let data = NSData(contentsOf: url! as URL)
-                     self.profileImageView.image = UIImage(data: data! as Data)!
-                     })
-                     */
                 }else{
                     self.profileImageView.image =  UIImage(named: "default_image_icon")!
                 }
@@ -85,10 +77,19 @@ class SettingsViewController: UIViewController {
     }
     
     func loadProfileImage(withURLString string:String, completion: (_ image: Data) -> Void){
+        if let url = URL(string: string) {
+            if let data = NSData(contentsOf: url) as Data?{
+                completion(data)
+            }
+        }
+        
+    
+        /*
         let url = NSURL(string: string)
         let data = NSData(contentsOf: url! as URL)
         //self.profileImageView.image = UIImage(data: data! as Data)!
         completion(data as! Data)
+ */
     }
 
 }

@@ -113,7 +113,7 @@ class AuthenticateViewController: UIViewController {
         // 4. Call Firebase server to create a user with provided information
         
         DataService.dataService.AUTH_REF.signIn(withEmail: email, password: password) { (user, error) in
-            if let errorCode = (error as? NSError)?.code{
+            if let errorCode = (error as NSError?)?.code{
                 
                 self.activityIndicator?.stopAnimating()
                 
@@ -167,7 +167,7 @@ class AuthenticateViewController: UIViewController {
         
         // 4. Call Firebase server to create a user with provided information
         DataService.dataService.AUTH_REF.createUser(withEmail: email, password: password, completion: { (user, error) in
-            if let errorCode = (error as? NSError)?.code{
+            if let errorCode = (error as NSError?)?.code{
                 //Error found while creating user; will show alert view with information
                 self.activityIndicator?.stopAnimating()
                 
@@ -225,12 +225,11 @@ class AuthenticateViewController: UIViewController {
                 FIRAuth.auth()?.signIn(with: credential, completion: { (user, error) in
                     let user = user!
                     
-                    if error != nil{
+                    if let error = error{
                         //Error was found
                         self.activityIndicator?.stopAnimating()
                         print("Login failed. \(error)")
                     }else{
-                        
                         //5. Allow user to enter app and set user UID to value for key in NSUserDefaults
                         UserDefaults.standard.setValue(user.uid, forKey: "uid")
                         self.performSegue(withIdentifier: "ToAppSegue", sender: nil)
@@ -259,7 +258,7 @@ class AuthenticateViewController: UIViewController {
                 print("Logged in!")
                 let credential = FIRFacebookAuthProvider.credential(withAccessToken: accessToken.authenticationToken)
                 FIRAuth.auth()?.signIn(with: credential, completion: { (user, error) in
-                    if let error = error as? NSError{
+                    if let error = error{
                         self.activityIndicator?.stopAnimating()
                         self.present(Utilities.showErrorAlert(inDict: FIRAuthErrorCodeInvalidCredential), animated: true, completion: nil)
                         print("Login failed. \(error)")
