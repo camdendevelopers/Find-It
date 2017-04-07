@@ -21,6 +21,8 @@ class ConfirmReportViewController: UIViewController {
     var itemImage:UIImage?
     var imageInfo:[String : AnyObject]?
     
+    var itemInfo: NSDictionary?
+    
     private var currentUserID:String?
     private var currentUser: FIRDatabaseReference?
     
@@ -33,7 +35,7 @@ class ConfirmReportViewController: UIViewController {
         
         loadUser()
         
-        //loadUI()
+        loadUI()
 
     }
 
@@ -51,9 +53,10 @@ class ConfirmReportViewController: UIViewController {
     }
     
     func loadUI(){
-        self.itemImageView.image = self.imageInfo?[UIImagePickerControllerOriginalImage] as? UIImage
-        self.itemNameLabel.text = itemNameText!
-        self.itemDescriptionLabel.text = itemDescriptionText!
+        //self.itemImageView.image = self.imageInfo?[UIImagePickerControllerOriginalImage] as? UIImage
+        self.itemIdentificationLabel.text = itemInfo?.value(forKey: "id") as? String
+        self.itemNameLabel.text = itemInfo?.value(forKey: "name") as? String
+        self.itemDescriptionLabel.text = itemInfo?.value(forKey: "description") as? String
         //self.successView.isHidden = true
     }
     

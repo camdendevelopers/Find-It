@@ -16,24 +16,24 @@ class TutorialViewController: UIViewController {
     
     // Class variables
     var descriptionText: String?
+    var backgroundImageName: String?
     var titleText:String?
     var backgroundColor: UIColor?
-    var backgroundImageName: String?
     var index:Int?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 1. Change description label text and image
         self.backgroundImageView.image = UIImage(named: backgroundImageName!)
         self.descriptionLabel.text = descriptionText
-        //self.descriptionLabel.font = UIFont(name: "HalisR-Light", size: 12)
         self.descriptionLabel.textColor = kColor9B9B9B
         
+        // 2. Change title text
         self.titleLabel.text = titleText
-        //self.titleLabel.font = UIFont(name: "HalisR-Black", size: 20)
         self.titleLabel.textColor = kColor4A4A4A
         
-    
+        // 3. Change background image
         self.view.backgroundColor = backgroundColor
-        
     }
 }
