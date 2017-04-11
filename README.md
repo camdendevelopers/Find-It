@@ -45,7 +45,12 @@ The following **additional** features are implemented:
 1. If you don't have the correct library installed, you may see dependency errors when running the app. A simple 'pod install' in the folder directory should do the trick. In the event that you don't have the correct libraries installed. Follow these steps:
   - Open terminal and type 'brew install ruby'
   - Then 'sudo gem install cocoapods'
-  - And finally 'pod install'
+  - CD to your project folder and type 'pod install'
+  
+  1.2 In the case that the above steps still do not fix dependency errors, you may be reinstalling pods with your Xcode open or your pods won't allow overwriting. To resolve, try:
+  - Deleting the "Pods" folder with your current workspace open
+  - Quit Xcode and open terminal
+  - CD to your project folder and reinstall pods using 'pod install'
   
 2. Firebase offers a storage SDK to upload and download images. It's a time consuming process and we have not yet optimized it. As a result, you will not be able to see your tag's image in the table view when the app loads. WILL BE COMING IN BETA. However, feel free to use the image picker when you add a tag.
 
