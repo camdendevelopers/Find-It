@@ -14,62 +14,54 @@ protocol ChangeStatusProtocol {
 }
 
 class TagDetailViewController: UIViewController {
+    
+    // IBOutlets for class
     @IBOutlet weak var itemIdentificationLabel: UILabel!
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var itemDescriptionLabel: UILabel!
     
+    var itemID:String?
+    var itemName:String?
+    var itemDescription:String?
+    var itemImage:UIImage?
+    
+    // Variabels for class
     var delegate: ChangeStatusProtocol?
     var itemDetails:NSDictionary?
-    var currentUserID: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 1. Setup labels
         setupLabels()
     }
     
     @IBAction func backButtonPressed(_ sender: Any) {
+        
+        // 1. Return to previous screen
         _ = self.navigationController?.popViewController(animated: true)
     }
     
     @IBAction func statusButtonPressed(_ sender: Any) {
+        // 1. Call the delegate of this protocol
         self.delegate?.changeItemStatus()
+        
+        // 2. Return to previous screen
         _ = self.navigationController?.popViewController(animated: true)
     }
     
+    // MARK:- Utilties for class
+    
     func setupLabels(){
-        let itemID = itemDetails?["id"] as? String
-        //let status = itemDetails?["status"] as? String
-        let itemName = itemDetails?["name"] as? String
-        let itemDescription = itemDetails?["description"] as? String
-        
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            
-            let itemImageReference = DataService.dataService.STORAGE.reference(withPath: "\(self.currentUserID!)/\(itemID!).jpg")
-            itemImageReference.downloadURL(completion: { (url, error) in
-                if let error = error{
-                    print("Error downloading: \(error)")
-                    return
-                }else{
-                    //let bal = NSData(contentsOf: url!)
-                    //let data = NSData(contentsOf: (url?.absoluteURL)!)
-                    let data = NSData(contentsOf: url!)
-                    self.itemImageView.image = UIImage(data: data! as Data)
-                }
-            })
-            
-            DispatchQueue.main.async {
-                self.title = "ID " + itemID!
-                self.itemIdentificationLabel.isHidden = true
-                self.itemNameLabel.text = itemName!
-                self.itemDescriptionLabel.text = itemDescription!
-                self.itemImageView.layer.cornerRadius = self.itemImageView.frame.size.height / 2
-                self.itemImageView.clipsToBounds = true
-                self.itemImageView.layer.masksToBounds = true
-                
-            }
-        }
-        
+        // Assign variables to text fields
+        self.title = "ID " + itemID!
+        self.itemNameLabel.text = itemName!
+        self.itemDescriptionLabel.text = itemDescription!
+        self.itemIdentificationLabel.isHidden = true
+        self.itemImageView.image = itemImage!
+        self.itemImageView.layer.cornerRadius = self.itemImageView.frame.size.height / 2
+        self.itemImageView.clipsToBounds = true
+        self.itemImageView.layer.masksToBounds = true
     }
 }

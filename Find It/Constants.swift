@@ -52,10 +52,11 @@ let FIRAuthErrorCodeInvalidCredential = ["title": "Could Not Sign In With Facebo
 
 
 //MARK:- Colors and text for tutorial
-let kColor4990E2 = UIColor(red: 70.0/255.0, green: 142.0/255.0, blue: 229.0/255.0, alpha: 1.0)
-let kColorFF7D7D = UIColor(red: 255.0/255.0, green: 124.0/255.0, blue: 122.0/255.0, alpha: 1.0)
+let kColor4990E2 = UIColor(red: 73.0/255.0, green: 144.0/255.0, blue: 226.0/255.0, alpha: 1.0)
+let kColorFF7D7D = UIColor(red: 255.0/255.0, green: 125.0/255.0, blue: 125.0/255.0, alpha: 1.0)
 let kColorE3CC00 = UIColor(red: 227.0/255.0, green: 204.0/255.0, blue: 0.0/255.0, alpha: 1.0)
-
+let kColor87BEFE = UIColor(red: 135.0/255.0, green: 190.0/255.0, blue: 254.0/255.0, alpha: 1.0)
+let kColorFDBFBF = UIColor(red: 253.0/255.0, green: 191.0/255.0, blue: 191.0/255.0, alpha: 1.0)
 let kColor9B9B9B = UIColor(red: 155.0/255.0, green: 155.0/255.0, blue: 155.0/255.0, alpha: 1.0)
 let kColor4A4A4A = UIColor(red: 74.0/255.0, green: 74.0/255.0, blue: 74.0/255.0, alpha: 1.0)
 

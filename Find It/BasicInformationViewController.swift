@@ -14,17 +14,13 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     
     // IBOutlets for class
     @IBOutlet weak var profileImageView: UIImageView!
-    @IBOutlet weak var nameTextField: UITextField!
-    @IBOutlet weak var phoneTextField: UITextField!
+    @IBOutlet weak var firstNameTextField: UITextField!
+    @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var nextButton: UIButton!
     
     // Variables for class
     private var imagePicker =  UIImagePickerController()
-    private var imageInfo: [String : AnyObject]?
     private var imageSelected: UIImage?
-    
-    private var currentUserID:String?
-    private var currentUser: FIRDatabaseReference?
     
     var isFacebookAuth:Bool?
 
@@ -37,28 +33,25 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         // 2. Setup image view
         setupImageView()
         
-        // 3. Load user to edit
-        loadUser()
-        
     }
     
     @IBAction func nextButtonPressed(_ sender: Any) {
         // 1. Create local variables of text fields text
-        let name = nameTextField.text
-        let phone = phoneTextField.text
+        let firstName = firstNameTextField.text
+        let lastName = lastNameTextField.text
         
         // 2. Check if textfields are empty
-        guard name != "", phone != "" else {
+        guard firstName != "", lastName != "" else {
             present(Utilities.showErrorAlert(inDict: ["title": "Oops", "message": "You need to have details on both fields"]), animated: true, completion: nil)
             return
         }
         
         // 3. Update current user's values
-        currentUser?.child("name").setValue(name)
-        currentUser?.child("phone").setValue(phone)
+        DataService.dataService.CURRENT_USER_REF.child("firstName").setValue(firstName)
+        DataService.dataService.CURRENT_USER_REF.child("lastName").setValue(lastName)
         
         // 4. Go to next screen
-        performSegue(withIdentifier: "ToAddressSegue", sender: self)
+        performSegue(withIdentifier: "ToPhoneSegue", sender: self)
     }
     
     @IBAction func backButtonPressed(_ sender: Any) {
@@ -73,21 +66,17 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
             print("Not connected to internet")
             return
         }
-        
+
         // 2. Get current user's information
-        self.currentUserID = DataService.dataService.AUTH_REF.currentUser?.uid
-        self.currentUser = DataService.dataService.USER_REF.child(currentUserID!)
-        
-        // 3. Get current user's information
-        self.currentUser?.observeSingleEvent(of: .value, with: { (snapshot) in
+        DataService.dataService.CURRENT_USER_REF.observeSingleEvent(of: .value, with: { (snapshot) in
             let value = snapshot.value as? NSDictionary
             
             // 4. If they are facbook users, they have default information
             if self.isFacebookAuth! {
                 let urlString = value?["profileImageURL"] as? String
-                let name = value?["name"] as? String
+                let firstName = value?["firstName"] as? String
                 
-                self.nameTextField.text = name!
+                self.firstNameTextField.text = firstName!
                 DispatchQueue.main.async(execute: {
                     let url = NSURL(string: urlString!)
                     let data = NSData(contentsOf: url! as URL)
@@ -106,15 +95,17 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         
         // 1. Create a recognizer for image
         let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddTagViewController.imageViewTapped))
+        profileImageView.image = UIImage(named: "default_image_icon")
         profileImageView.isUserInteractionEnabled = true
         profileImageView.addGestureRecognizer(tapImageRecognizer)
     }
     
     func imageViewTapped(){
         
-        // 1. Check which iphone is currently being displayed
-        if DeviceType.IS_IPHONE_5 || DeviceType.IS_IPHONE_4_OR_LESS{
+        // 1. Check which ilastName is currently being displayed
+        if DeviceType.IS_IPHONE_5 || DeviceType.IS_IPHONE_4_OR_LESS {
             present(Utilities.showErrorAlert(inDict: IPhoneTryUpload), animated: true, completion: nil)
+            
         }else{
             showAlertView()
         }
@@ -185,7 +176,7 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         // 1. Assign the image info to a dictionary
-        self.imageInfo = info as [String : AnyObject]?
+        let imageInfo = info as [String : AnyObject]?
         
         // 2. Set the image view to the selected image
         self.profileImageView.image = info[UIImagePickerControllerEditedImage] as? UIImage
@@ -194,8 +185,26 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         // 3. Dismiss the picker
         picker.dismiss(animated: true, completion: nil)
         
-        // 4. Upload image
-        //uploadImage(imageInfo!)
+        // 4. Perform asynchronous call to upload image
+        DispatchQueue.global(qos: .userInitiated).async {
+            
+            // Create variables
+            let image = imageInfo?[UIImagePickerControllerOriginalImage] as? UIImage
+            let imageData = UIImageJPEGRepresentation(image!, 0.8)
+            let metadata = FIRStorageMetadata()
+            let imagePath = FIRAuth.auth()!.currentUser!.uid + ".jpg"
+            metadata.contentType = "image/jpeg"
+            
+            // Update it to storage
+            DataService.dataService.STORAGE_REF.child(imagePath).put(imageData!, metadata: metadata) { (metadata, error) in
+                if error != nil {
+                    return
+                }else{
+                    let imageURL = (metadata?.downloadURL()?.absoluteString)!
+                    DataService.dataService.CURRENT_USER_REF.child("profileImageURL").setValue(imageURL)
+                }
+            }
+        }
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -208,16 +217,16 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     
     func setupTextFields(){
         // 1. Set the delegates of the text fields
-        self.nameTextField.delegate = self
-        self.phoneTextField.delegate = self
+        self.firstNameTextField.delegate = self
+        self.lastNameTextField.delegate = self
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         // 1. If you are at top text field and hit enter, go to the next one
-        if textField == nameTextField{
-            phoneTextField.becomeFirstResponder()
+        if textField == firstNameTextField{
+            lastNameTextField.becomeFirstResponder()
         }else{
-            phoneTextField.resignFirstResponder()
+            lastNameTextField.resignFirstResponder()
         }
         return true
     }

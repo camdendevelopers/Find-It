@@ -35,6 +35,7 @@
 		8D75314B1E79B53B00984419 /* TagCustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D75314A1E79B53B00984419 /* TagCustomTableViewCell.swift */; };
 		8D75314D1E7A3A3D00984419 /* TagDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D75314C1E7A3A3C00984419 /* TagDetailViewController.swift */; };
 		8D861A151E5E751E00BCD646 /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D861A141E5E751E00BCD646 /* TutorialViewController.swift */; };
+		8DD83A1E1E9C561100C074D9 /* PhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD83A1D1E9C561100C074D9 /* PhoneViewController.swift */; };
 		9A1F6E694DBBC3489B614E99 /* Pods_Find_ItUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7DF1677DEAA825B4D2CD401 /* Pods_Find_ItUITests.framework */; };
 		BA9CCABB9044E14267FE17F7 /* Pods_Find_It.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655EF729B04EB450B5922FDD /* Pods_Find_It.framework */; };
 		E2683AB21CC555B144052BE6 /* Pods_Find_ItTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05ED98A52B097C0D5F33D8F4 /* Pods_Find_ItTests.framework */; };
@@ -99,6 +100,7 @@
 		8D75314A1E79B53B00984419 /* TagCustomTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagCustomTableViewCell.swift; sourceTree = "<group>"; };
 		8D75314C1E7A3A3C00984419 /* TagDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagDetailViewController.swift; sourceTree = "<group>"; };
 		8D861A141E5E751E00BCD646 /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
+		8DD83A1D1E9C561100C074D9 /* PhoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneViewController.swift; sourceTree = "<group>"; };
 		8F1EA53A4AF68DE579A2E82E /* Pods-Find ItTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Find ItTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Find ItTests/Pods-Find ItTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A7DF1677DEAA825B4D2CD401 /* Pods_Find_ItUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Find_ItUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F56F3BC00BF2E01FE078DBF1 /* Pods-Find ItUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Find ItUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Find ItUITests/Pods-Find ItUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -172,8 +174,8 @@
 			children = (
 				8D1082231E5CFF1A00F94393 /* AppDelegate.swift */,
 				8D38B04C1E8460A50081721B /* Fonts */,
-				8D6477BC1E6E502400341FD4 /* Introduction */,
 				8D6477BD1E6E503E00341FD4 /* Models */,
+				8D6477BC1E6E502400341FD4 /* Introduction */,
 				8D6477BE1E6E505800341FD4 /* My Tags */,
 				8D6477BF1E6E557800341FD4 /* Reports */,
 				8D1082271E5CFF1A00F94393 /* Main.storyboard */,
@@ -221,6 +223,7 @@
 				8D1082531E5D0A7500F94393 /* MainViewController.swift */,
 				8D1082551E5D0A8200F94393 /* AuthenticateViewController.swift */,
 				8D7531461E786B7700984419 /* BasicInformationViewController.swift */,
+				8DD83A1D1E9C561100C074D9 /* PhoneViewController.swift */,
 				8D7531481E786B8200984419 /* AddressViewController.swift */,
 			);
 			name = Introduction;
@@ -559,6 +562,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D75314B1E79B53B00984419 /* TagCustomTableViewCell.swift in Sources */,
+				8DD83A1E1E9C561100C074D9 /* PhoneViewController.swift in Sources */,
 				8D1082241E5CFF1A00F94393 /* AppDelegate.swift in Sources */,
 				8D1082581E5D0A9100F94393 /* MyTagsViewController.swift in Sources */,
 				8D6477BB1E6E4F3500341FD4 /* ConfirmAddTagViewController.swift in Sources */,

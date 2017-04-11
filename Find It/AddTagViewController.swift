@@ -32,35 +32,46 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         
         // 3. Setup image view
         setupImageView()
+        
+        // 4. Setup bars
+        setupBars()
     }
     
     // MARK:- IBActions
     @IBAction func cancelButtonPressed(_ sender: Any) {
+        // 1. Return to previous screen
         self.dismiss(animated: true, completion: nil)
     }
     
-    
     //ADDD THE ANIMATION INDICATOR
     @IBAction func nextButtonPressed(_ sender: Any) {
+        
+        // 1. Create local variables for each text field input
         let itemName = itemNameTextField.text
         let itemDescription = itemDescriptionTextField.text
         
+        // 2. Check that fields are not empty
         guard itemName != "", itemDescription != "" else {
             present(Utilities.showErrorAlert(inDict: ["title": "Oops", "message": "You need to have details on both fields"]), animated: true, completion: nil)
             return
         }
         
+        // 3. Go to next screen
         performSegue(withIdentifier: "ConfirmAddTagSegue", sender: self)
     }
     
     // MARK:- Image Picker Delegate methods
     func setupImageView(){
+        
+        // 1. Create a reconizer for image
         let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddTagViewController.imageViewTapped))
         itemImageView.isUserInteractionEnabled = true
         itemImageView.addGestureRecognizer(tapImageRecognizer)
     }
     
     func imageViewTapped(){
+        
+        // 1. Check which device is being used
         if DeviceType.IS_IPHONE_5 || DeviceType.IS_IPHONE_4_OR_LESS{
             self.present(Utilities.showErrorAlert(inDict: IPhoneTryUpload), animated: true, completion: nil)
         }else{
@@ -69,32 +80,45 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     }
     
     func showAlertView (){
+        // 1. Create alert to be displayed
         let alert:UIAlertController=UIAlertController(title: "Choose Image", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+        
+        // 2. Create button that will open camera
         let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.default)
         {
             UIAlertAction in
             self.openCamera()
         }
+        
+        // 3. Create button that will open gallery
         let gallaryAction = UIAlertAction(title: "Gallery", style: UIAlertActionStyle.default)
         {
             UIAlertAction in
             self.openGallery()
         }
+        
+        // 4. Create button that will cancel action
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
         {
             UIAlertAction in
         }
         
-        // Add the actions
-        imagePicker.delegate = self
-        imagePicker.allowsEditing = true
+        // 5.  Add the actions
         alert.addAction(cameraAction)
         alert.addAction(gallaryAction)
         alert.addAction(cancelAction)
+        
+        // 6. Set the image picker delegates
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        
+        // 7. Display alert to user
         self.present(alert, animated: true, completion: nil)
     }
     
     func openCamera(){
+        
+        // 1. Check that user has camera
         if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerControllerSourceType.camera))
         {
             imagePicker.sourceType = UIImagePickerControllerSourceType.camera
@@ -110,32 +134,26 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     }
     
     func openGallery(){
+        
+        // 1. Open gallery
         imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
         self.present(imagePicker, animated: true, completion: nil)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        // 1. Assign info to class image infor
         self.imageInfo = info as [String: AnyObject]
         self.itemImageView.image = info[UIImagePickerControllerOriginalImage] as? UIImage
         
+        // 2. Return to app
         picker.dismiss(animated: true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        print("Image picker canceled")
-        picker.dismiss(animated: true, completion: nil)
-    }
-    
-    func resize(image: UIImage, newSize: CGSize) -> UIImage {
-        let resizeImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
-        resizeImageView.contentMode = UIViewContentMode.scaleAspectFill
-        resizeImageView.image = image
         
-        UIGraphicsBeginImageContext(resizeImageView.frame.size)
-        resizeImageView.layer.render(in: UIGraphicsGetCurrentContext()!)
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return newImage!
+        // 1. Image picker was canceled, return to app
+        picker.dismiss(animated: true, completion: nil)
     }
     
     // MARK:- Button methods
@@ -149,6 +167,8 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     // MARK:- Text Field Delegate
     
     func setupTextFields(){
+        
+        // 1. Assign the text fields
         self.itemNameTextField.delegate = self
         self.itemDescriptionTextField.delegate = self
     }
@@ -164,7 +184,7 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         
-        // Disable the next button if BOTH textfields are empty
+        // 1. Check that text fields have text
         if itemNameTextField.text?.isEmpty == true || itemDescriptionTextField.text?.isEmpty == true {
             nextButton.setTitleColor(UIColor(red:0.64, green:0.64, blue:0.64, alpha:1.0), for: .disabled)
             nextButton.backgroundColor = UIColor(red:0.80, green:0.82, blue:0.82, alpha:1.0)
@@ -176,11 +196,15 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
             
         }
     }
+    
+    // MARK:- Utilities for class
+    func setupBars(){
+        navigationController?.navigationBar.barTintColor = UIColor.white
+        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16), NSForegroundColorAttributeName: UIColor(red: 74.0/255.0, green: 74.0/255.0, blue: 74.0/255.0, alpha: 1.0) ]
+    }
 
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
         if segue.identifier == "ConfirmAddTagSegue"{
             if let destinationViewController = segue.destination as? ConfirmAddTagViewController{
                 destinationViewController.itemDescriptionText = itemDescriptionTextField.text!

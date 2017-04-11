@@ -21,6 +21,8 @@ class AuthenticateViewController: UIViewController {
     @IBOutlet weak var authenticateButton: UIButton!
     @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var facebookButton: UIButton!
+    @IBOutlet weak var emailDescriptionLabel: UILabel!
+    @IBOutlet weak var passwordDescriptionLabel: UILabel!
     
     // Variables for class
     var activityIndicator:NVActivityIndicatorView?
@@ -35,8 +37,11 @@ class AuthenticateViewController: UIViewController {
         // 2. Show activity indicator while app checks for current user
         self.activityIndicator?.startAnimating()
         
+        // 3. Setup UI
+        setupUI()
         
-        // 3. Perform action based on current user
+        
+        // 4. Perform action based on current user
         if UserDefaults.standard.value(forKey: "uid") != nil && DataService.dataService.AUTH_REF.currentUser != nil && Reachability.isConnectedToNetwork(){
             
             //There is a current user previously logged in
@@ -48,17 +53,38 @@ class AuthenticateViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        // 1. Change status bar color to white for this screen only
+        UIApplication.shared.statusBarStyle = .lightContent
         
-        // 1. Update UI depending on if user is signing up or signing in
+        // 2. Update UI depending on if user is signing up or signing in
         if isSignUp == true{
-            facebookButton.setTitle("Sign Up With Facebook", for: .normal)
-            authenticateButton.setTitle("Sign Up", for: .normal)
-            descriptionLabel.text = "Sign up to create tags"
+            facebookButton.setTitle("SIGN UP WITH FB", for: .normal)
+            authenticateButton.setTitle("SIGN UP", for: .normal)
+            descriptionLabel.text = "Sign up"
+            
+            self.view.backgroundColor = kColorFF7D7D
+            self.authenticateButton.setTitleColor(kColorFF7D7D, for: .normal)
+            self.facebookButton.setTitleColor(kColorFF7D7D, for: .normal)
+            self.emailDescriptionLabel.textColor = kColorFDBFBF
+            self.passwordDescriptionLabel.textColor = kColorFDBFBF
         }else{
-            facebookButton.setTitle("Sign In With Facebook", for: .normal)
-            authenticateButton.setTitle("Sign In", for: .normal)
-            descriptionLabel.text = "Sign in to access your account"
+            facebookButton.setTitle("LOG IN WITH FB", for: .normal)
+            authenticateButton.setTitle("LOG IN", for: .normal)
+            descriptionLabel.text = "Log in"
+            
+            self.view.backgroundColor = kColor4990E2
+            self.authenticateButton.setTitleColor(kColor4990E2, for: .normal)
+            self.facebookButton.setTitleColor(kColor4990E2, for: .normal)
+            self.emailDescriptionLabel.textColor = kColor87BEFE
+            self.passwordDescriptionLabel.textColor = kColor87BEFE
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // 1. Change status bar color back to white when moving away from screen
+        UIApplication.shared.statusBarStyle = .default
     }
     
     // MARK:- IB Actions
@@ -181,7 +207,9 @@ class AuthenticateViewController: UIViewController {
         }
         
         // 3.Check if all the entered information is valid from text fields
-        guard Utilities.isValidEmail(text: email), Utilities.isValidPassword(text: password) else {
+
+        guard email != "", password != "" else {
+            self.activityIndicator?.stopAnimating()
             present(Utilities.showErrorAlert(inDict: ["title": "Couldn't Create Account", "message": "You entered something wrong"]), animated: true, completion: nil)
             return
         }
@@ -290,7 +318,7 @@ class AuthenticateViewController: UIViewController {
                     if let user = user as FIRUser!{
                          let newUser: [String:Any] = [
                          "provider": user.providerID as String,
-                         "name": user.displayName! as String,
+                         "firstName": user.displayName! as String,
                          "email": user.email! as String,
                          "profileImageURL": (user.photoURL?.absoluteString)!,
                          "uid": user.uid as String,
@@ -318,6 +346,18 @@ class AuthenticateViewController: UIViewController {
         
         // 3. Add indicator to view
         self.view.addSubview(self.activityIndicator!)
+    }
+    
+    func setupUI(){
+        
+        // 1. Add a radius to button to make it round
+        self.authenticateButton.layer.cornerRadius = self.authenticateButton.frame.size.height / 2
+        self.authenticateButton.clipsToBounds = true
+        self.authenticateButton.layer.masksToBounds = true
+        
+        self.facebookButton.layer.cornerRadius = self.facebookButton.frame.size.height / 2
+        self.facebookButton.clipsToBounds = true
+        self.facebookButton.layer.masksToBounds = true
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -24,6 +24,12 @@ class DataService {
     var AUTH_REF = FIRAuth.auth()!
     var FBAUTH_REF = LoginManager()
     
+    var CURRENT_USER_REF:FIRDatabaseReference{
+        let userID = UserDefaults.standard.value(forKey: "uid") as! String
+        let currentUser = USER_REF.child(userID)
+        return currentUser
+    }
+    
     func createNewAccount(uid: String, user: [String:Any]) {
         // A User is born.
         USER_REF.child(uid).setValue(user)

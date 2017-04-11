@@ -11,42 +11,6 @@ import UIKit
 import SystemConfiguration
 class Utilities {
     
-    //Validate member code in ValidationViewController
-    class func validateCodeFromOptions(text: String, options: [String]) -> Bool {
-        var result = false
-        
-        // test code
-        if text.isNumeric() &&
-            text.characters.count == options[0].characters.count && options.contains(text){
-            result = true
-        }
-        return result
-    }
-    
-    //Validate name from UITextField.text
-    class func isValidName(text:String) -> Bool {
-        let matchCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
-        return text.containsOnlyCharactersIn(matchCharacters: matchCharacters)
-    }
-    
-    //Validate password from UITextField.text
-    class func isValidPassword(text:String) -> Bool{
-        //let matchCharacters = "@.!@#$%^&*()_'{}~|0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-        
-        //return text.containsOnlyCharactersIn(matchCharacters: matchCharacters)
-        return true
-    }
-
-    //Validate name from UITextField.text
-    class  func isValidEmail(text:String) -> Bool {
-        // print("validate calendar: \(testStr)")
-        //let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-        
-        //let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
-        //return emailTest.evaluate(with: text)
-        return true
-    }
-    
     //Method that shows any errors encountered view UIAlertController
     class func showErrorAlert (inDict: [String:String]) -> UIAlertController{
         let title = inDict["title"]
@@ -108,21 +72,25 @@ class Utilities {
 }
 
 struct ShortCodeGenerator {
+    private static let numbers = [Character]("1234567890".characters)
+    private static let letters = [Character]("ABCDEFGHIJKLMNOPQRSTUVWXYZ".characters)
     
-    private static let base62chars = [Character]("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".characters)
-    private static let maxBase : UInt32 = 62
-    
-    static func getCode(withBase base: UInt32 = maxBase, length: Int) -> String {
+    static func getCode(length: Int) -> String{
         var code = ""
-        for _ in 0..<length {
-            let random = Int(arc4random_uniform(min(base, maxBase)))
-            code.append(base62chars[random])
+        
+        for index in 0..<length {
+            
+            if index < (length/2){
+                let randomLetter = Int(arc4random_uniform(UInt32(letters.count)))
+                code.append(letters[randomLetter])
+            }else{
+                let randomNumber = Int(arc4random_uniform(UInt32(numbers.count)))
+                code.append(numbers[randomNumber])
+            }
         }
         return code
     }
 }
-
-
 
 
 extension String.CharacterView {
@@ -227,8 +195,8 @@ struct DeviceType
     static let IS_IPAD              = UIDevice.current.userInterfaceIdiom == .pad && ScreenSize.SCREEN_MAX_LENGTH == 1024.0
 }
 
-public class Reachability {
-    class func isConnectedToNetwork() -> Bool {
+struct Reachability {
+    static func isConnectedToNetwork() -> Bool {
         var zeroAddress = sockaddr_in()
         zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
         zeroAddress.sin_family = sa_family_t(AF_INET)
@@ -243,6 +211,7 @@ public class Reachability {
         if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
             return false
         }
+        
         let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
         let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
         return (isReachable && !needsConnection)

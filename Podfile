@@ -17,6 +17,8 @@ target 'Find It' do
 
   pod 'NVActivityIndicatorView'
 
+  pod 'SDWebImage'
+
   target 'Find ItTests' do
     inherit! :search_paths
     # Pods for testing
