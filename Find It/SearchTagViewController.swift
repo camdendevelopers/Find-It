@@ -14,6 +14,7 @@ class SearchTagViewController: UIViewController, UITextFieldDelegate {
     // IBOutlets for class
     @IBOutlet weak var itemSearchTextField: UITextField!
     @IBOutlet weak var nextButton: UIButton!
+    @IBOutlet weak var itemSearchTextFieldBottomConstraint: NSLayoutConstraint!
     
     // Variables for class
     var itemInfo: NSDictionary?
@@ -21,11 +22,27 @@ class SearchTagViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 2. Setup text fields
+        // 1. Setup text fields
         setupTextFields()
         
-        // 1. Setup recognizers
+        // 2. Setup recognizers
         setupRecognizers()
+        
+        // 3. Setup bars and buttons
+        setupBars()
+        
+        // 4. Setup button
+        setupButton()
+        
+        // 5. Initiliaze keyboard size functionality
+        initializeKeyboardNotifications()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 1. Change status bar color to white for this screen only
+        UIApplication.shared.statusBarStyle = .lightContent
     }
 
     @IBAction func cancelButtonPressed(_ sender: Any) {
@@ -69,7 +86,58 @@ class SearchTagViewController: UIViewController, UITextFieldDelegate {
         })
     }
     
+    //Methods for keyboards
+    func initializeKeyboardNotifications(){
+        
+        // 1. Add notification obeservers that will alert app when keyboard displays
+        NotificationCenter.default.addObserver(self, selector: #selector(SearchTagViewController.keyboardWillShow(notification :)), name:NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(SearchTagViewController.keyboardWillHide(notification:)), name:NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
+    }
+    
+    func keyboardWillShow(notification: Notification) {
+        
+        // 1. Check that notification dictionary is available
+        if let userInfo = notification.userInfo{
+            
+            // 2. Obtain keyboard size and predictive search height
+            if let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
+                
+                if self.itemSearchTextField.frame.maxY > (self.view.frame.height - keyboardSize.height){
+                    // 3. Animate the text fields up
+                    UIView.animate(withDuration: 0.5, animations: {
+                        
+                        // If no predictive search is displayed
+                        if keyboardSize.height == offset.height{
+                            self.itemSearchTextFieldBottomConstraint.constant = (keyboardSize.height) - (self.view.frame.height - self.nextButton.frame.origin.y) + 15
+                        }else{
+                            self.itemSearchTextFieldBottomConstraint.constant = (keyboardSize.height + offset.height) - (self.view.frame.height - self.nextButton.frame.origin.y) + 15
+                        }
+                    })
+                }
+            }
+        }
+    }
+    
+    func keyboardWillHide(notification: Notification) {
+        UIView.animate(withDuration: 0.5) {
+            self.itemSearchTextFieldBottomConstraint.constant = 198
+        }
+    }
+    
     // MARK:- Text Field Delegate
+    
+    func setupBars(){
+        self.view.backgroundColor = kColorE3CC00
+        
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.isOpaque = true
+                navigationController?.navigationBar.barTintColor = kColorE3CC00
+        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
+        
+    }
     
     func setupTextFields(){
         // 1. Set the delegates of the text fields
@@ -85,6 +153,14 @@ class SearchTagViewController: UIViewController, UITextFieldDelegate {
     }
     
     // MARK:- Utilities for class
+    func setupButton(){
+        
+        // 1. Add a radius to button to make it round
+        self.nextButton.layer.cornerRadius = self.nextButton.frame.size.height / 2
+        self.nextButton.clipsToBounds = true
+        self.nextButton.layer.masksToBounds = true
+    }
+    
     func setupRecognizers(){
         
         // 1. Create a tag screen regonizer

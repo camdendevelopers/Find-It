@@ -31,6 +31,13 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         setupBars()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 1. Change status bar color to white for this screen only
+        UIApplication.shared.statusBarStyle = .lightContent
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -90,6 +97,7 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
     func setupBars(){
         navigationController?.navigationBar.barTintColor = kColor4990E2
         navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.isOpaque = true
         navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
         tabBarController?.tabBar.barTintColor = UIColor.white
     }

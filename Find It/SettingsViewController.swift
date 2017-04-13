@@ -11,7 +11,7 @@ import Firebase
 import FacebookLogin
 import SDWebImage
 
-class SettingsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+class SettingsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate{
     
     // IBOutlets for class
     @IBOutlet weak var nameLabel: UILabel!
@@ -19,6 +19,7 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var phoneTextField: UITextField!
     @IBOutlet weak var addressTextField: UITextField!
+    @IBOutlet weak var logoutButton: UIButton!
     
     // Variables for class
     private var imagePicker =  UIImagePickerController()
@@ -32,8 +33,27 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
         
         // 2. Setup image view
         setupImageView()
+        
+        // 3. Setup bars
+        setupBars()
+        
+        // 4. Setup button
+        setupButton()
+        
+        // 5. Setup text fields
+        setupTextFields()
+        
+        // 6. Setup recognizers
+        setupRecognizers()
     }
-  
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 1. Change status bar color to white for this screen only
+        UIApplication.shared.statusBarStyle = .lightContent
+    }
+    
     @IBAction func cancelButtonPressed(_ sender: Any) {
         // 1. Return to previous screen
         self.dismiss(animated: true, completion: nil)
@@ -187,7 +207,53 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
         picker.dismiss(animated: true, completion: nil)
     }
     
+    // MARK:- Text Field Delegate
+    
+    func setupTextFields(){
+        // 1. Set the delegates of the text fields
+        self.emailTextField.delegate = self
+        self.phoneTextField.delegate = self
+        self.addressTextField.delegate = self
+    }
+    
     // MARK:- Utilities for class
+    func setupRecognizers(){
+        
+        // 1. Create a tag screen regonizer
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(SettingsViewController.screenTapped))
+        self.view.addGestureRecognizer(screenTapRecognizer)
+    }
+    
+    func screenTapped(){
+        
+        // 1. If screen is tapped, resign keyboard for all text fields
+        self.emailTextField.resignFirstResponder()
+        self.phoneTextField.resignFirstResponder()
+        self.addressTextField.resignFirstResponder()
+    }
+    
+    func setupButton(){
+        // 1. Add a radius to button to make it round
+        self.logoutButton.layer.cornerRadius = self.logoutButton.frame.size.height / 2
+        self.logoutButton.clipsToBounds = true
+        self.logoutButton.layer.masksToBounds = true
+        
+        
+        self.logoutButton.setTitleColor(kColorFF7D7D, for: .normal)
+        self.logoutButton.backgroundColor = UIColor.clear
+        self.logoutButton.layer.borderWidth = 2
+        self.logoutButton.layer.borderColor = kColorFF7D7D.cgColor
+    }
+    
+    func setupBars(){
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.isOpaque = true
+        
+        navigationController?.navigationBar.barTintColor = kColorFF7D7D
+        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
+        
+    }
+    
     func loadUser(){
         
         // 1. Check for network connectivity
@@ -228,7 +294,7 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
                     self.profileImageView.sd_setImage(with: URL(string: urlString), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.progressiveDownload)
 
                 }else{
-                    self.profileImageView.image =  UIImage(named: "default_image_icon")!
+                    self.profileImageView.image =  UIImage(named: "default_image_icon_gray")!
                 }
             }
         })

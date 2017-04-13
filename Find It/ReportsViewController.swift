@@ -28,6 +28,13 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
         setupBars()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 1. Change status bar color to white for this screen only
+        UIApplication.shared.statusBarStyle = .lightContent
+    }
+    
     // MARK:- Table view delegate methods
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -68,6 +75,7 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
     func setupBars(){
         navigationController?.navigationBar.barTintColor = kColorE3CC00
         navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.isOpaque = true
         navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
         tabBarController?.tabBar.barTintColor = UIColor.white
     }

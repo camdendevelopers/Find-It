@@ -20,7 +20,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash-screen-icon" translatesAutoresizingMaskIntoConstraints="NO" id="psK-aO-boY">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash-icon" translatesAutoresizingMaskIntoConstraints="NO" id="psK-aO-boY">
                                 <rect key="frame" x="132" y="252" width="110" height="162"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="162" id="e0F-j4-aHv"/>
@@ -28,7 +28,7 @@
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="psK-aO-boY" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="aeU-bZ-J3y"/>
                             <constraint firstItem="psK-aO-boY" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="ckm-yp-kv7"/>
@@ -41,6 +41,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="splash-screen-icon" width="111" height="155"/>
+        <image name="splash-icon" width="111" height="155"/>
     </resources>
 </document>

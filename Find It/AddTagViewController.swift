@@ -15,7 +15,8 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     @IBOutlet weak var itemNameTextField: UITextField!
     @IBOutlet weak var itemDescriptionTextField: UITextField!
     @IBOutlet weak var nextButton: UIButton!
-    
+    @IBOutlet weak var addItemPlaceholderImageView: UIImageView!
+    @IBOutlet weak var itemDescriptionTextFieldBottomConstraint: NSLayoutConstraint!
     
     //Declare Variables
     private var imagePicker =  UIImagePickerController()
@@ -35,6 +36,19 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         
         // 4. Setup bars
         setupBars()
+        
+        // 5. Setup up recognizers
+        setupRecognizers()
+        
+        // 6. Initiliaze keyboard size functionality
+        initializeKeyboardNotifications()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 1. Change status bar color to white for this screen only
+        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     // MARK:- IBActions
@@ -62,6 +76,11 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     // MARK:- Image Picker Delegate methods
     func setupImageView(){
+        
+        // 1. Make image view rounded
+        self.itemImageView.layer.cornerRadius = 5
+        self.itemImageView.clipsToBounds = true
+        self.itemImageView.layer.masksToBounds = true
         
         // 1. Create a reconizer for image
         let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddTagViewController.imageViewTapped))
@@ -145,6 +164,7 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         // 1. Assign info to class image infor
         self.imageInfo = info as [String: AnyObject]
         self.itemImageView.image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        self.addItemPlaceholderImageView.isHidden = true
         
         // 2. Return to app
         picker.dismiss(animated: true, completion: nil)
@@ -158,10 +178,18 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     // MARK:- Button methods
     func setupButton(){
-        // 1. Set the button to gray  by default and disable
-        nextButton.setTitleColor(UIColor(red:0.64, green:0.64, blue:0.64, alpha:1.0), for: .disabled)
-        nextButton.backgroundColor = UIColor(red:0.80, green:0.82, blue:0.82, alpha:1.0)
-        nextButton.isEnabled = false
+    
+        // 1. Add a radius to button to make it round
+        self.nextButton.layer.cornerRadius = self.nextButton.frame.size.height / 2
+        self.nextButton.clipsToBounds = true
+        self.nextButton.layer.masksToBounds = true
+        
+        // 2. Set the button to gray  by default and disable
+        self.nextButton.setTitleColor(kColor4990E2, for: .disabled)
+        self.nextButton.backgroundColor = UIColor.clear
+        self.nextButton.isEnabled = false
+        self.nextButton.layer.borderWidth = 2
+        self.nextButton.layer.borderColor = kColor4990E2.cgColor
     }
     
     // MARK:- Text Field Delegate
@@ -185,22 +213,80 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     func textFieldDidEndEditing(_ textField: UITextField) {
         
         // 1. Check that text fields have text
-        if itemNameTextField.text?.isEmpty == true || itemDescriptionTextField.text?.isEmpty == true {
-            nextButton.setTitleColor(UIColor(red:0.64, green:0.64, blue:0.64, alpha:1.0), for: .disabled)
-            nextButton.backgroundColor = UIColor(red:0.80, green:0.82, blue:0.82, alpha:1.0)
-            nextButton.isEnabled = false
+        if itemNameTextField.text?.isEmpty == true || itemDescriptionTextField.text?.isEmpty == true || addItemPlaceholderImageView.isHidden == false{
+            self.nextButton.setTitleColor(kColor4990E2, for: .disabled)
+            self.nextButton.backgroundColor = UIColor.clear
+            self.nextButton.isEnabled = false
+            self.nextButton.layer.borderWidth = 2
+            self.nextButton.layer.borderColor = kColor4990E2.cgColor
         }else{
-            nextButton.backgroundColor = UIColor(red: 88.0/255.0, green: 163.0/255.0, blue: 232.0/255.0, alpha: 1.0)
-            nextButton.setTitleColor(UIColor.white, for: .normal)
-            nextButton.isEnabled = true
             
+            self.nextButton.setTitleColor(UIColor.white, for: .normal)
+            self.nextButton.backgroundColor = kColor4990E2
+            self.nextButton.isEnabled = true
+        }
+    }
+    
+    //Methods for keyboards
+    func initializeKeyboardNotifications(){
+        
+        // 1. Add notification obeservers that will alert app when keyboard displays
+        NotificationCenter.default.addObserver(self, selector: #selector(AddTagViewController.keyboardWillShow(notification :)), name:NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(AddTagViewController.keyboardWillHide(notification:)), name:NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
+    }
+    
+    func keyboardWillShow(notification: Notification) {
+        
+        // 1. Check that notification dictionary is available
+        if let userInfo = notification.userInfo{
+            
+            // 2. Obtain keyboard size and predictive search height
+            if let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
+                
+                if self.itemDescriptionTextField.frame.maxY > (self.view.frame.height - keyboardSize.height){
+                    // 3. Animate the text fields up
+                    UIView.animate(withDuration: 0.5, animations: {
+                        
+                        // If no predictive search is displayed
+                        if keyboardSize.height == offset.height{
+                            self.itemDescriptionTextFieldBottomConstraint.constant = (keyboardSize.height) - (self.view.frame.height - self.nextButton.frame.origin.y) + 15
+                        }else{
+                            self.itemDescriptionTextFieldBottomConstraint.constant = (keyboardSize.height + offset.height) - (self.view.frame.height - self.nextButton.frame.origin.y) + 15
+                        }
+                    })
+                }
+            }
+        }
+    }
+    
+    func keyboardWillHide(notification: Notification) {
+        UIView.animate(withDuration: 0.5) {
+            self.itemDescriptionTextFieldBottomConstraint.constant = 128
         }
     }
     
     // MARK:- Utilities for class
+    
+    func setupRecognizers(){
+        
+        // 1. Create a tag screen regonizer
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddTagViewController.screenTapped))
+        self.view.addGestureRecognizer(screenTapRecognizer)
+    }
+    
+    func screenTapped(){
+        
+        // 1. If screen is tapped, resign keyboard for all text fields
+        self.itemNameTextField.resignFirstResponder()
+        self.itemDescriptionTextField.resignFirstResponder()
+    }
+    
     func setupBars(){
-        navigationController?.navigationBar.barTintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16), NSForegroundColorAttributeName: UIColor(red: 74.0/255.0, green: 74.0/255.0, blue: 74.0/255.0, alpha: 1.0) ]
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.isOpaque = true
+        
+        navigationController?.navigationBar.barTintColor = kColor4990E2
+        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
     }
 
     // MARK: - Navigation

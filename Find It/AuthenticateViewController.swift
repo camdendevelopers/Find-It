@@ -52,14 +52,32 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
         // 6. Setup text fields
         setupTextFields()
         
-        // 7. Perform action based on current user
-        if UserDefaults.standard.value(forKey: "uid") != nil && DataService.dataService.AUTH_REF.currentUser != nil && Reachability.isConnectedToNetwork(){
+        // 7. Check if it's sign up and if it is
+        //    and there is a user currently signed in
+        //    make sure to sign them out
+        if isSignUp! == true{
+            // 1. Attempt to sign out
+            do {
+                try DataService.dataService.AUTH_REF.signOut()
+                
+                
+            } catch let signOutError as NSError {
+                
+                // Error signing out
+                print ("Error signing out: %@", signOutError)
+            }
             
-            //There is a current user previously logged in
-            self.performSegue(withIdentifier: "ToAppSegue", sender: self)
-        }else{
-            //No current user found
             self.activityIndicator?.stopAnimating()
+        }else{
+            // 7. Perform action based on current user
+            if UserDefaults.standard.value(forKey: "uid") != nil && DataService.dataService.AUTH_REF.currentUser != nil && Reachability.isConnectedToNetwork(){
+                
+                //There is a current user previously logged in
+                self.performSegue(withIdentifier: "ToAppSegue", sender: self)
+            }else{
+                //No current user found
+                self.activityIndicator?.stopAnimating()
+            }
         }
     }
     

@@ -29,13 +29,20 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
         setupRecognizers()
         
         // 3. Setup up button
-        //setupButton()
+        setupButton()
         
         // 4. Setup UI
         setupUI()
         
         // 5. Initiliaze keyboard size functionality
         initializeKeyboardNotifications()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 1. Change status bar color to white for this screen only
+        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     @IBAction func finishButtonPressed(_ sender: Any) {
@@ -112,7 +119,8 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
             self.finishButton.clipsToBounds = true
             self.finishButton.layer.masksToBounds = true
             self.finishButton.layer.borderWidth = 2
-            self.finishButton.layer.borderColor = UIColor.white.cgColor        }
+            self.finishButton.layer.borderColor = UIColor.white.cgColor
+        }
     }
     
     func setupRecognizers(){
@@ -179,10 +187,6 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
         self.finishButton.setTitleColor(UIColor.white, for: .disabled)
         self.finishButton.backgroundColor = UIColor.clear
         self.finishButton.isEnabled = false
-        
-        self.finishButton.layer.cornerRadius = self.finishButton.frame.height / 2
-        self.finishButton.clipsToBounds = true
-        self.finishButton.layer.masksToBounds = true
         self.finishButton.layer.borderWidth = 2
         self.finishButton.layer.borderColor = UIColor.white.cgColor
     }

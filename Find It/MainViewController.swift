@@ -49,13 +49,6 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
         setupButton()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        // 1. Change status bar color back to white when moving away from screen
-        UIApplication.shared.statusBarStyle = .default
-    }
-    
     // MARK:- IB Actions
     @IBAction func signInButtonPressed(_ sender: Any) {
         // 1. Change flag since user is signing in

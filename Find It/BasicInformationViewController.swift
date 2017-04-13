@@ -45,6 +45,13 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 1. Change status bar color to white for this screen only
+        UIApplication.shared.statusBarStyle = .lightContent
+    }
+    
     @IBAction func nextButtonPressed(_ sender: Any) {
         // 1. Create local variables of text fields text
         let firstName = firstNameTextField.text
@@ -241,7 +248,7 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         return true
     }
     
-    //MARK:- Utilities for class
+    // MARK:- Utilities for class
     func setupRecognizers(){
         
         // 1. Create a tag screen regonizer

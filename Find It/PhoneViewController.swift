@@ -31,6 +31,13 @@ class PhoneViewController: UIViewController, UITextFieldDelegate {
         // 5. Initiliaze keyboard size functionality
         initializeKeyboardNotifications()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 1. Change status bar color to white for this screen only
+        UIApplication.shared.statusBarStyle = .lightContent
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -143,7 +150,7 @@ class PhoneViewController: UIViewController, UITextFieldDelegate {
     
     func keyboardWillHide(notification: Notification) {
         UIView.animate(withDuration: 0.5) {
-            self.phoneTextFieldBottomConstraint.constant = 120
+            self.phoneTextFieldBottomConstraint.constant = 204
         }
     }
     

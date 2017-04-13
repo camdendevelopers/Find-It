@@ -18,6 +18,7 @@ class ConfirmAddTagViewController: UIViewController {
     @IBOutlet weak var itemDescriptionLabel: UILabel!
     @IBOutlet weak var successView: UIView!
     @IBOutlet weak var itemAddedImageView: UIImageView!
+    @IBOutlet weak var saveButton: UIButton!
     
     // Variables for class
     private var activityIndicator:NVActivityIndicatorView?
@@ -38,6 +39,16 @@ class ConfirmAddTagViewController: UIViewController {
         
         // 3. Setup bars and buttons
         setupBars()
+        
+        // 4. Setup button
+        setupButton()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 1. Change status bar color to white for this screen only
+        UIApplication.shared.statusBarStyle = .lightContent
     }
     
     @IBAction func saveButtonPressed(_ sender: Any) {
@@ -115,7 +126,12 @@ class ConfirmAddTagViewController: UIViewController {
 
     func loadUI(){
         
-        // 1. Update UI with users details from previous page
+        // 1. Make image view rounded
+        self.itemImageView.layer.cornerRadius = 5
+        self.itemImageView.clipsToBounds = true
+        self.itemImageView.layer.masksToBounds = true
+        
+        // 2. Update UI with users details from previous page
         self.itemImageView.image = self.imageInfo?[UIImagePickerControllerOriginalImage] as? UIImage
         self.itemNameLabel.text = itemNameText!
         self.itemDescriptionLabel.text = itemDescriptionText!
@@ -123,13 +139,22 @@ class ConfirmAddTagViewController: UIViewController {
     }
     
     //MARK:- Utilities for class
+    
+    func setupButton(){
+        
+        // 1. Add a radius to button to make it round
+        self.saveButton.layer.cornerRadius = self.saveButton.frame.size.height / 2
+        self.saveButton.clipsToBounds = true
+        self.saveButton.layer.masksToBounds = true
+    }
+    
     func setupActivityIndicator(){
         // 1. Create a frame size for activity indicator
         let height: CGFloat = 60
         let frame = CGRect(x: (self.view.frame.width - height) / 2, y: (self.view.frame.height - height) / 2, width: height, height: height)
         
         // 2. Instantiate the activity indicator
-        self.activityIndicator = NVActivityIndicatorView(frame: frame, type: .ballClipRotatePulse, color: UIColor.white, padding: 0)
+        self.activityIndicator = NVActivityIndicatorView(frame: frame, type: .ballClipRotatePulse, color: kColor4990E2, padding: 0)
         
         // 3. Add it to view
         self.view.addSubview(self.activityIndicator!)
@@ -137,16 +162,17 @@ class ConfirmAddTagViewController: UIViewController {
     
     func setupBars(){
         let leftButton:UIButton = UIButton()
-        leftButton.setImage(UIImage(named: "backward-icon-gray") , for: .normal)
+        leftButton.setImage(UIImage(named: "backward-icon-white") , for: .normal)
         leftButton.addTarget(self, action: #selector(ConfirmAddTagViewController.backPressed), for: UIControlEvents.touchUpInside)
+        leftButton.imageView?.contentMode = .scaleAspectFit
         leftButton.frame = CGRect(x: 0, y: 0, width: 83, height: 30)
         leftButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
         
         let barButton = UIBarButtonItem(customView: leftButton)
         self.navigationItem.leftBarButtonItem = barButton
         
-        navigationController?.navigationBar.barTintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16), NSForegroundColorAttributeName: UIColor(red: 74.0/255.0, green: 74.0/255.0, blue: 74.0/255.0, alpha: 1.0) ]
+        navigationController?.navigationBar.barTintColor = kColor4990E2
+        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
         
     }
     
