@@ -64,17 +64,11 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     // MARK:- Utilities for class
-    func loadProfileImage(withURLString string:String, completion: (_ image: Data) -> Void){
-        if let url = URL(string: string) {
-            if let data = NSData(contentsOf: url) as Data?{
-                completion(data)
-            }
-        }
-    }
     
     func setupBars(){
-        navigationController?.navigationBar.barTintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16), NSForegroundColorAttributeName: UIColor(red: 74.0/255.0, green: 74.0/255.0, blue: 74.0/255.0, alpha: 1.0) ]
+        navigationController?.navigationBar.barTintColor = kColorE3CC00
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
         tabBarController?.tabBar.barTintColor = UIColor.white
     }
     

@@ -18,6 +18,7 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var nextButton: UIButton!
     
+    @IBOutlet weak var lastNameTextFieldBottomConstraint: NSLayoutConstraint!
     // Variables for class
     private var imagePicker =  UIImagePickerController()
     private var imageSelected: UIImage?
@@ -33,6 +34,15 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         // 2. Setup image view
         setupImageView()
         
+        // 3. Setup UI
+        setupUI()
+        
+        // 4. Initiliaze keyboard size functionality
+        initializeKeyboardNotifications()
+        
+        // 5. Setup recognizers
+        setupRecognizers()
+    
     }
     
     @IBAction func nextButtonPressed(_ sender: Any) {
@@ -229,5 +239,74 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
             lastNameTextField.resignFirstResponder()
         }
         return true
+    }
+    
+    //MARK:- Utilities for class
+    func setupRecognizers(){
+        
+        // 1. Create a tag screen regonizer
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(BasicInformationViewController.screenTapped))
+        self.view.addGestureRecognizer(screenTapRecognizer)
+    }
+    
+    func screenTapped(){
+        
+        // 1. If screen is tapped, resign keyboard for all text fields
+        self.firstNameTextField.resignFirstResponder()
+        self.lastNameTextField.resignFirstResponder()
+    }
+    
+    func setupUI(){
+        
+        // 1. Add a radius to button to make it round
+        self.nextButton.layer.cornerRadius = self.nextButton.frame.size.height / 2
+        self.nextButton.clipsToBounds = true
+        self.nextButton.layer.masksToBounds = true
+        
+        /*
+        self.facebookButton.layer.cornerRadius = self.facebookButton.frame.height / 2
+        self.facebookButton.clipsToBounds = true
+        self.facebookButton.layer.masksToBounds = true
+        self.facebookButton.layer.borderWidth = 2
+        self.facebookButton.layer.borderColor = UIColor.white.cgColor
+        */
+    }
+    
+    //Methods for keyboards
+    func initializeKeyboardNotifications(){
+        
+        // 1. Add notification obeservers that will alert app when keyboard displays
+        NotificationCenter.default.addObserver(self, selector: #selector(BasicInformationViewController.keyboardWillShow(notification :)), name:NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(BasicInformationViewController.keyboardWillHide(notification:)), name:NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
+    }
+    
+    func keyboardWillShow(notification: Notification) {
+        
+        // 1. Check that notification dictionary is available
+        if let userInfo = notification.userInfo{
+            
+            // 2. Obtain keyboard size and predictive search height
+            if let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
+                
+                if self.lastNameTextField.frame.maxY > (self.view.frame.height - keyboardSize.height){
+                    // 3. Animate the text fields up
+                    UIView.animate(withDuration: 0.5, animations: {
+                        
+                        // If no predictive search is displayed
+                        if keyboardSize.height == offset.height{
+                            self.lastNameTextFieldBottomConstraint.constant = (keyboardSize.height) - (self.view.frame.height - self.nextButton.frame.origin.y) + 15
+                        }else{
+                            self.lastNameTextFieldBottomConstraint.constant = (keyboardSize.height + offset.height) - (self.view.frame.height - self.nextButton.frame.origin.y) + 15
+                        }
+                    })
+                }
+            }
+        }
+    }
+    
+    func keyboardWillHide(notification: Notification) {
+        UIView.animate(withDuration: 0.5) {
+            self.lastNameTextFieldBottomConstraint.constant = 120
+        }
     }
 }

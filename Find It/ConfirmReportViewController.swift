@@ -114,7 +114,7 @@ class ConfirmReportViewController: UIViewController {
         let frame = CGRect(x: (self.view.frame.width - height) / 2, y: (self.view.frame.height - height) / 2, width: height, height: height)
         
         // 2. Instantiate the activity indicator
-        self.activityIndicator = NVActivityIndicatorView(frame: frame, type: .ballTrianglePath, color: UIColor(red: 255.0/255.0, green: 125.0/255.0, blue: 125.0/255.0, alpha: 1.0), padding: 0)
+        self.activityIndicator = NVActivityIndicatorView(frame: frame, type: .ballClipRotatePulse, color: UIColor.white, padding: 0)
         
         // 3. Add it to view
         self.view.addSubview(self.activityIndicator!)

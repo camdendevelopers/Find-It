@@ -16,6 +16,8 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
     @IBOutlet weak var cityTextField: UITextField!
     @IBOutlet weak var stateTextField: UITextField!
     @IBOutlet weak var finishButton: UIButton!
+    @IBOutlet weak var cityTextFieldBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var stateTextFieldBottomConstraint: NSLayoutConstraint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +29,13 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
         setupRecognizers()
         
         // 3. Setup up button
-        setupButton()
+        //setupButton()
+        
+        // 4. Setup UI
+        setupUI()
+        
+        // 5. Initiliaze keyboard size functionality
+        initializeKeyboardNotifications()
     }
     
     @IBAction func finishButtonPressed(_ sender: Any) {
@@ -84,16 +92,27 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
         
         // 1. Disable the next button if BOTH textfields are empty
         if addressTextField.text?.isEmpty == true || cityTextField.text?.isEmpty == true || stateTextField.text?.isEmpty == true {
-            finishButton.setTitleColor(UIColor(red:0.64, green:0.64, blue:0.64, alpha:1.0), for: .disabled)
-            finishButton.backgroundColor = UIColor(red:0.80, green:0.82, blue:0.82, alpha:1.0)
-            finishButton.isEnabled = false
+            self.finishButton.setTitleColor(UIColor.white, for: .disabled)
+            self.finishButton.backgroundColor = UIColor.clear
+            self.finishButton.isEnabled = false
+            
+            self.finishButton.layer.cornerRadius = self.finishButton.frame.height / 2
+            self.finishButton.clipsToBounds = true
+            self.finishButton.layer.masksToBounds = true
+            self.finishButton.layer.borderWidth = 2
+            self.finishButton.layer.borderColor = UIColor.white.cgColor
         }else{
             
             // 2. If text fields are filled out, then enable the button and change the color
-            finishButton.backgroundColor = UIColor(red: 88.0/255.0, green: 163.0/255.0, blue: 232.0/255.0, alpha: 1.0)
-            finishButton.setTitleColor(UIColor.white, for: .normal)
-            finishButton.isEnabled = true
-        }
+            self.finishButton.backgroundColor = UIColor.white
+            self.finishButton.setTitleColor(kColorFF7D7D, for: .normal)
+            self.finishButton.isEnabled = true
+            
+            self.finishButton.layer.cornerRadius = self.finishButton.frame.height / 2
+            self.finishButton.clipsToBounds = true
+            self.finishButton.layer.masksToBounds = true
+            self.finishButton.layer.borderWidth = 2
+            self.finishButton.layer.borderColor = UIColor.white.cgColor        }
     }
     
     func setupRecognizers(){
@@ -101,6 +120,47 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
         // 1. Create a tag screen regonizer
         let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddressViewController.screenTapped))
         self.view.addGestureRecognizer(screenTapRecognizer)
+    }
+    
+    //Methods for keyboards
+    func initializeKeyboardNotifications(){
+        
+        // 1. Add notification obeservers that will alert app when keyboard displays
+        NotificationCenter.default.addObserver(self, selector: #selector(AddressViewController.keyboardWillShow(notification :)), name:NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(AddressViewController.keyboardWillHide(notification:)), name:NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
+    }
+    
+    func keyboardWillShow(notification: Notification) {
+        
+        // 1. Check that notification dictionary is available
+        if let userInfo = notification.userInfo{
+            
+            // 2. Obtain keyboard size and predictive search height
+            if let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
+                
+                if self.stateTextField.frame.maxY > (self.view.frame.height - keyboardSize.height){
+                    // 3. Animate the text fields up
+                    UIView.animate(withDuration: 0.5, animations: {
+                        
+                        // If no predictive search is displayed
+                        if keyboardSize.height == offset.height{
+                            self.stateTextFieldBottomConstraint.constant = (keyboardSize.height) - (self.view.frame.height - self.finishButton.frame.origin.y) + 15
+                            self.cityTextFieldBottomConstraint.constant = (keyboardSize.height) - (self.view.frame.height - self.finishButton.frame.origin.y) + 15
+                        }else{
+                            self.stateTextFieldBottomConstraint.constant = (keyboardSize.height + offset.height) - (self.view.frame.height - self.finishButton.frame.origin.y) + 15
+                            self.cityTextFieldBottomConstraint.constant = (keyboardSize.height + offset.height) - (self.view.frame.height - self.finishButton.frame.origin.y) + 15
+                        }
+                    })
+                }
+            }
+        }
+    }
+    
+    func keyboardWillHide(notification: Notification) {
+        UIView.animate(withDuration: 0.5) {
+            self.cityTextFieldBottomConstraint.constant = 128
+            self.stateTextFieldBottomConstraint.constant = 128
+        }
     }
     
     // MARK:- Utilities for class
@@ -116,8 +176,31 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
     func setupButton(){
         
         // 1. Set the button to gray  by default and disable
-        finishButton.setTitleColor(UIColor(red:0.64, green:0.64, blue:0.64, alpha:1.0), for: .disabled)
-        finishButton.backgroundColor = UIColor(red:0.80, green:0.82, blue:0.82, alpha:1.0)
-        finishButton.isEnabled = false
+        self.finishButton.setTitleColor(UIColor.white, for: .disabled)
+        self.finishButton.backgroundColor = UIColor.clear
+        self.finishButton.isEnabled = false
+        
+        self.finishButton.layer.cornerRadius = self.finishButton.frame.height / 2
+        self.finishButton.clipsToBounds = true
+        self.finishButton.layer.masksToBounds = true
+        self.finishButton.layer.borderWidth = 2
+        self.finishButton.layer.borderColor = UIColor.white.cgColor
+    }
+    
+    // MARK:- Utilities for class
+    func setupUI(){
+        
+        // 1. Add a radius to button to make it round
+        self.finishButton.layer.cornerRadius = self.finishButton.frame.size.height / 2
+        self.finishButton.clipsToBounds = true
+        self.finishButton.layer.masksToBounds = true
+        
+        /*
+         self.facebookButton.layer.cornerRadius = self.facebookButton.frame.height / 2
+         self.facebookButton.clipsToBounds = true
+         self.facebookButton.layer.masksToBounds = true
+         self.facebookButton.layer.borderWidth = 2
+         self.facebookButton.layer.borderColor = UIColor.white.cgColor
+         */
     }
 }

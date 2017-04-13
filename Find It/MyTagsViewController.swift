@@ -88,8 +88,9 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func setupBars(){
-        navigationController?.navigationBar.barTintColor = UIColor.white
-        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16), NSForegroundColorAttributeName: UIColor(red: 74.0/255.0, green: 74.0/255.0, blue: 74.0/255.0, alpha: 1.0) ]
+        navigationController?.navigationBar.barTintColor = kColor4990E2
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
         tabBarController?.tabBar.barTintColor = UIColor.white
     }
     

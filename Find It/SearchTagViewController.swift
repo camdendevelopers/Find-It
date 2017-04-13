@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 
-class SearchTagViewController: UIViewController {
+class SearchTagViewController: UIViewController, UITextFieldDelegate {
     
     // IBOutlets for class
     @IBOutlet weak var itemSearchTextField: UITextField!
@@ -20,6 +20,12 @@ class SearchTagViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // 2. Setup text fields
+        setupTextFields()
+        
+        // 1. Setup recognizers
+        setupRecognizers()
     }
 
     @IBAction func cancelButtonPressed(_ sender: Any) {
@@ -63,8 +69,36 @@ class SearchTagViewController: UIViewController {
         })
     }
     
+    // MARK:- Text Field Delegate
+    
+    func setupTextFields(){
+        // 1. Set the delegates of the text fields
+        self.itemSearchTextField.delegate = self
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        // 1. If you are at top text field and hit enter, go to the next one
+        if textField == itemSearchTextField{
+            itemSearchTextField.resignFirstResponder()
+        }
+        return true
+    }
+    
+    // MARK:- Utilities for class
+    func setupRecognizers(){
+        
+        // 1. Create a tag screen regonizer
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(SearchTagViewController.screenTapped))
+        self.view.addGestureRecognizer(screenTapRecognizer)
+    }
+    
+    func screenTapped(){
+        
+        // 1. If screen is tapped, resign keyboard for all text fields
+        self.itemSearchTextField.resignFirstResponder()
+    }
+    
     // MARK: - Navigation
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ConfirmReportSegue"{
             if let destinationViewController = segue.destination as? ConfirmReportViewController{
