@@ -17,6 +17,7 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     // Variables for class
     private var reports = [NSDictionary]()
+    private var refreshControl: UIRefreshControl?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,27 +51,53 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         if reports.count != 0{
             let report = reports[row]
+            let createdAt = report["createdAt"] as? String
             let item = report["item"] as? NSDictionary
             let itemID = item?["id"] as? String
             let itemName = item?["name"] as? String
             let itemImageURL = item?["itemImageURL"] as? String
             
-            cell.itemIdentificationLabel.text = itemID!
-            cell.itemNameLabel.text = itemName!
-            
-            cell.itemImageView.layer.cornerRadius = cell.itemImageView.frame.size.height / 2
-            cell.itemImageView.clipsToBounds = true
-            cell.itemImageView.layer.masksToBounds = true
-            
-            cell.itemImageView.sd_setShowActivityIndicatorView(true)
-            cell.itemImageView.sd_setIndicatorStyle(.gray)
-            cell.itemImageView.sd_setImage(with: URL(string: itemImageURL!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.scaleDownLargeImages)
+            DispatchQueue.global(qos: .userInitiated).async {
+                cell.reportedAtLabel.text = Utilities.formatTimestamp(time: createdAt!)
+                
+                DispatchQueue.main.async {
+                    cell.itemIdentificationLabel.text = itemID!
+                    cell.itemNameLabel.text = itemName!
+                    
+                    cell.itemImageView.layer.cornerRadius = cell.itemImageView.frame.size.height / 2
+                    cell.itemImageView.clipsToBounds = true
+                    cell.itemImageView.layer.masksToBounds = true
+                    
+                    cell.itemImageView.sd_setShowActivityIndicatorView(true)
+                    cell.itemImageView.sd_setIndicatorStyle(.gray)
+                    cell.itemImageView.sd_setImage(with: URL(string: itemImageURL!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.scaleDownLargeImages)
+                }
+            }
         }
         
         return cell
     }
     
     // MARK:- Utilities for class
+    
+    func getReports(){
+        
+        // 1. Empty out report array before fetching new one
+        self.reports = []
+        
+        // 2. Call Firebase to retrive all user's tag and add them to the table view
+        DataService.dataService.CURRENT_USER_REF.child("reports").observe(.childAdded, with: { (snapshot) in
+            let report = snapshot.value as! NSDictionary
+            self.reports.insert(report, at: 0)
+            self.reportsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.top)
+        })
+    }
+    
+    func didRefresh(refreshControl: UIRefreshControl){
+        self.getReports()
+        self.reportsTableView.reloadData()
+        self.refreshControl?.endRefreshing()
+    }
     
     func setupBars(){
         navigationController?.navigationBar.barTintColor = kColorE3CC00
@@ -81,13 +108,18 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
     }
     
     func setupTableView(){
+        // 1. Assign the table view delegate
         reportsTableView.dataSource = self
         reportsTableView.delegate = self
         
-        DataService.dataService.CURRENT_USER_REF.child("reports").observe(.childAdded, with: { (snapshot) in
-            let report = snapshot.value as! NSDictionary
-            self.reports.insert(report, at: 0)
-            self.reportsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.top)
-        })
+        // 2. Setup refresh control
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(ReportsViewController.didRefresh), for: .valueChanged)
+        reportsTableView.insertSubview(refreshControl!, at: 0)
+        
+        // 3. Retrive reports from Firebase
+        self.getReports()
+        
+        
     }
 }

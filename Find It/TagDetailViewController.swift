@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 protocol ChangeStatusProtocol {
-    func changeItemStatus()
+    func changeItemStatus(withStatus: String)
 }
 
 class TagDetailViewController: UIViewController {
@@ -26,10 +26,11 @@ class TagDetailViewController: UIViewController {
     var itemName:String?
     var itemDescription:String?
     var itemImage:UIImage?
+    var itemStatus:String?
+    var key:String?
     
     // Variabels for class
     var delegate: ChangeStatusProtocol?
-    var itemDetails:NSDictionary?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,17 +38,17 @@ class TagDetailViewController: UIViewController {
         // 1. Setup labels
         setupLabels()
         
-        // 2. Setup navigation bars
-        setupBars()
-        
-        // 3. Setup image view
+        // 2. Setup image view
         setupImageView()
         
-        // 4. Setup button
+        // 3. Setup button
         setupButton()
         
-        // 5. Setup up recognizers
+        // 4. Setup up recognizers
         setupRecognizers()
+        
+        // 5. Setup bars
+        setupBars()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -55,6 +56,9 @@ class TagDetailViewController: UIViewController {
         
         // 1. Change status bar color to white for this screen only
         UIApplication.shared.statusBarStyle = .lightContent
+        
+        // 2. Setup button if status has changed
+        setupButton()
     }
     
     @IBAction func backButtonPressed(_ sender: Any) {
@@ -64,8 +68,18 @@ class TagDetailViewController: UIViewController {
     }
     
     @IBAction func statusButtonPressed(_ sender: Any) {
+        
         // 1. Call the delegate of this protocol
-        self.delegate?.changeItemStatus()
+        if itemStatus == ItemStatus.okay.rawValue{
+            DataService.dataService.ITEM_REF.child(key!).child("status").setValue(ItemStatus.lost.rawValue)
+            DataService.dataService.CURRENT_USER_REF.child("items").child(key!).child("status").setValue(ItemStatus.lost.rawValue)
+            self.delegate?.changeItemStatus(withStatus: ItemStatus.lost.rawValue)
+        }else{
+            DataService.dataService.ITEM_REF.child(key!).child("status").setValue(ItemStatus.okay.rawValue)
+            DataService.dataService.CURRENT_USER_REF.child("items").child(key!).child("status").setValue(ItemStatus.okay.rawValue)
+            self.delegate?.changeItemStatus(withStatus: ItemStatus.okay.rawValue)
+        }
+        
         
         // 2. Return to previous screen
         _ = self.navigationController?.popViewController(animated: true)
@@ -100,9 +114,15 @@ class TagDetailViewController: UIViewController {
         self.statusButton.clipsToBounds = true
         self.statusButton.layer.masksToBounds = true
         
-        
-        self.statusButton.setTitleColor(UIColor.white, for: .normal)
-        self.statusButton.backgroundColor = kColorFF7D7D
+        if itemStatus! == ItemStatus.okay.rawValue{
+            self.statusButton.setTitle("REPORT AS LOST", for: .normal)
+            self.statusButton.setTitleColor(UIColor.white, for: .normal)
+            self.statusButton.backgroundColor = kColorFF7D7D
+        }else{
+            self.statusButton.setTitle("REPORT AS FOUND", for: .normal)
+            self.statusButton.setTitleColor(UIColor.white, for: .normal)
+            self.statusButton.backgroundColor = kColor4990E2
+        }
     }
     
     func setupLabels(){
@@ -127,7 +147,7 @@ class TagDetailViewController: UIViewController {
         let rightButton:UIButton = UIButton()
         rightButton.setTitle("Save", for: .normal)
         rightButton.addTarget(self, action: #selector(TagDetailViewController.savePressed), for: UIControlEvents.touchUpInside)
-        rightButton.frame = CGRect(x: 0, y: 0, width: 18, height: 18)
+        rightButton.frame = CGRect(x: 0, y: 0, width: 83, height: 30)
         rightButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.right
         
         let rightBarButton = UIBarButtonItem(customView: rightButton)
@@ -142,17 +162,14 @@ class TagDetailViewController: UIViewController {
     }
     
     func savePressed(){
-        //ADD EDIT TAG FUNCTIONALITY
-        
-        /*
         let name = self.itemNameTextField.text
         let description = self.itemDescriptionTextField.text
         
         // 1. Update values if changed
-        DataService.dataService.CURRENT_USER_REF.child("email").setValue(name!)
-        DataService.dataService.CURRENT_USER_REF.child("phone").setValue(description!)
+        DataService.dataService.ITEM_REF.child(key!).child("name").setValue(name!)
+        DataService.dataService.ITEM_REF.child(key!).child("description").setValue(description!)
         
-            self.navigationController?.popViewController(animated: true)
-        */
+        self.navigationController?.popViewController(animated: true)
+        
     }
 }

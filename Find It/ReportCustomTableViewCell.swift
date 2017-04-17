@@ -12,6 +12,7 @@ class ReportCustomTableViewCell: UITableViewCell {
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var itemIdentificationLabel: UILabel!
     @IBOutlet weak var itemImageView: UIImageView!
+    @IBOutlet weak var reportedAtLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -57,9 +57,15 @@ class ConfirmReportViewController: UIViewController {
             let currentUserID = UserDefaults.standard.value(forKey: "uid") as! String
             let date = Date()
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "dd MMM yyyy hh:mm:ss +zzzz"
+            dateFormatter.dateStyle = .full
+            dateFormatter.timeStyle = .full
             let dateString = dateFormatter.string(from: date)
             
+            let itemOwnerID = self.itemInfo?["itemOwner"] as? String
+            let itemKey = self.itemInfo?["key"] as? String
+            
+            DataService.dataService.ITEM_REF.child(itemKey!).child("status").setValue(ItemStatus.found.rawValue)
+            DataService.dataService.USER_REF.child(itemOwnerID!).child("items").child(itemKey!).child("status").setValue(ItemStatus.found.rawValue)
             
             let report:[String:Any] = ["item": self.itemInfo!, "status": "lost", "createdBy": currentUserID, "createdAt": dateString]
             let childUpdates = ["/reports/\(key)": report,

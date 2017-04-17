@@ -72,3 +72,10 @@ let descriptionText2 = "When you find an item, report the ID to notify the owner
 let titleText3 = "FIND LOST ITEM"
 let descriptionText3 = "Get notified of the location of your lost item when it is found"
 
+
+//MARK:- Enums
+enum ItemStatus: String {
+    case okay = "in-possesion"
+    case lost = "lost"
+    case found = "found"
+}

@@ -69,6 +69,37 @@ class Utilities {
         
         return leadingOne + areaCode + prefix + "-" + suffix
     }
+    
+    class func formatTimestamp(time: String) -> String{
+        let formatter = DateFormatter()
+        formatter.timeStyle = .full
+        formatter.dateStyle = .full
+        let date = formatter.date(from: time)
+        let now = Date()
+        let elapsed = now.timeIntervalSince(date!)
+        
+        let minutes = floor(elapsed / 60)
+        let hours = floor(elapsed / (60*60))
+        let days = floor(elapsed / ((60*60)*24))
+        let weeks = floor(elapsed / ((60*60)*24*7))
+        let months = floor(elapsed / ((60*60)*24*7*4))
+        
+        if minutes <= 60 {
+            return ("\(Int(minutes))m")
+        }else if hours <= 24 && hours >= 1{
+            return ("\(Int(hours))h")
+        }else if days <= 31 && days >= 1{
+            return ("\(Int(days))d")
+        }
+        else if weeks <= 4 && weeks >= 1{
+            return ("\(Int(weeks))w")
+        }
+        else if months <= 12 && months >= 1 {
+            return ("\(Int(months))mon")
+        }
+        
+        return ""
+    }
 }
 
 struct ShortCodeGenerator {

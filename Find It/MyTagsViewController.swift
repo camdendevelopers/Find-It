@@ -16,10 +16,9 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var itemsTableView: UITableView!
     
     // Variables for class
-    //private var currentUserID:String?
-    //private var currentUser: FIRDatabaseReference?
     private var didLoad:Bool = false
     private var items = [NSDictionary]()
+    private var refreshControl: UIRefreshControl?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,8 +69,10 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
             cell.itemImageView.layer.masksToBounds = true
             
             // Check if cell is lost or found, and update the status button
-            if itemStatus == "in-possesion" {
+            if itemStatus == ItemStatus.okay.rawValue {
                 cell.statusImageView.image = UIImage(named: "okay-icon")
+            }else if itemStatus == ItemStatus.found.rawValue{
+                cell.statusImageView.image = UIImage(named: "warning-icon")
             }else{
                 cell.statusImageView.image = UIImage(named: "lost-icon")
             }
@@ -80,18 +81,31 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
             cell.itemImageView.sd_setIndicatorStyle(.gray)
             cell.itemImageView.sd_setImage(with: URL(string: itemImageUrl!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.scaleDownLargeImages)
         }
-        
+
         return cell
     }
     
     // MARK:- Utilities for class
     
-    func loadProfileImage(withURLString string:String, completion: (_ image: Data) -> Void){
-        if let url = URL(string: string) {
-            if let data = NSData(contentsOf: url) as Data?{
-                completion(data)
-            }
-        }
+    func getTags(){
+        // 1. Empty out array before fetching new ones
+        self.items = []
+        
+        // 2. Call Firebase to retrieve all user's tag and add them to the table view
+        DataService.dataService.CURRENT_USER_REF.child("items").observe(.childAdded, with: { (snapshot) in
+            
+            // Create item
+            let item = snapshot.value as! NSDictionary
+            
+            // Add item to list
+            self.items.insert(item, at: 0)
+            
+            print(self.items)
+            // Add item to table view
+            self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.right)
+        })
+        
+        self.itemsTableView.reloadData()
     }
     
     func setupBars(){
@@ -102,14 +116,21 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         tabBarController?.tabBar.barTintColor = UIColor.white
     }
     
-    func changeItemStatus() {
+    func changeItemStatus(withStatus: String) {
         
         // 1. Check which cell was tapped
         let selectedIndex = itemsTableView.indexPathForSelectedRow
         let cell = itemsTableView.cellForRow(at: selectedIndex!) as! TagCustomTableViewCell
         
         // 2. Update that specific cell's status button
-        cell.statusImageView.image = UIImage(named: "lost-icon")
+        if withStatus == ItemStatus.okay.rawValue {
+            cell.statusImageView.image = UIImage(named: "okay-icon")
+        }else{
+            cell.statusImageView.image = UIImage(named: "lost-icon")
+        }
+        
+        // 3. Reload data to update values visually
+        self.getTags()
     }
     
     func setupTableView(){
@@ -118,19 +139,18 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         self.itemsTableView.delegate = self
         self.itemsTableView.dataSource = self
         
-        // 2. Call Firebase to retrieve all user's tag and add them to the table view
-        DataService.dataService.CURRENT_USER_REF.child("items").observe(.childAdded, with: { (snapshot) in
-            
-            // Create item
-            let item = snapshot.value as! NSDictionary
-            
-            
-            // Add item to list
-            self.items.insert(item, at: 0)
-            
-            // Add item to table view
-            self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.top)
-        })
+        // 2. Setup refresh control
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: #selector(MyTagsViewController.didRefresh), for: .valueChanged)
+        itemsTableView.insertSubview(refreshControl!, at: 0)
+        
+        // 3. Retrive tags from Firebase
+        self.getTags()
+    }
+    
+    func didRefresh(refreshControl: UIRefreshControl){
+        self.getTags()
+        self.refreshControl?.endRefreshing()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -143,12 +163,13 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
             
             if let destinationViewController = segue.destination as? TagDetailViewController{
                 
-                //destinationViewController.itemDetails = self.items[selectedRow!]
                 destinationViewController.delegate = self
                 destinationViewController.itemID = item["id"] as? String
                 destinationViewController.itemName = item["name"] as? String
                 destinationViewController.itemImage = cell.itemImageView.image
                 destinationViewController.itemDescription = item["description"] as? String
+                destinationViewController.key = item["key"] as? String
+                destinationViewController.itemStatus = item["status"] as? String
             }
         }
     }

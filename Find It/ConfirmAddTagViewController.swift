@@ -72,15 +72,16 @@ class ConfirmAddTagViewController: UIViewController {
         let itemDescription = itemDescriptionLabel.text
         var itemID = ShortCodeGenerator.getCode(length: 6)
         
+        
         // 3. Check database to make sure no duplicate tags, else create new one
-        DataService.dataService.ITEM_REF.observe(.value, with: { (snapshot) in
-            if let databaseItems = snapshot.value as? [NSDictionary]{
-                for databaseItem in databaseItems{
-                    let databaseItemIDString = databaseItem["id"] as! String
-                    
-                    if itemID == databaseItemIDString {
-                        itemID = ShortCodeGenerator.getCode(length: 6)
-                    }
+        let itemsQuery = DataService.dataService.ITEM_REF.queryOrdered(byChild: "id").queryEqual(toValue: itemID)
+        
+        itemsQuery.observeSingleEvent(of: .value, with: { (snapshot) in
+            
+            // Extract the data from the retrieved snapshot
+            if let result = snapshot.value as? NSDictionary {
+                if result.count != 0{
+                    itemID = ShortCodeGenerator.getCode(length: 6)
                 }
             }
         })
@@ -102,10 +103,10 @@ class ConfirmAddTagViewController: UIViewController {
                     return
                 }else{
                     let imageURL = (metadata?.downloadURL()?.absoluteString)!
-                    let item = ["status": "in-possesion", "id": itemID, "name": itemName!, "description": itemDescription!, "itemImageURL": imageURL, "itemOwner": userID]
+                    let item = ["status": ItemStatus.okay.rawValue, "id": itemID, "name": itemName!, "description": itemDescription!, "itemImageURL": imageURL, "itemOwner": userID, "key": key]
                     let childUpdates = ["/items/\(key)": item,
                                         "/users/\(userID)/items/\(key)/": item]
-                    
+            
                     DataService.dataService.BASE_REF.updateChildValues(childUpdates)
                 }
             }
