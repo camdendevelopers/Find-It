@@ -37,6 +37,11 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         UIApplication.shared.statusBarStyle = .lightContent
     }
     
+    override func didReceiveMemoryWarning() {
+        SDImageCache.shared().clearMemory()
+        SDImageCache.shared().clearDisk()
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -91,21 +96,35 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         // 1. Empty out array before fetching new ones
         self.items = []
         
+        
         // 2. Call Firebase to retrieve all user's tag and add them to the table view
         DataService.dataService.CURRENT_USER_REF.child("items").observe(.childAdded, with: { (snapshot) in
             
             // Create item
             let item = snapshot.value as! NSDictionary
             
-            // Add item to list
-            self.items.insert(item, at: 0)
-            
-            print(self.items)
-            // Add item to table view
-            self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.right)
+            // Add item to list only if item not in list
+            if self.isItemInArray(item: item, array: self.items) == false{
+                self.items.insert(item, at: 0)
+                
+                // Add item to table view
+                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.right)
+            }
         })
-        
         self.itemsTableView.reloadData()
+ 
+    }
+    
+    private func isItemInArray(item: NSDictionary, array: [NSDictionary]) -> Bool{
+        var result:Bool = false
+        
+        for dict in array{
+            if item == dict{
+                result = true
+            }
+        }
+        
+        return result
     }
     
     func setupBars(){

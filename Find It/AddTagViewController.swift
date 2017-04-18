@@ -141,7 +141,9 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerControllerSourceType.camera))
         {
             imagePicker.sourceType = UIImagePickerControllerSourceType.camera
-            self .present(imagePicker, animated: true, completion: nil)
+            imagePicker.cameraCaptureMode = .photo
+            imagePicker.modalPresentationStyle = .fullScreen
+            self.present(imagePicker, animated: true, completion: nil)
         }
         else
         {
