@@ -1,8 +1,6 @@
-# Alpha - Find It
+# Beta - Find It
 
  Find It is an application that allows users to create unique identifiers for their items and update them with their current contact information in the event that they are lost. People lose their things everyday by leaving them behind or misplacing them. While kind-hearted people might want to help return those items, it often is difficult because there is no way of identifying an owner or trust anyone who says it’s theirs. With Find It, you can always guarantee the ownership of an item because of the unique ID of the item and the verification of an item before you interact with anyone.
-
-Time spent: 20 hours spent in total
 
 ## Implementation Contributions
 Marcos Ortiz: 33.33%
@@ -16,7 +14,7 @@ Susan Seo: 33.33%
  - Tab bar implementation
 
 Jacob Rodenbusch: 33.33%
- - My tags table view controller
+ - My Reports table view controller
  - Detail screen that shows tag details
  - Settings page
 
@@ -24,7 +22,7 @@ Jacob Rodenbusch: 33.33%
  Same grade for all members
 
 ## Differences
-None
+ Map view and related functions removed because we thought the added benefit would be minimal and unnecessary. The address from the reporting user should be enough to find the item.
 
 ## User Stories
 
@@ -34,11 +32,16 @@ The following **required** functionality is completed:
 - [X] Profile creation and modification flow
 - [X] Tab bar embedded to provide navigation to multiple screens
 - [X] Settings page
+- [X] Tag creation and search capabilities
+- [X] Lost/Found reporting of tags
 
 The following **additional** features are implemented:
 
 - [X] Added Firebase
 - [X] Tag creation flow
+- [X] Asynchronous loading of item images
+- [X] Tutorial screens before sign-in
+- [X] Persistence of user log-in credentials between loads
 
 ## Important Messages
 
@@ -52,8 +55,37 @@ The following **additional** features are implemented:
   - Quit Xcode and open terminal
   - CD to your project folder and reinstall pods using 'pod install'
   
-2. Firebase offers a storage SDK to upload and download images. It's a time consuming process and we have not yet optimized it. As a result, you will not be able to see your tag's image in the table view when the app loads. WILL BE COMING IN BETA. However, feel free to use the image picker when you add a tag.
+2. You can create an account of your own if you like but we have two example accounts with registered items if you would rather use those. Also we recommend you use these users if you want to try the "Reporting functionality"
 
+    User 1: Micah Drennan
+    Address: 123 Swift Lane
+             San Antonio, TX
+    Phone: 210-478-9673
+    email: first@gmail.com
+    password: password
+
+        Item 1 ID: WHL227
+        Item name: iPhone 6 Plus
+        Description: Black with light wear on the sides
+
+        Item 2 ID: HYO099
+        Item name: Osprey Backpack
+        Description: Green with name patch on the left side
+
+    User 2: Sofia Castillo
+    Address: 456 Fast Street
+             Austin, TX
+    Phone: 210-478-9671
+    email: second@gmail.com
+    password: password
+
+        Item 1 ID: VKF459
+        Item name: Soundlink III
+        Description: Gray with name on back
+
+        Item 2 ID: DOR504
+        Item name: Audio-Technica Earphones
+        Description: Brown with light scuff marks
 
 ## Video Walkthrough
 
