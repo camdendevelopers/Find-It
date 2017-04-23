@@ -20,6 +20,10 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
     private var items = [NSDictionary]()
     private var refreshControl: UIRefreshControl?
     
+    private let tableViewHeaderTitles = ["LOST ITEMS", "FOUND ITEMS"]
+    private var lostItems = [NSDictionary]()
+    private var foundItems = [NSDictionary]()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,11 +47,40 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return tableViewHeaderTitles.count
     }
     
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        switch section {
+        case TableViewSections.lost.rawValue:
+            return tableViewHeaderTitles[TableViewSections.lost.rawValue]
+        default:
+            return tableViewHeaderTitles[TableViewSections.found.rawValue]
+        }
+    }
+ 
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        guard let header = view as? UITableViewHeaderFooterView else { return }
+        header.textLabel?.textColor = kColor4A4A4A
+        header.textLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 12)
+        //header.textLabel?.font = UIFont.boldSystemFont(ofSize: 10)
+        header.textLabel?.frame = header.frame
+        header.textLabel?.textAlignment = .left
+    }
+ 
+ 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        
+        switch section {
+        case TableViewSections.lost.rawValue:
+            return self.lostItems.count
+        case TableViewSections.found.rawValue:
+            return self.foundItems.count
+        default:
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -55,10 +88,21 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         let row = indexPath.row
         
         // 1. Check if there are items on the list
-        if items.count != 0 {
+        if lostItems.count != 0 || foundItems.count != 0 {
+            var item:NSDictionary = [:]
+            
+            switch indexPath.section {
+            case TableViewSections.lost.rawValue:
+                item = lostItems[row]
+            case TableViewSections.found.rawValue:
+                item = foundItems[row]
+            default:
+                print("FUCK")
+            }
+            
             
             // 2. Create local item variable
-            let item = items[row]
+            //let item = items[row]
             let itemID = item["id"] as? String
             let itemName = item["name"] as? String
             let itemStatus = item["status"] as? String
@@ -85,16 +129,61 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
             cell.itemImageView.sd_setShowActivityIndicatorView(true)
             cell.itemImageView.sd_setIndicatorStyle(.gray)
             cell.itemImageView.sd_setImage(with: URL(string: itemImageUrl!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.scaleDownLargeImages)
+ 
         }
 
         return cell
+    }
+    
+    // Override to support conditional editing of the table view.
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        
+        return true
+    }
+    
+    // Override to support editing the table view.
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let selectedSection = indexPath.section
+            let selectedRow = indexPath.row
+            var item:NSDictionary = [:]
+            
+            switch selectedSection {
+            case TableViewSections.lost.rawValue:
+                item = self.lostItems[selectedRow]
+            default:
+                item = self.foundItems[selectedRow]
+            }
+            
+            let itemKey = item["key"] as! String
+            DispatchQueue.global(qos: .userInitiated).async {
+                
+                DataService.dataService.ITEM_REF.child(itemKey).removeValue()
+                DataService.dataService.CURRENT_USER_REF.child("items").child(itemKey).removeValue()
+               
+                // 5. Meanwhile in the main thread
+                DispatchQueue.main.async {
+                    
+                    // Delete the row from the data source
+                    switch selectedSection {
+                    case TableViewSections.lost.rawValue:
+                        self.lostItems.remove(at: selectedRow)
+                    default:
+                        self.foundItems.remove(at: selectedRow)
+                    }
+                    
+                    tableView.deleteRows(at: [indexPath], with: .fade)
+                }
+            }
+        }
     }
     
     // MARK:- Utilities for class
     
     func getTags(){
         // 1. Empty out array before fetching new ones
-        self.items = []
+        self.lostItems = []
+        self.foundItems = []
         
         
         // 2. Call Firebase to retrieve all user's tag and add them to the table view
@@ -102,13 +191,14 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
             
             // Create item
             let item = snapshot.value as! NSDictionary
+            let status = item["status"] as! String
             
-            // Add item to list only if item not in list
-            if self.isItemInArray(item: item, array: self.items) == false{
-                self.items.insert(item, at: 0)
-                
-                // Add item to table view
-                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.right)
+            if status == ItemStatus.lost.rawValue && self.isItemInArray(item: item, array: self.lostItems) == false{
+                self.lostItems.insert(item, at: 0)
+                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: TableViewSections.lost.rawValue)], with: UITableViewRowAnimation.middle)
+            }else if status == ItemStatus.okay.rawValue && self.isItemInArray(item: item, array: self.foundItems) == false{
+                self.foundItems.insert(item, at: 0)
+                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: TableViewSections.found.rawValue)], with: UITableViewRowAnimation.middle)
             }
         })
         self.itemsTableView.reloadData()
@@ -174,11 +264,20 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "TagDetailSegue"{
+            self.tabBarController?.tabBar.isHidden = true
             let selectedIndex = itemsTableView.indexPathForSelectedRow!
+            let selectedSection = selectedIndex.section
             let selectedRow = selectedIndex.row
             let cell = itemsTableView.cellForRow(at: selectedIndex) as! TagCustomTableViewCell
-            let item = self.items[selectedRow]
-            self.tabBarController?.tabBar.isHidden = true
+            //let item = self.items[selectedRow]
+            var item:NSDictionary = [:]
+            
+            switch selectedSection {
+            case TableViewSections.lost.rawValue:
+                item = self.lostItems[selectedRow]
+            default:
+                item = self.foundItems[selectedRow]
+            }
             
             if let destinationViewController = segue.destination as? TagDetailViewController{
                 

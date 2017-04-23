@@ -18,6 +18,7 @@ class ConfirmReportViewController: UIViewController {
     @IBOutlet weak var itemDescriptionLabel: UILabel!
     @IBOutlet weak var successView: UIView!
     @IBOutlet weak var tagReportedImageView: UIImageView!
+    @IBOutlet weak var reportButton: UIButton!
     
     // Variables for class
     private var activityIndicator:NVActivityIndicatorView?
@@ -37,6 +38,9 @@ class ConfirmReportViewController: UIViewController {
         
         // 4. Setup image view
         setupImageView()
+        
+        // 5. Setup button
+        setupButton()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -67,7 +71,7 @@ class ConfirmReportViewController: UIViewController {
             DataService.dataService.ITEM_REF.child(itemKey!).child("status").setValue(ItemStatus.found.rawValue)
             DataService.dataService.USER_REF.child(itemOwnerID!).child("items").child(itemKey!).child("status").setValue(ItemStatus.found.rawValue)
             
-            let report:[String:Any] = ["item": self.itemInfo!, "status": "lost", "createdBy": currentUserID, "createdAt": dateString]
+            let report:[String:Any] = ["item": self.itemInfo!, "status": "lost", "createdBy": currentUserID, "createdAt": dateString, "key": key]
             let childUpdates = ["/reports/\(key)": report,
                                 "/users/\(currentUserID)/reports/\(key)/": report]
             
@@ -130,6 +134,13 @@ class ConfirmReportViewController: UIViewController {
         self.itemImageView.layer.cornerRadius = 5
         self.itemImageView.clipsToBounds = true
         self.itemImageView.layer.masksToBounds = true
+    }
+    
+    func setupButton(){
+        // 1. Add a radius to button to make it round
+        self.reportButton.layer.cornerRadius = self.reportButton.frame.size.height / 2
+        self.reportButton.clipsToBounds = true
+        self.reportButton.layer.masksToBounds = true
     }
     
     func setupBars(){

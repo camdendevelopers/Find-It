@@ -79,3 +79,8 @@ enum ItemStatus: String {
     case lost = "lost"
     case found = "found"
 }
+
+enum TableViewSections: Int {
+    case lost = 0
+    case found = 1
+}
