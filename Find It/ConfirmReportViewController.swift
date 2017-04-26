@@ -68,13 +68,15 @@ class ConfirmReportViewController: UIViewController {
             let itemOwnerID = self.itemInfo?["itemOwner"] as? String
             let itemKey = self.itemInfo?["key"] as? String
             
-            DataService.dataService.ITEM_REF.child(itemKey!).child("status").setValue(ItemStatus.found.rawValue)
-            DataService.dataService.USER_REF.child(itemOwnerID!).child("items").child(itemKey!).child("status").setValue(ItemStatus.found.rawValue)
+            
             
             let report:[String:Any] = ["item": self.itemInfo!, "status": "lost", "createdBy": currentUserID, "createdAt": dateString, "key": key]
             let childUpdates = ["/reports/\(key)": report,
                                 "/users/\(currentUserID)/reports/\(key)/": report]
             
+            DataService.dataService.ITEM_REF.child(itemKey!).child("status").setValue(ItemStatus.found.rawValue)
+            DataService.dataService.USER_REF.child(itemOwnerID!).child("items").child(itemKey!).child("status").setValue(ItemStatus.found.rawValue)
+            DataService.dataService.USER_REF.child(itemOwnerID!).child("items").child(itemKey!).child("report").setValue(report)
             DataService.dataService.BASE_REF.updateChildValues(childUpdates)
             
             // 3. Meanwhile in the main thread

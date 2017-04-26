@@ -56,6 +56,7 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
             let itemID = item?["id"] as? String
             let itemName = item?["name"] as? String
             let itemImageURL = item?["itemImageURL"] as? String
+            let reportStatus = report["status"] as? String
             
             DispatchQueue.global(qos: .userInitiated).async {
                 cell.reportedAtLabel.text = Utilities.formatTimestamp(time: createdAt!)
@@ -63,6 +64,18 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
                 DispatchQueue.main.async {
                     cell.itemIdentificationLabel.text = itemID!
                     cell.itemNameLabel.text = itemName!
+                    
+                    if reportStatus! == "lost"{
+                        cell.reportStatusLabel.text = "REPORTED"
+                        cell.reportStatusLabel.backgroundColor = kColorFF7D7D
+                    }else{
+                        cell.reportStatusLabel.text = "RETURNED"
+                        cell.reportStatusLabel.backgroundColor = kColor4990E2
+                    }
+                    
+                    cell.reportStatusLabel.layer.cornerRadius = 2
+                    cell.reportStatusLabel.clipsToBounds = true
+                    cell.reportStatusLabel.layer.masksToBounds = true
                     
                     cell.itemImageView.layer.cornerRadius = cell.itemImageView.frame.size.height / 2
                     cell.itemImageView.clipsToBounds = true

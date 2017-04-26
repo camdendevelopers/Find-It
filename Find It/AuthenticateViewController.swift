@@ -15,7 +15,7 @@ import NVActivityIndicatorView
 
 class AuthenticateViewController: UIViewController, UITextFieldDelegate {
     
-    // IBOutlets for class
+    // MARK:- IBOutlets for class
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var emailUnderlineView: UIView!
     @IBOutlet weak var passwordTextField: UITextField!
@@ -27,11 +27,12 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordDescriptionLabel: UILabel!
     @IBOutlet weak var passwordTextFieldBottomConstraint: NSLayoutConstraint!
     
-    // Variables for class
+    // MARK:- Variables for class
     var activityIndicator:NVActivityIndicatorView?
     var isSignUp:Bool?
     var isFacebookAuth:Bool?
     
+    // MARK:- Loading method calls
     override func viewDidLoad() {
         super.viewDidLoad()
         // 1. Setup activity indicator 
@@ -331,6 +332,7 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
         // 1. Call Firebase server to perform authentication through Facebook
         
         DataService.dataService.FBAUTH_REF.logIn([ReadPermission.publicProfile,ReadPermission.email, ReadPermission.userFriends], viewController: self) { loginResult in
+            
             switch loginResult {
                 
             case .failed(let error):

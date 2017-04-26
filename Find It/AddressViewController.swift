@@ -11,14 +11,15 @@ import Firebase
 
 class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    // IBOutlets for class
+    // MARK:- IBOutlets for class
     @IBOutlet weak var addressTextField: UITextField!
     @IBOutlet weak var cityTextField: UITextField!
     @IBOutlet weak var stateTextField: UITextField!
     @IBOutlet weak var finishButton: UIButton!
     @IBOutlet weak var cityTextFieldBottomConstraint: NSLayoutConstraint!
     @IBOutlet weak var stateTextFieldBottomConstraint: NSLayoutConstraint!
-
+    
+    // MARK:- Loading method calls
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,6 +46,18 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
         UIApplication.shared.statusBarStyle = .lightContent
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // 1. Change status bar color back to white when moving away from screen
+        UIApplication.shared.statusBarStyle = .default
+        
+        // 2. Remove observers for keyboard
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+    }
+    
+    // MARK:- IBActions for class
     @IBAction func finishButtonPressed(_ sender: Any) {
         
         // 1. Create local variables for each input entered
@@ -198,13 +211,5 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
         self.finishButton.layer.cornerRadius = self.finishButton.frame.size.height / 2
         self.finishButton.clipsToBounds = true
         self.finishButton.layer.masksToBounds = true
-        
-        /*
-         self.facebookButton.layer.cornerRadius = self.facebookButton.frame.height / 2
-         self.facebookButton.clipsToBounds = true
-         self.facebookButton.layer.masksToBounds = true
-         self.facebookButton.layer.borderWidth = 2
-         self.facebookButton.layer.borderColor = UIColor.white.cgColor
-         */
     }
 }

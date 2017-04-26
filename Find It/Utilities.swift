@@ -100,6 +100,19 @@ class Utilities {
         
         return ""
     }
+    
+    class func isItemInArray(item: NSDictionary, array: [NSDictionary]) -> Bool{
+        
+        var result:Bool = false
+        
+        for dict in array{
+            if item == dict{
+                result = true
+            }
+        }
+        
+        return result
+    }
 }
 
 struct ShortCodeGenerator {

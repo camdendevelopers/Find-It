@@ -54,7 +54,7 @@ The following **additional** features are implemented:
   - Deleting the "Pods" folder with your current workspace open
   - Quit Xcode and open terminal
   - CD to your project folder and reinstall pods using 'pod install'
-
+  
 2. You can create an account of your own if you like but we have two example accounts with registered items if you would rather use those. Also we recommend you use these users if you want to try the "Reporting functionality"
 
     User 1: Micah Drennan

@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
-    // Declare IBOutlets
+    // MARK:- Declare IBOutlets
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemNameTextField: UITextField!
     @IBOutlet weak var itemDescriptionTextField: UITextField!
@@ -18,11 +18,12 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     @IBOutlet weak var addItemPlaceholderImageView: UIImageView!
     @IBOutlet weak var itemDescriptionTextFieldBottomConstraint: NSLayoutConstraint!
     
-    //Declare Variables
+    // MARK:- Declare Variables
     private var imagePicker =  UIImagePickerController()
     private var imageSelected: UIImage?
     private var imageInfo: [String: AnyObject]?
-
+    
+    // MARK:- Loading method calls
     override func viewDidLoad() {
         super.viewDidLoad()
         // 1. Setup text fields
@@ -49,6 +50,17 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         
         // 1. Change status bar color to white for this screen only
         UIApplication.shared.statusBarStyle = .lightContent
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // 1. Change status bar color back to white when moving away from screen
+        UIApplication.shared.statusBarStyle = .default
+        
+        // 2. Remove observers for keyboard
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     // MARK:- IBActions
@@ -82,7 +94,7 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         self.itemImageView.clipsToBounds = true
         self.itemImageView.layer.masksToBounds = true
         
-        // 1. Create a reconizer for image
+        // 2. Create a reconizer for image
         let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddTagViewController.imageViewTapped))
         itemImageView.isUserInteractionEnabled = true
         itemImageView.addGestureRecognizer(tapImageRecognizer)
@@ -284,6 +296,8 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     }
     
     func setupBars(){
+        
+        // 1. Change navigation controller background color and alpha
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.isOpaque = true
         

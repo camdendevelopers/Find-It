@@ -9,10 +9,13 @@
 import UIKit
 
 class PhoneViewController: UIViewController, UITextFieldDelegate {
+    
+    // MARK:- IBOutlets for class
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var phoneTextField: UITextField!
     @IBOutlet weak var phoneTextFieldBottomConstraint: NSLayoutConstraint!
-
+    
+    // MARK:- Loading method calls
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -39,11 +42,18 @@ class PhoneViewController: UIViewController, UITextFieldDelegate {
         UIApplication.shared.statusBarStyle = .lightContent
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // 1. Change status bar color back to white when moving away from screen
+        UIApplication.shared.statusBarStyle = .default
+        
+        // 2. Remove observers for keyboard
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
+    // MARK:- IBActions for class
     @IBAction func backButtonPressed(_ sender: Any) {
         _ = self.navigationController?.popViewController(animated: true)
     }
@@ -161,14 +171,6 @@ class PhoneViewController: UIViewController, UITextFieldDelegate {
         self.nextButton.layer.cornerRadius = self.nextButton.frame.size.height / 2
         self.nextButton.clipsToBounds = true
         self.nextButton.layer.masksToBounds = true
-        
-        /*
-         self.facebookButton.layer.cornerRadius = self.facebookButton.frame.height / 2
-         self.facebookButton.clipsToBounds = true
-         self.facebookButton.layer.masksToBounds = true
-         self.facebookButton.layer.borderWidth = 2
-         self.facebookButton.layer.borderColor = UIColor.white.cgColor
-         */
     }
     
     func screenTapped(){

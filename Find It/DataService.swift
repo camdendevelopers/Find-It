@@ -34,26 +34,4 @@ class DataService {
         // A User is born.
         USER_REF.child(uid).setValue(user)
     }
-    
-    func createNewTag(tag: Dictionary<String, AnyObject>) {
-        // Save the Tag
-        // ITEM_REF is the parent of the new Tag: "tags".
-        // childByAutoId() saves the joke and gives it its own ID.
-        
-        let firebaseNewTag = ITEM_REF.childByAutoId()
-        
-        // setValue() saves to Firebase.
-        firebaseNewTag.setValue(tag)
-    }
-    
-    func createNewReport(report: Dictionary<String, AnyObject>){
-        // Save the Event
-        // REPORT_REF is the parent of the new Post: "reports".
-        // childByAutoId() saves the joke and gives it its own ID.
-        
-        let firebaseNewReport = REPORT_REF.childByAutoId()
-        
-        // setValue() saves to Firebase.
-        firebaseNewReport.setValue(report)
-    }
 }

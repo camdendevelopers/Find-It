@@ -59,6 +59,7 @@ let kColor87BEFE = UIColor(red: 135.0/255.0, green: 190.0/255.0, blue: 254.0/255
 let kColorFDBFBF = UIColor(red: 253.0/255.0, green: 191.0/255.0, blue: 191.0/255.0, alpha: 1.0)
 let kColor9B9B9B = UIColor(red: 155.0/255.0, green: 155.0/255.0, blue: 155.0/255.0, alpha: 1.0)
 let kColor4A4A4A = UIColor(red: 74.0/255.0, green: 74.0/255.0, blue: 74.0/255.0, alpha: 1.0)
+let kColorD8D8D8 = UIColor(red: 216.0/255.0, green: 216.0/255.0, blue: 216.0/255.0, alpha: 1.0)
 
 let titleText0 = "TAG YOUR ITEM"
 let descriptionText0 = "Get a unique ID and attach it to an item, and link it in the app"

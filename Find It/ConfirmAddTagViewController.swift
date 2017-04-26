@@ -12,7 +12,7 @@ import NVActivityIndicatorView
 
 class ConfirmAddTagViewController: UIViewController {
     
-    // IBOutlets for class
+    // MARK:- IBOutlets for class
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var itemDescriptionLabel: UILabel!
@@ -20,7 +20,7 @@ class ConfirmAddTagViewController: UIViewController {
     @IBOutlet weak var itemAddedImageView: UIImageView!
     @IBOutlet weak var saveButton: UIButton!
     
-    // Variables for class
+    // MARK:- Variables for class
     private var activityIndicator:NVActivityIndicatorView?
     
     var itemNameText:String?
@@ -28,6 +28,7 @@ class ConfirmAddTagViewController: UIViewController {
     var itemImage:UIImage?
     var imageInfo:[String : AnyObject]?
     
+    // MARK:- Loading method calls
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -52,15 +53,6 @@ class ConfirmAddTagViewController: UIViewController {
     }
     
     @IBAction func saveButtonPressed(_ sender: Any) {
-        /*
-         let imageUrl          = self.imageInfo?[UIImagePickerControllerReferenceURL] as! NSURL
-         let imageName         = imageUrl.lastPathComponent
-         let documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
-         let photoURL          = NSURL(fileURLWithPath: documentDirectory)
-         let localPath         = photoURL.appendingPathComponent(imageName!)
-         let image             = self.imageInfo?[UIImagePickerControllerOriginalImage]as! UIImage
-         let data              = UIImagePNGRepresentation(image)
-         */
         
         // 1. Block user interaction and show indicator
         self.view.isUserInteractionEnabled = false

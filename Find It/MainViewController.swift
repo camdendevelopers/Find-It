@@ -13,13 +13,25 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
     
     // MARK:- Class variables
     private var isSignUp:Bool?
-    private var currentIndex = 0
+    private var currentIndex:Int = 0
     private var pageViewController:UIPageViewController?
-    private var pageTitles:[String] = [titleText0, titleText1, titleText2, titleText3]
-    private var pageColors:[UIColor] = [kColor4990E2,kColorFF7D7D,kColorE3CC00,kColor4990E2]
-    private var pageDescriptions:[String] = [descriptionText0, descriptionText1, descriptionText2, descriptionText3]
-    private var backgroundImageNames:[String] = ["tutorial-icon-0","tutorial-icon-1","tutorial-icon-2","tutorial-icon-3"]
     
+    fileprivate(set) lazy var pageTitles:[String] = {
+        return [titleText0, titleText1, titleText2, titleText3]
+    }()
+    
+    fileprivate(set) lazy var pageColors:[UIColor] = {
+        return [kColor4990E2,kColorFF7D7D,kColorE3CC00,kColor4990E2]
+    }()
+    
+    fileprivate(set) lazy var pageDescriptions:[String] = {
+        return [descriptionText0, descriptionText1, descriptionText2, descriptionText3]
+    }()
+    
+    fileprivate(set) lazy var backgroundImageNames:[String] = {
+        return ["tutorial-icon-0","tutorial-icon-1","tutorial-icon-2","tutorial-icon-3"]
+    }()
+
     fileprivate(set) lazy var orderedViewControllers: [UIViewController] = {
         return [self.newTutorialViewController(0),
                 self.newTutorialViewController(1),
