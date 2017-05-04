@@ -154,16 +154,10 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
         // 1. Set this flag to prepare app to register user through Email
         self.isFacebookAuth = false
         
-        // 2. Check that user has entered text in text fields
-        guard emailTextField.text != "", passwordTextField.text != "" else{
-            self.present(Utilities.showErrorAlert(inDict: ["title": "Error Signing In", "message": "Make sure to fill out both fields"]), animated: true, completion: nil)
-            return
-        }
-        
-        // 3. Show progress indicator while checking
+        // 2. Show progress indicator while checking
         activityIndicator?.startAnimating()
  
-        // 4. Perform Firebase authentication depending on user selction
+        // 3. Perform Firebase authentication depending on user selction
         if isSignUp == true{
             performFirebaseSignUp()
         }else{
@@ -175,23 +169,26 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
     private func performFirebaseSignIn(){
         
         // 1.Create local variables with text from text fields
-        let email = emailTextField.text!
-        let password = passwordTextField.text!
+        let email = emailTextField.text
+        let password = passwordTextField.text
         
         // 2. Check there is network connection
         guard Reachability.isConnectedToNetwork() == true else {
             print("Internet connection FAILED")
+            self.activityIndicator?.stopAnimating()
             present(Utilities.showErrorAlert(inDict: noNetworkConnection), animated: true, completion: nil)
             return
         }
         
         // 4. Check that user has entered text in both text fields
         guard email != "", password != "" else {
+            self.activityIndicator?.stopAnimating()
+             self.present(Utilities.showErrorAlert(inDict: ["title": "Error Signing In", "message": "Make sure to fill out both fields"]), animated: true, completion: nil)
             return
         }
         
         // 4. Call Firebase server to create a user with provided information
-        DataService.dataService.AUTH_REF.signIn(withEmail: email, password: password) { (user, error) in
+        DataService.dataService.AUTH_REF.signIn(withEmail: email!, password: password!) { (user, error) in
             
             // 5. Check if error exists
             if let errorCode = (error as NSError?)?.code{
@@ -234,26 +231,32 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
     
     private func performFirebaseSignUp(){
         // 1.Create local variables with text from text fields
-        let email = emailTextField.text!
-        let password = passwordTextField.text!
+        let email = emailTextField.text
+        let password = passwordTextField.text
         
         // 2. Check there is network connection
         guard Reachability.isConnectedToNetwork() == true else {
             print("Internet connection FAILED")
+            self.activityIndicator?.stopAnimating()
             present(Utilities.showErrorAlert(inDict: noNetworkConnection), animated: true, completion: nil)
             return
         }
         
-        // 3.Check if all the entered information is valid from text fields
-
         guard email != "", password != "" else {
             self.activityIndicator?.stopAnimating()
-            present(Utilities.showErrorAlert(inDict: ["title": "Couldn't Create Account", "message": "You entered something wrong"]), animated: true, completion: nil)
+            present(Utilities.showErrorAlert(inDict: ["title": "Couldn't Create Account", "message": "Fields cannot be left blank"]), animated: true, completion: nil)
+            return
+        }
+        
+        // 3.Check if all the entered information is valid from text fields
+        guard Utilities.isValidEmail(string: email!) == true, Utilities.isValidPassword(string: password!) == true else {
+            self.activityIndicator?.stopAnimating()
+            present(Utilities.showErrorAlert(inDict: ["title": "Couldn't Create Account", "message": "Invalid email or password"]), animated: true, completion: nil)
             return
         }
         
         // 4. Call Firebase server to create a user with provided information
-        DataService.dataService.AUTH_REF.createUser(withEmail: email, password: password, completion: { (user, error) in
+        DataService.dataService.AUTH_REF.createUser(withEmail: email!, password: password!, completion: { (user, error) in
             if let errorCode = (error as NSError?)?.code{
                 // 5. Error found while creating user; will show alert view with information
                 self.activityIndicator?.stopAnimating()
@@ -277,7 +280,7 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
             if let user = user as FIRUser! {
                 let newUser: [String:Any] = [
                     "provider": user.providerID as String,
-                    "email": email,
+                    "email": email!,
                     "uid": user.uid as String,
                     "profileImageURL": ""
                 ]

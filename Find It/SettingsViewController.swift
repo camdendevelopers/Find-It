@@ -16,10 +16,17 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
     // IBOutlets for class
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var profileImageView: UIImageView!
-    @IBOutlet weak var emailTextField: UITextField!
+    @IBOutlet weak var cityTextField: UITextField!
     @IBOutlet weak var phoneTextField: UITextField!
     @IBOutlet weak var addressTextField: UITextField!
+    @IBOutlet weak var stateTextField: UITextField!
     @IBOutlet weak var logoutButton: UIButton!
+    @IBOutlet weak var actionButton: UIButton!
+    @IBOutlet weak var itemImageEditableView: UIImageView!
+    @IBOutlet weak var phoneTextFieldLine: UIView!
+    @IBOutlet weak var addressTextFieldLine: UIView!
+    @IBOutlet weak var cityTextFieldLine: UIView!
+    @IBOutlet weak var stateTextFieldLine: UIView!
     
     // Variables for class
     private var imagePicker =  UIImagePickerController()
@@ -73,17 +80,66 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
         }
     }
     
-    @IBAction func saveButtonPressed(_ sender: Any) {
-        let email = self.emailTextField.text
-        let phone = self.phoneTextField.text
-        let address = self.addressTextField.text
+    @IBAction func actionButtonPressed(_ sender: Any) {
         
-        // 1. Update values if changed
-        DataService.dataService.CURRENT_USER_REF.child("email").setValue(email!)
-        DataService.dataService.CURRENT_USER_REF.child("phone").setValue(phone!)
-        DataService.dataService.CURRENT_USER_REF.child("address").setValue(address!)
-        
-        self.dismiss(animated: true, completion: nil)
+        // If the button was previously edit, change it save and update UI elements to allow edits
+        if actionButton.title(for: .normal) == "Edit"{
+            
+            // 1. Enable the text fields
+            cityTextField.isEnabled = true
+            stateTextField.isEnabled = true
+            phoneTextField.isEnabled = true
+            addressTextField.isEnabled = true
+            
+            // 2. Enable the image view to be tapped and unhide indicator
+            profileImageView.isUserInteractionEnabled = true
+            itemImageEditableView.isHidden = false
+            
+            // 3. Display the lines underneath text fields
+            phoneTextFieldLine.isHidden = false
+            addressTextFieldLine.isHidden = false
+            cityTextFieldLine.isHidden = false
+            stateTextFieldLine.isHidden = false
+            
+            // 4. Change the button titles
+            actionButton?.setTitle("Save", for: .normal)
+        }else{
+            DispatchQueue.global(qos: .userInitiated).async {
+                
+                let city = self.cityTextField.text
+                let state = self.stateTextField.text
+                let phone = self.phoneTextField.text
+                let address = self.addressTextField.text
+                
+                // 1. Update values if changed
+                DataService.dataService.CURRENT_USER_REF.child("city").setValue(city!)
+                DataService.dataService.CURRENT_USER_REF.child("state").setValue(state!)
+                DataService.dataService.CURRENT_USER_REF.child("phone").setValue(phone!)
+                DataService.dataService.CURRENT_USER_REF.child("address").setValue(address!)
+                
+                DispatchQueue.main.async {
+                    // 1. Enable the text fields
+                    self.cityTextField.isEnabled = false
+                    self.stateTextField.isEnabled = false
+                    self.phoneTextField.isEnabled = false
+                    self.addressTextField.isEnabled = false
+                    
+                    // 2. Enable the image view to be tapped and unhide indicator
+                    self.profileImageView.isUserInteractionEnabled = false
+                    self.itemImageEditableView.isHidden = true
+                    
+                    // 3. Display the lines underneath text fields
+                    self.phoneTextFieldLine.isHidden = true
+                    self.addressTextFieldLine.isHidden = true
+                    self.cityTextFieldLine.isHidden = true
+                    self.stateTextFieldLine.isHidden = true
+                    
+                    // 4. Change the button titles
+                    self.actionButton?.setTitle("Edit", for: .normal)
+                }
+            }
+        }
+        //self.dismiss(animated: true, completion: nil)
     }
     
     // MARK:- Image Picker Delegate methods
@@ -92,7 +148,7 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
         // 1. Create a recognizer for image
         let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddTagViewController.imageViewTapped))
         profileImageView.image = UIImage(named: "default_image_icon")
-        profileImageView.isUserInteractionEnabled = true
+        profileImageView.isUserInteractionEnabled = false
         profileImageView.addGestureRecognizer(tapImageRecognizer)
     }
     
@@ -211,9 +267,15 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
     
     func setupTextFields(){
         // 1. Set the delegates of the text fields
-        self.emailTextField.delegate = self
+        self.cityTextField.delegate = self
         self.phoneTextField.delegate = self
         self.addressTextField.delegate = self
+        self.cityTextField.delegate = self
+        
+        self.cityTextField.isEnabled = false
+        self.phoneTextField.isEnabled = false
+        self.addressTextField.isEnabled = false
+        self.cityTextField.isEnabled = false
     }
     
     // MARK:- Utilities for class
@@ -227,9 +289,10 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
     func screenTapped(){
         
         // 1. If screen is tapped, resign keyboard for all text fields
-        self.emailTextField.resignFirstResponder()
+        self.cityTextField.resignFirstResponder()
         self.phoneTextField.resignFirstResponder()
         self.addressTextField.resignFirstResponder()
+        self.cityTextField.resignFirstResponder()
     }
     
     func setupButton(){
@@ -270,8 +333,12 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
                 self.nameLabel.text = firstName + " " + lastName
             }
             
-            if let email = value?["email"] as? String {
-                self.emailTextField.text = email
+            if let city = value?["city"] as? String {
+                self.cityTextField.text = city
+            }
+            
+            if let state = value?["state"] as? String {
+                self.stateTextField.text = state
             }
             
             if let phone = value?["phone"] as? String {

@@ -50,6 +50,9 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         
         // 1. Change status bar color to white for this screen only
         UIApplication.shared.statusBarStyle = .lightContent
+        
+        // 2. Re-add keyboard initializers that were removed if image selected
+        initializeKeyboardNotifications()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -260,6 +263,8 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
                 if self.itemDescriptionTextField.frame.maxY > (self.view.frame.height - keyboardSize.height){
                     // 3. Animate the text fields up
                     UIView.animate(withDuration: 0.5, animations: {
+                        
+                        print(self.itemDescriptionTextFieldBottomConstraint.constant)
                         
                         // If no predictive search is displayed
                         if keyboardSize.height == offset.height{

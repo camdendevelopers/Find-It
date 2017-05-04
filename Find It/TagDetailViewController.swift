@@ -13,7 +13,7 @@ protocol ChangeStatusProtocol {
     func changeItemStatus(withStatus: String)
 }
 
-class TagDetailViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+class TagDetailViewController: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     // IBOutlets for class
     @IBOutlet weak var itemImageView: UIImageView!
@@ -48,23 +48,26 @@ class TagDetailViewController: UIViewController, UIImagePickerControllerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 1. Setup labels
-        setupLabels()
-        
-        // 2. Setup image view
-        setupImageView()
-        
-        // 3. Setup button
-        setupUI()
-        
-        // 4. Setup up recognizers
-        setupRecognizers()
-        
-        // 5. Setup bars
+        // 6. Setup bars
         setupBars()
         
-        // 6. Setup text fields
+        // 1. Setup text fields
         setupTextFields()
+        
+        // 2. Setup labels
+        setupLabels()
+        
+        // 3. Setup image view
+        setupImageView()
+        
+        // 4. Setup button
+        setupUI()
+        
+        // 5. Setup up recognizers
+        setupRecognizers()
+        
+        // 6. Setup bars
+        setupBars()
         
         // 7. Initiliaze keyboard size functionality
         initializeKeyboardNotifications()
@@ -158,8 +161,8 @@ class TagDetailViewController: UIViewController, UIImagePickerControllerDelegate
         
         // 2. Create a reconizer for image
         let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(TagDetailViewController.imageViewTapped))
-        itemImageView.isUserInteractionEnabled = false
         itemImageView.addGestureRecognizer(tapImageRecognizer)
+        itemImageView.isUserInteractionEnabled = false
     }
     
     func imageViewTapped(){
@@ -300,7 +303,7 @@ class TagDetailViewController: UIViewController, UIImagePickerControllerDelegate
         self.view.addGestureRecognizer(screenTapRecognizer)
         
         let itemStatusNotificationViewRecognizer = UITapGestureRecognizer(target: self, action: #selector(TagDetailViewController.itemStatusNotificationViewPressed))
-        self.view.addGestureRecognizer(itemStatusNotificationViewRecognizer)
+        self.itemStatusNotificationView.addGestureRecognizer(itemStatusNotificationViewRecognizer)
     }
     
     func itemStatusNotificationViewPressed(){
@@ -326,50 +329,53 @@ class TagDetailViewController: UIViewController, UIImagePickerControllerDelegate
         self.statusButton.clipsToBounds = true
         self.statusButton.layer.masksToBounds = true
         
-        if itemStatus! == ItemStatus.okay.rawValue{
-            self.itemStatusNotificationViewTopConstraint.constant = -self.itemStatusNotificationView.frame.height
-            
-            self.statusButton.setTitle("REPORT AS LOST", for: .normal)
-            self.statusButton.setTitleColor(UIColor.white, for: .normal)
-            self.statusButton.backgroundColor = kColorFF7D7D
-            
-        }else if itemStatus! == ItemStatus.found.rawValue{
-            self.itemStatusNotificationViewTopConstraint.constant = 0
-            self.itemStatusNotificationView.backgroundColor = kColorE3CC00
-            
-            
-            DataService.dataService.CURRENT_USER_REF.child("items").child(self.key!).observeSingleEvent(of: .value, with: { (snapshot) in
-                let value = snapshot.value as? NSDictionary
-                if let report = value?["report"] as? NSDictionary{
-                    if let reportCreatorID = report["createdBy"] as? String{
-                        
-                        DataService.dataService.USER_REF.child(reportCreatorID).observeSingleEvent(of: .value, with: { (snapshot) in
-                            let reportOwner = snapshot.value as? NSDictionary
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
+            if self.itemStatus! == ItemStatus.okay.rawValue{
+                
+                self.itemStatusNotificationViewTopConstraint.constant = -self.itemStatusNotificationView.frame.height
+                
+                self.statusButton.setTitle("REPORT AS LOST", for: .normal)
+                self.statusButton.setTitleColor(UIColor.white, for: .normal)
+                self.statusButton.backgroundColor = kColorFF7D7D
+                
+            }else if self.itemStatus! == ItemStatus.found.rawValue{
+                self.itemStatusNotificationViewTopConstraint.constant = 0
+                self.itemStatusNotificationView.backgroundColor = kColorE3CC00
+                
+                
+                DataService.dataService.CURRENT_USER_REF.child("items").child(self.key!).observeSingleEvent(of: .value, with: { (snapshot) in
+                    let value = snapshot.value as? NSDictionary
+                    if let report = value?["report"] as? NSDictionary{
+                        if let reportCreatorID = report["createdBy"] as? String{
                             
-                            if let firstName = reportOwner?["firstName"] as? String{
-                                self.phone = reportOwner?["phone"] as? String
+                            DataService.dataService.USER_REF.child(reportCreatorID).observeSingleEvent(of: .value, with: { (snapshot) in
+                                let reportOwner = snapshot.value as? NSDictionary
                                 
-                                self.itemStatusNotificationViewLabel.text = "\(firstName) has found your item.\nContact \(firstName) at \(Utilities.format(phoneNumber: self.phone!)!)"
-                            }
-                        })
+                                if let firstName = reportOwner?["firstName"] as? String{
+                                    self.phone = reportOwner?["phone"] as? String
+                                    
+                                    self.itemStatusNotificationViewLabel.text = "\(firstName) has found your item.\nContact \(firstName) at \(Utilities.format(phoneNumber: self.phone!)!)"
+                                }
+                            })
+                        }
                     }
-                }
-            })
-    
-            self.statusButton.setTitle("REPORT AS FOUND", for: .normal)
-            self.statusButton.setTitleColor(UIColor.white, for: .normal)
-            self.statusButton.backgroundColor = kColor4990E2
-            
-        }else{
-            self.itemStatusNotificationViewTopConstraint.constant = 0
-            self.itemStatusNotificationView.backgroundColor = kColorFF7D7D
-            self.itemStatusNotificationViewLabel.text = "You've marked this item as lost."
-            
-            self.statusButton.setTitle("REPORT AS FOUND", for: .normal)
-            self.statusButton.setTitleColor(UIColor.white, for: .normal)
-            self.statusButton.backgroundColor = kColor4990E2
-            
-        }
+                })
+                
+                self.statusButton.setTitle("REPORT AS FOUND", for: .normal)
+                self.statusButton.setTitleColor(UIColor.white, for: .normal)
+                self.statusButton.backgroundColor = kColor4990E2
+                
+            }else{
+                self.itemStatusNotificationViewTopConstraint.constant = 0
+                self.itemStatusNotificationView.backgroundColor = kColorFF7D7D
+                self.itemStatusNotificationViewLabel.text = "You've marked this item as lost."
+                
+                self.statusButton.setTitle("REPORT AS FOUND", for: .normal)
+                self.statusButton.setTitleColor(UIColor.white, for: .normal)
+                self.statusButton.backgroundColor = kColor4990E2
+                
+            }
+        }, completion: nil)
     }
     
     func setupLabels(){
@@ -405,12 +411,14 @@ class TagDetailViewController: UIViewController, UIImagePickerControllerDelegate
     }
     
     func setupTextFields(){
-        itemNameTextField.isEnabled = false
-        itemDescriptionTextField.isEnabled = false
+        self.itemNameTextField.delegate = self
+        self.itemDescriptionTextField.delegate = self
         
+        self.itemNameTextField.isEnabled = false
+        self.itemDescriptionTextField.isEnabled = false
         
-        itemNameTextFieldLine.isHidden = true
-        itemDescriptionTextFieldLine.isHidden = true
+        self.itemNameTextFieldLine.isHidden = true
+        self.itemDescriptionTextFieldLine.isHidden = true
     }
     
     func backPressed(){

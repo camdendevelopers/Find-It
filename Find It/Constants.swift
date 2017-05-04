@@ -9,6 +9,8 @@
 import Foundation
 import UIKit
 
+
+
 //MARK:- Client Side Error Messages
 let EmptyUserPasswordTextFields = ["title": "Could Not Sign In","message":"Email/password fields are empty."]
 let ChangeMemberTypeInformation = ["title": "Change Member Status", "message": "You can change status by typing in a different member code."]

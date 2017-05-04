@@ -101,8 +101,11 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
         // 2. Call Firebase to retrive all user's tag and add them to the table view
         DataService.dataService.CURRENT_USER_REF.child("reports").observe(.childAdded, with: { (snapshot) in
             let report = snapshot.value as! NSDictionary
-            self.reports.insert(report, at: 0)
-            self.reportsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.top)
+            
+            if Utilities.isItemInArray(item: report, array: self.reports) == false {
+                self.reports.insert(report, at: 0)
+                self.reportsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.top)
+            }
         })
     }
     
