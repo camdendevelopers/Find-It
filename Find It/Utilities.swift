@@ -192,11 +192,6 @@ enum ItemStatus: String {
     case found = "found"
 }
 
-enum TableViewSections: Int {
-    case lost = 0
-    case found = 1
-}
-
 enum UIUserInterfaceIdiom : Int {
     case Unspecified
     case Phone
@@ -252,10 +247,10 @@ struct ShortCodeGenerator {
     private static let numbers = "1234567890".split(separator: ",")
     private static let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(separator: ",")
     
-    static func getCode(length: Int) -> String{
+    static func getCode(length: Int) -> String {
         var code = ""
         
-        for index in 0 ..< length {
+        for index in 0..<length {
             
             if index < (length / 2){
                 let randomLetter = Int(arc4random_uniform(UInt32(letters.count)))

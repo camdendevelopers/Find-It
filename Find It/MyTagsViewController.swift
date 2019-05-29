@@ -10,150 +10,118 @@ import UIKit
 import Firebase
 import SDWebImage
 
-class MyTagsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ChangeStatusProtocol{
-    
+class MyTagsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, ChangeStatusProtocol {
+    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
+
     // MARK:- IBOutlets for class
     @IBOutlet weak var itemsTableView: UITableView!
     
     // MARK:- Variables for class
-    private var refreshControl: UIRefreshControl?
-    private lazy var tableViewHeaderTitles = ["LOST ITEMS", "FOUND ITEMS"]
-    private lazy var lostItems = [NSDictionary]()
-    private lazy var foundItems = [NSDictionary]()
+    private lazy var lostItems: [NSDictionary] = []
+    private lazy var foundItems: [NSDictionary] = []
     
     // MARK:- Loading method calls
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // 1. Setup table view
         setupTableView()
-        
-        // 2. Setup navigation bar and tab bar
-        setupBars()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        // 1. Change status bar color to white for this screen only
-        UIApplication.shared.statusBarStyle = .lightContent
+        setupNavigation()
+        getTags()
     }
     
     // MARK:- Table View Delegate Methods
     func numberOfSections(in tableView: UITableView) -> Int {
-        
-        // Returns 2
-        return tableViewHeaderTitles.count
+        return 2
     }
  
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        
-        // 1. Make sure there is a header to show
         guard let header = view as? UITableViewHeaderFooterView else { return }
-        
-        // 2. Create a small divider at the bottom of the header view fram
-        let divider = UIView(frame: CGRect(x: header.frame.origin.x, y: header.frame.height - 1, width: header.frame.width, height: 1))
-        divider.backgroundColor = kColorD8D8D8
-        
-        // 3. Modify header label text properties
+
         header.textLabel?.textColor = kColor4A4A4A
         header.textLabel?.font = UIFont(name: "AvenirNext-DemiBold", size: 12)
         header.textLabel?.frame = header.frame
         header.textLabel?.textAlignment = .left
-        header.addSubview(divider)
+
+        let divider = UIView()
+        divider.backgroundColor = kColorD8D8D8
+        divider.translatesAutoresizingMaskIntoConstraints = false
         
+        header.addSubview(divider)
+
+        divider.leadingAnchor.constraint(equalTo: header.leadingAnchor).isActive = true
+        divider.trailingAnchor.constraint(equalTo: header.trailingAnchor).isActive = true
+        divider.bottomAnchor.constraint(equalTo: header.bottomAnchor).isActive = true
+        divider.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        
-        // 1. Switch between sections
-        switch section {
-        case TableViewSections.lost.rawValue:
-            
-            // If there are items in lost items array, return "LOST ITEMS"
-            return tableViewHeaderTitles[TableViewSections.lost.rawValue]
-        default:
-            
-            // If there are items in found items array, return "FOUND ITEMS"
-            return tableViewHeaderTitles[TableViewSections.found.rawValue]
-        }
+        return section == 0 ? "LOST ITEMS" : "FOUND ITEMS"
     }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        // 1. Switch between section
+        return section == 0 ? lostItems.count : foundItems.count
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
-            
-        case TableViewSections.lost.rawValue:
-            return self.lostItems.count
-            
-        case TableViewSections.found.rawValue:
-            return self.foundItems.count
-            
+        case 0:
+            return lostItems.isEmpty ? 0 : UITableView.automaticDimension
         default:
-            return 0
+            return foundItems.isEmpty ? 0 : UITableView.automaticDimension
         }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "tagCell", for: indexPath) as! TagCustomTableViewCell
         let row = indexPath.row
+        let section = indexPath.section
         
-        // 1. Check if there are items on the list
-        if lostItems.count != 0 || foundItems.count != 0 {
-            var item:NSDictionary = [:]
-            
-            switch indexPath.section {
-            case TableViewSections.lost.rawValue:
-                item = lostItems[row]
-            case TableViewSections.found.rawValue:
-                item = foundItems[row]
-            default:
-                print("Empty lists")
-            }
-            
-            
-            // 2. Create local item variable
-            let itemID = item["id"] as? String
-            let itemName = item["name"] as? String
-            let itemStatus = item["status"] as? String
-            let itemImageUrl = item["itemImageURL"] as? String
-            
-            // Update cell name and id labels
-            cell.itemIdentificationLabel.text = itemID!
-            cell.itemNameLabel.text = itemName!
-            
-            // Add a radius to image
-            cell.itemImageView.layer.cornerRadius = cell.itemImageView.frame.size.height / 2
-            cell.itemImageView.clipsToBounds = true
-            cell.itemImageView.layer.masksToBounds = true
-            
-            // Check if cell is lost or found, and update the status button
-            if itemStatus == ItemStatus.okay.rawValue {
-                cell.statusImageView.image = UIImage(named: "okay-icon")
-            }else if itemStatus == ItemStatus.found.rawValue{
-                cell.statusImageView.image = UIImage(named: "warning-icon")
-            }else{
-                cell.statusImageView.image = UIImage(named: "lost-icon")
-            }
-            
-            cell.itemImageView.sd_setShowActivityIndicatorView(true)
-            cell.itemImageView.sd_setIndicatorStyle(.gray)
-            cell.itemImageView.sd_setImage(with: URL(string: itemImageUrl!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.cacheMemoryOnly)
+        var item: NSDictionary = [:]
+
+        switch section {
+        case 0:
+            item = lostItems[row]
+        default:
+            item = foundItems[row]
         }
+
+
+        // 2. Create local item variable
+        let itemID = item["id"] as? String
+        let itemName = item["name"] as? String
+        let itemStatus = item["status"] as? String
+        let itemImageUrl = item["itemImageURL"] as? String
+
+        // Update cell name and id labels
+        cell.itemIdentificationLabel.text = itemID
+        cell.itemNameLabel.text = itemName
+
+        // Add a radius to image
+        cell.itemImageView.layer.cornerRadius = cell.itemImageView.frame.size.height / 2
+        cell.itemImageView.clipsToBounds = true
+        cell.itemImageView.layer.masksToBounds = true
+
+        // Check if cell is lost or found, and update the status button
+        if itemStatus == ItemStatus.okay.rawValue {
+            cell.statusImageView.image = UIImage(named: "okay-icon")
+        } else if itemStatus == ItemStatus.found.rawValue {
+            cell.statusImageView.image = UIImage(named: "warning-icon")
+        } else {
+            cell.statusImageView.image = UIImage(named: "lost-icon")
+        }
+
+        cell.itemImageView.sd_setShowActivityIndicatorView(true)
+        cell.itemImageView.sd_setIndicatorStyle(.gray)
+        cell.itemImageView.sd_setImage(with: URL(string: itemImageUrl!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.cacheMemoryOnly)
 
         return cell
     }
 
     // Override to support conditional editing of the table view.
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        
         return true
     }
-    
-   
-    
+
     // Override to support editing the table view.
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
@@ -167,10 +135,10 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
             
             // 3. Retrieve item info in selected cell
             switch selectedSection {
-            case TableViewSections.lost.rawValue:
-                item = self.lostItems[selectedRow]
+            case 0:
+                item = lostItems[selectedRow]
             default:
-                item = self.foundItems[selectedRow]
+                item = foundItems[selectedRow]
             }
             
             // 4. Delete item from Firebase with item key
@@ -185,7 +153,7 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
                     
                     //  6. Delete the row from the data source
                     switch selectedSection {
-                    case TableViewSections.lost.rawValue:
+                    case 0:
                         self.lostItems.remove(at: selectedRow)
                     default:
                         self.foundItems.remove(at: selectedRow)
@@ -199,16 +167,13 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     // MARK:- Utilities for class
-    func getTags(){
-        
+    func getTags() {
         // 1. Empty out array before fetching new ones
-        self.lostItems = []
-        self.foundItems = []
-        
+        lostItems.removeAll()
+        foundItems.removeAll()
         
         // 2. Call Firebase to retrieve all user's tag and add them to the table view
         DataService.dataService.CURRENT_USER_REF.child("items").observe(.childAdded, with: { (snapshot) in
-            
             // Create item
             let item = snapshot.value as! NSDictionary
             let status = item["status"] as! String
@@ -218,27 +183,22 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
                 
                 // Add it to lost items array and insert in lost section
                 self.lostItems.insert(item, at: 0)
-                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: TableViewSections.lost.rawValue)], with: UITableView.RowAnimation.middle)
-            }else if status == ItemStatus.okay.rawValue && Utilities.isItemInArray(item: item, array: self.foundItems) == false{
+                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .middle)
+            } else if status == ItemStatus.okay.rawValue && Utilities.isItemInArray(item: item, array: self.foundItems) == false {
                 
                 // Add it to lost items array and insert in lost section
                 self.foundItems.insert(item, at: 0)
-                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: TableViewSections.found.rawValue)], with: UITableView.RowAnimation.middle)
+                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .middle)
             }
         })
-        
-        // 3. Reload the table view to display fresh data
-        self.itemsTableView.reloadData()
     }
     
-    func setupBars(){
-        
-        // 1. Change navigation bar background color and make its alpha 1
+    func setupNavigation() {
         navigationController?.navigationBar.barTintColor = kColor4990E2
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.isOpaque = true
-        navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.font.rawValue: UIFont(name: "HalisR-Black", size: 16)!, NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
-        tabBarController?.tabBar.barTintColor = UIColor.white
+        navigationController?.navigationBar.titleTextAttributes = [.font: UIFont(name: "HalisR-Black", size: 16)!, .foregroundColor: UIColor.white]
+        tabBarController?.tabBar.barTintColor = .white
     }
     
     func changeItemStatus(withStatus: String) {
@@ -259,25 +219,19 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         self.getTags()
     }
     
-    func setupTableView(){
-        
-        // 1. Assign the table view delegates
-        self.itemsTableView.delegate = self
-        self.itemsTableView.dataSource = self
-        
-        // 2. Setup refresh control
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(didRefresh), for: .valueChanged)
-        itemsTableView.insertSubview(refreshControl!, at: 0)
-        
-        // 3. Retrive tags from Firebase
-        self.getTags()
+    func setupTableView() {
+        itemsTableView.delegate = self
+        itemsTableView.dataSource = self
+
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(didRefresh), for: .valueChanged)
+        itemsTableView.insertSubview(refreshControl, at: 0)
     }
     
     @objc func didRefresh(refreshControl: UIRefreshControl) {
-        self.getTags()
-        self.itemsTableView.reloadData()
-        self.refreshControl?.endRefreshing()
+        getTags()
+        itemsTableView.reloadData()
+        refreshControl.endRefreshing()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -291,7 +245,7 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
             var item:NSDictionary = [:]
             
             switch selectedSection {
-            case TableViewSections.lost.rawValue:
+            case 0:
                 item = self.lostItems[selectedRow]
             default:
                 item = self.foundItems[selectedRow]

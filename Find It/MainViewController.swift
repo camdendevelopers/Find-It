@@ -54,11 +54,13 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
         super.viewWillAppear(animated)
         
         // 1. Change status bar color to white for this screen only
-        UIApplication.shared.statusBarStyle = .lightContent
-        
+//        UIApplication.shared.statusBarStyle = .lightContent
+
         // 2. Change button depending on user signup/signin
         setupButton()
     }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
     
     // MARK:- IB Actions
     @IBAction func signInButtonPressed(_ sender: Any) {

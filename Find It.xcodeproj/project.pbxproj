@@ -37,6 +37,7 @@
 		8D75314D1E7A3A3D00984419 /* TagDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D75314C1E7A3A3C00984419 /* TagDetailViewController.swift */; };
 		8D861A151E5E751E00BCD646 /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D861A141E5E751E00BCD646 /* TutorialViewController.swift */; };
 		8DD83A1E1E9C561100C074D9 /* PhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DD83A1D1E9C561100C074D9 /* PhoneViewController.swift */; };
+		8DFC1CFD229F42CB00086E0A /* UINavigationController+StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFC1CFC229F42CB00086E0A /* UINavigationController+StatusBar.swift */; };
 		9A1F6E694DBBC3489B614E99 /* Pods_Find_ItUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7DF1677DEAA825B4D2CD401 /* Pods_Find_ItUITests.framework */; };
 		BA9CCABB9044E14267FE17F7 /* Pods_Find_It.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 655EF729B04EB450B5922FDD /* Pods_Find_It.framework */; };
 		E2683AB21CC555B144052BE6 /* Pods_Find_ItTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05ED98A52B097C0D5F33D8F4 /* Pods_Find_ItTests.framework */; };
@@ -103,6 +104,7 @@
 		8D75314C1E7A3A3C00984419 /* TagDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TagDetailViewController.swift; sourceTree = "<group>"; };
 		8D861A141E5E751E00BCD646 /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		8DD83A1D1E9C561100C074D9 /* PhoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneViewController.swift; sourceTree = "<group>"; };
+		8DFC1CFC229F42CB00086E0A /* UINavigationController+StatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+StatusBar.swift"; sourceTree = "<group>"; };
 		8F1EA53A4AF68DE579A2E82E /* Pods-Find ItTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Find ItTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Find ItTests/Pods-Find ItTests.debug.xcconfig"; sourceTree = "<group>"; };
 		A7DF1677DEAA825B4D2CD401 /* Pods_Find_ItUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Find_ItUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F56F3BC00BF2E01FE078DBF1 /* Pods-Find ItUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Find ItUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Find ItUITests/Pods-Find ItUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				8D6477B61E6E4F2A00341FD4 /* Utilities.swift */,
+				8DFC1CFC229F42CB00086E0A /* UINavigationController+StatusBar.swift */,
 				8D6477C01E6F861F00341FD4 /* DataService.swift */,
 				8D6477B71E6E4F2A00341FD4 /* Constants.swift */,
 				8D75314A1E79B53B00984419 /* TagCustomTableViewCell.swift */,
@@ -516,6 +519,7 @@
 				8D7531491E786B8200984419 /* AddressViewController.swift in Sources */,
 				8D1835231E97074F00B4C875 /* ConfirmReportViewController.swift in Sources */,
 				8D75314D1E7A3A3D00984419 /* TagDetailViewController.swift in Sources */,
+				8DFC1CFD229F42CB00086E0A /* UINavigationController+StatusBar.swift in Sources */,
 				8D7531471E786B7700984419 /* BasicInformationViewController.swift in Sources */,
 				8D1082561E5D0A8200F94393 /* AuthenticateViewController.swift in Sources */,
 				8D6477B81E6E4F2A00341FD4 /* Utilities.swift in Sources */,
