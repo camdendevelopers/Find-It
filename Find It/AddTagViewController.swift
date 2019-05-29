@@ -98,12 +98,12 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         self.itemImageView.layer.masksToBounds = true
         
         // 2. Create a reconizer for image
-        let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddTagViewController.imageViewTapped))
+        let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
         itemImageView.isUserInteractionEnabled = true
         itemImageView.addGestureRecognizer(tapImageRecognizer)
     }
     
-    @objc func imageViewTapped(){
+    @objc func imageViewTapped() {
         
         // 1. Check which device is being used
         if DeviceType.IS_IPHONE_5 || DeviceType.IS_IPHONE_4_OR_LESS{
@@ -251,8 +251,8 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(AddTagViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(AddTagViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: self.view.window)
     }
     
     @objc func keyboardWillShow(notification: Notification) {

@@ -267,14 +267,14 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         
         // 2. Setup refresh control
         refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(MyTagsViewController.didRefresh), for: .valueChanged)
+        refreshControl?.addTarget(self, action: #selector(didRefresh), for: .valueChanged)
         itemsTableView.insertSubview(refreshControl!, at: 0)
         
         // 3. Retrive tags from Firebase
         self.getTags()
     }
     
-    @objc func didRefresh(refreshControl: UIRefreshControl){
+    @objc func didRefresh(refreshControl: UIRefreshControl) {
         self.getTags()
         self.itemsTableView.reloadData()
         self.refreshControl?.endRefreshing()

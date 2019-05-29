@@ -295,7 +295,7 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
     func setupRecognizers(){
         
         // 1. Create a tag screen regonizer
-        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(SettingsViewController.screenTapped))
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(screenTapped))
         self.view.addGestureRecognizer(screenTapRecognizer)
     }
     

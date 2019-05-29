@@ -156,7 +156,7 @@ class ConfirmAddTagViewController: UIViewController {
     func setupBars(){
         let leftButton:UIButton = UIButton()
         leftButton.setImage(UIImage(named: "backward-icon-white") , for: .normal)
-        leftButton.addTarget(self, action: #selector(ConfirmAddTagViewController.backPressed), for: UIControl.Event.touchUpInside)
+        leftButton.addTarget(self, action: #selector(backPressed), for: UIControl.Event.touchUpInside)
         leftButton.imageView?.contentMode = .scaleAspectFit
         leftButton.frame = CGRect(x: 0, y: 0, width: 83, height: 30)
         leftButton.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
@@ -172,7 +172,6 @@ class ConfirmAddTagViewController: UIViewController {
     @objc func backPressed(){
         self.navigationController?.popViewController(animated: true)
     }
-    
 }
 
 // Helper function inserted by Swift 4.2 migrator.

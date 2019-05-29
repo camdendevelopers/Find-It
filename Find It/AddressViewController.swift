@@ -140,7 +140,7 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
     func setupRecognizers(){
         
         // 1. Create a tag screen regonizer
-        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddressViewController.screenTapped))
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(screenTapped))
         self.view.addGestureRecognizer(screenTapRecognizer)
     }
     
@@ -148,8 +148,8 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(AddressViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(AddressViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
     }
     
     @objc func keyboardWillShow(notification: Notification) {

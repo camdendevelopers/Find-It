@@ -211,9 +211,9 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
                 }
                 
             }
-            
+
             // 6. If no error, sign in user
-            if let user = user as FIRUser!{
+            if let user = user {
                 // 5.Allow user to enter app and set user UID to value for key in NSUserDefaults
                 
                 // Reset text fields
@@ -279,7 +279,7 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
             }
             
             // 6. No error, create user
-            if let user = user as FIRUser! {
+            if let user = user {
                 let newUser: [String:Any] = [
                     "provider": user.providerID as String,
                     "email": email!,
@@ -402,7 +402,7 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
     func setupRecognizers(){
         
         // 1. Create a tag screen regonizer
-        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(AuthenticateViewController.screenTapped))
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(screenTapped))
         self.view.addGestureRecognizer(screenTapRecognizer)
     }
     
@@ -444,8 +444,8 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(AuthenticateViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(AuthenticateViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: view.window)
     }
     
     @objc func keyboardWillShow(notification: Notification) {

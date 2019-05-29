@@ -105,11 +105,11 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
     func setupRecognizers(){
         
         // 1. Create a tag screen regonizer
-        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(ResetPasswordViewController.screenTapped))
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(screenTapped))
         self.view.addGestureRecognizer(screenTapRecognizer)
     }
     
-    @objc func screenTapped(){
+    @objc func screenTapped() {
         
         // 1. If screen is tapped, resign keyboard for all text fields
         self.emailTextField.resignFirstResponder()
@@ -127,8 +127,8 @@ class ResetPasswordViewController: UIViewController, UITextFieldDelegate {
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(ResetPasswordViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(ResetPasswordViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: self.view.window)
     }
     
     @objc func keyboardWillShow(notification: Notification) {

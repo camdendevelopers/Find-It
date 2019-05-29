@@ -131,8 +131,8 @@ class PhoneViewController: UIViewController, UITextFieldDelegate {
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(PhoneViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(PhoneViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: view.window)
     }
     
     @objc func keyboardWillShow(notification: Notification) {
@@ -174,7 +174,7 @@ class PhoneViewController: UIViewController, UITextFieldDelegate {
         self.nextButton.layer.masksToBounds = true
     }
     
-    @objc func screenTapped(){
+    @objc func screenTapped() {
         
         // 1. If screen is tapped, resign keyboard for all text fields
         self.phoneTextField.resignFirstResponder()

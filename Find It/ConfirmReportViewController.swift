@@ -153,7 +153,7 @@ class ConfirmReportViewController: UIViewController {
         let leftButton:UIButton = UIButton()
         leftButton.setImage(UIImage(named: "backward-icon-white") , for: .normal)
         leftButton.imageView?.contentMode = .scaleAspectFit
-        leftButton.addTarget(self, action: #selector(ConfirmReportViewController.backPressed), for: UIControl.Event.touchUpInside)
+        leftButton.addTarget(self, action: #selector(backPressed), for: UIControl.Event.touchUpInside)
         leftButton.frame = CGRect(x: 0, y: 0, width: 83, height: 30)
         leftButton.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
         

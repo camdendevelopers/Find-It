@@ -34,9 +34,9 @@ class Utilities{
     class func isValidPassword(string: String) -> Bool{
         do {
             let regex = try NSRegularExpression(pattern: "^[a-zA-Z_0-9\\-_,;.:#+*?=!§$%&/()@]+$", options: .caseInsensitive)
-            if(regex.firstMatch(in: string, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, string.characters.count)) != nil){
+            if(regex.firstMatch(in: string, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, string.count)) != nil){
                 
-                if(string.characters.count>=6 && string.characters.count<=20){
+                if(string.count>=6 && string.count<=20){
                     return true
                 }else{
                     return false
@@ -53,7 +53,7 @@ class Utilities{
         
         // Remove any character that is not a number
         let numbersOnly = sourcePhoneNumber.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()
-        let length = numbersOnly.characters.count
+        let length = numbersOnly.count
         let hasLeadingOne = numbersOnly.hasPrefix("1")
         
         // Check for supported phone number length
@@ -75,7 +75,7 @@ class Utilities{
         var areaCode = ""
         if hasAreaCode {
             let areaCodeLength = 3
-            guard let areaCodeSubstring = numbersOnly.characters.substring(start: sourceIndex, offsetBy: areaCodeLength) else {
+            guard let areaCodeSubstring = numbersOnly.substring(start: sourceIndex, offsetBy: areaCodeLength) else {
                 return nil
             }
             areaCode = String(format: "(%@) ", areaCodeSubstring)
@@ -84,14 +84,14 @@ class Utilities{
         
         // Prefix, 3 characters
         let prefixLength = 3
-        guard let prefix = numbersOnly.characters.substring(start: sourceIndex, offsetBy: prefixLength) else {
+        guard let prefix = numbersOnly.substring(start: sourceIndex, offsetBy: prefixLength) else {
             return nil
         }
         sourceIndex += prefixLength
         
         // Suffix, 4 characters
         let suffixLength = 4
-        guard let suffix = numbersOnly.characters.substring(start: sourceIndex, offsetBy: suffixLength) else {
+        guard let suffix = numbersOnly.substring(start: sourceIndex, offsetBy: suffixLength) else {
             return nil
         }
         
@@ -249,20 +249,20 @@ struct Reachability {
 }
 
 struct ShortCodeGenerator {
-    private static let numbers = [Character]("1234567890".characters)
-    private static let letters = [Character]("ABCDEFGHIJKLMNOPQRSTUVWXYZ".characters)
+    private static let numbers = "1234567890".split(separator: ",")
+    private static let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(separator: ",")
     
     static func getCode(length: Int) -> String{
         var code = ""
         
-        for index in 0..<length {
+        for index in 0 ..< length {
             
-            if index < (length/2){
+            if index < (length / 2){
                 let randomLetter = Int(arc4random_uniform(UInt32(letters.count)))
-                code.append(letters[randomLetter])
-            }else{
+                code.append(String(letters[randomLetter]))
+            } else {
                 let randomNumber = Int(arc4random_uniform(UInt32(numbers.count)))
-                code.append(numbers[randomNumber])
+                code.append(String(numbers[randomNumber]))
             }
         }
         return code

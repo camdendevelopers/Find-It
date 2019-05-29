@@ -57,7 +57,7 @@ class SearchTagViewController: UIViewController, UITextFieldDelegate {
         let itemIdentification = itemSearchTextField.text
         
         // 2. Check that text field is not empty and that it is the correct lenght
-        guard itemIdentification != "", (itemIdentification?.characters.count)! == 6 else{
+        guard itemIdentification != "", (itemIdentification?.count)! == 6 else{
             present(Utilities.showErrorAlert(inDict: ["title": "Ooops", "message": "You need to enter a valid ID"]), animated: true, completion: nil)
             return
         }
@@ -90,8 +90,8 @@ class SearchTagViewController: UIViewController, UITextFieldDelegate {
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(SearchTagViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(SearchTagViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: self.view.window)
     }
     
     @objc func keyboardWillShow(notification: Notification) {
@@ -165,7 +165,7 @@ class SearchTagViewController: UIViewController, UITextFieldDelegate {
     func setupRecognizers(){
         
         // 1. Create a tag screen regonizer
-        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(SearchTagViewController.screenTapped))
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(screenTapped))
         self.view.addGestureRecognizer(screenTapRecognizer)
     }
     

@@ -119,7 +119,7 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
                 self.profileImageView.sd_setShowActivityIndicatorView(true)
                 self.profileImageView.sd_setIndicatorStyle(.gray)
                 self.profileImageView.sd_setImage(with: URL(string: urlString!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.progressiveDownload)
-            }else{
+            } else {
                 
                 // 5. If not, they must provide all information
                 self.profileImageView.image =  UIImage(named: "default_image_icon")!
@@ -131,17 +131,17 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     func setupImageView(){
         
         // 1. Create a recognizer for image
-        let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(BasicInformationViewController.imageViewTapped))
+        let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
         profileImageView.image = UIImage(named: "default_image_icon")
         profileImageView.isUserInteractionEnabled = true
-        self.profileImageView.addGestureRecognizer(tapImageRecognizer)
+        profileImageView.addGestureRecognizer(tapImageRecognizer)
         
         profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2
         profileImageView.clipsToBounds = true
         profileImageView.layer.masksToBounds = true
     }
     
-    @objc func imageViewTapped(){
+    @objc func imageViewTapped() {
         
         // 1. Check which ilastName is currently being displayed
         if DeviceType.IS_IPHONE_5 || DeviceType.IS_IPHONE_4_OR_LESS {
@@ -275,11 +275,11 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
     func setupRecognizers(){
         
         // 1. Create a tag screen regonizer
-        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(BasicInformationViewController.screenTapped))
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(screenTapped))
         self.view.addGestureRecognizer(screenTapRecognizer)
     }
     
-    @objc func screenTapped(){
+    @objc func screenTapped() {
         
         // 1. If screen is tapped, resign keyboard for all text fields
         self.firstNameTextField.resignFirstResponder()
@@ -298,8 +298,8 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(BasicInformationViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(BasicInformationViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
     }
     
     @objc func keyboardWillShow(notification: Notification) {

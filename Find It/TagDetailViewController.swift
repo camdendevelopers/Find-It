@@ -160,12 +160,12 @@ class TagDetailViewController: UIViewController, UITextFieldDelegate, UIImagePic
         self.itemImageView.layer.masksToBounds = true
         
         // 2. Create a reconizer for image
-        let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(TagDetailViewController.imageViewTapped))
+        let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
         itemImageView.addGestureRecognizer(tapImageRecognizer)
         itemImageView.isUserInteractionEnabled = false
     }
     
-    @objc func imageViewTapped(){
+    @objc func imageViewTapped() {
         
         // 1. Check which device is being used
         if DeviceType.IS_IPHONE_5 || DeviceType.IS_IPHONE_4_OR_LESS{
@@ -263,8 +263,8 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(TagDetailViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(TagDetailViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: self.view.window)
     }
     
     @objc func keyboardWillShow(notification: Notification) {
@@ -302,14 +302,14 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
     func setupRecognizers(){
         
         // 1. Create a tag screen regonizer
-        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(TagDetailViewController.screenTapped))
+        let screenTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(screenTapped))
         self.view.addGestureRecognizer(screenTapRecognizer)
         
-        let itemStatusNotificationViewRecognizer = UITapGestureRecognizer(target: self, action: #selector(TagDetailViewController.itemStatusNotificationViewPressed))
+        let itemStatusNotificationViewRecognizer = UITapGestureRecognizer(target: self, action: #selector(itemStatusNotificationViewPressed))
         self.itemStatusNotificationView.addGestureRecognizer(itemStatusNotificationViewRecognizer)
     }
     
-    @objc func itemStatusNotificationViewPressed(){
+    @objc func itemStatusNotificationViewPressed() {
         if let url = URL(string: "tel://\(self.phone!)") {
             if #available(iOS 10, *) {
                 UIApplication.shared.open(url, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
@@ -319,7 +319,7 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         }
     }
     
-    @objc func screenTapped(){
+    @objc func screenTapped() {
         
         // 1. If screen is tapped, resign keyboard for all text fields
         self.itemNameTextField.resignFirstResponder()
@@ -424,7 +424,7 @@ let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
         self.itemDescriptionTextFieldLine.isHidden = true
     }
     
-    @objc func backPressed(){
+    @objc func backPressed() {
         self.navigationController?.popViewController(animated: true)
     }
     

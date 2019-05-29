@@ -107,7 +107,7 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
         })
     }
     
-    @objc func didRefresh(refreshControl: UIRefreshControl){
+    @objc func didRefresh(refreshControl: UIRefreshControl) {
         self.getReports()
         self.reportsTableView.reloadData()
         self.refreshControl?.endRefreshing()
@@ -128,7 +128,7 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         // 2. Setup refresh control
         refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: #selector(ReportsViewController.didRefresh), for: .valueChanged)
+        refreshControl?.addTarget(self, action: #selector(didRefresh), for: .valueChanged)
         reportsTableView.insertSubview(refreshControl!, at: 0)
         
         // 3. Retrive reports from Firebase
