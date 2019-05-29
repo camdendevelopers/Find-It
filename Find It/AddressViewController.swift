@@ -53,8 +53,8 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
         UIApplication.shared.statusBarStyle = .default
         
         // 2. Remove observers for keyboard
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK:- IBActions for class
@@ -148,17 +148,17 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(AddressViewController.keyboardWillShow(notification :)), name:NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(AddressViewController.keyboardWillHide(notification:)), name:NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(AddressViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(AddressViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
     }
     
-    func keyboardWillShow(notification: Notification) {
+    @objc func keyboardWillShow(notification: Notification) {
         
         // 1. Check that notification dictionary is available
         if let userInfo = notification.userInfo{
             
             // 2. Obtain keyboard size and predictive search height
-            if let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
+            if let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
                 
                 if self.stateTextField.frame.maxY > (self.view.frame.height - keyboardSize.height){
                     // 3. Animate the text fields up
@@ -178,7 +178,7 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
         }
     }
     
-    func keyboardWillHide(notification: Notification) {
+    @objc func keyboardWillHide(notification: Notification) {
         UIView.animate(withDuration: 0.5) {
             self.cityTextFieldBottomConstraint.constant = 128
             self.stateTextFieldBottomConstraint.constant = 128
@@ -187,7 +187,7 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
     
     // MARK:- Utilities for class
     
-    func screenTapped(){
+    @objc func screenTapped(){
         
         // 1. If screen is tapped, resign keyboard for all text fields
         self.addressTextField.resignFirstResponder()

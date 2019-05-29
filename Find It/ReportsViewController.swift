@@ -102,12 +102,12 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             if Utilities.isItemInArray(item: report, array: self.reports) == false {
                 self.reports.insert(report, at: 0)
-                self.reportsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.middle)
+                self.reportsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableView.RowAnimation.middle)
             }
         })
     }
     
-    func didRefresh(refreshControl: UIRefreshControl){
+    @objc func didRefresh(refreshControl: UIRefreshControl){
         self.getReports()
         self.reportsTableView.reloadData()
         self.refreshControl?.endRefreshing()
@@ -117,7 +117,7 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
         navigationController?.navigationBar.barTintColor = kColorE3CC00
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.isOpaque = true
-        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.font.rawValue: UIFont(name: "HalisR-Black", size: 16)!, NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
         tabBarController?.tabBar.barTintColor = UIColor.white
     }
     
@@ -136,4 +136,10 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
         
         
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

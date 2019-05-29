@@ -10,8 +10,6 @@ import Foundation
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
-import FacebookCore
-import FacebookLogin
 
 class DataService {
     static let dataService = DataService()
@@ -22,8 +20,7 @@ class DataService {
     var ITEM_REF = FIRDatabase.database().reference().child("items")
     var REPORT_REF = FIRDatabase.database().reference().child("reports")
     var AUTH_REF = FIRAuth.auth()!
-    var FBAUTH_REF = LoginManager()
-    
+
     var CURRENT_USER_REF:FIRDatabaseReference{
         let userID = UserDefaults.standard.value(forKey: "uid") as! String
         let currentUser = USER_REF.child(userID)

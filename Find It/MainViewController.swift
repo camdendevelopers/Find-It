@@ -95,7 +95,7 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
             
             // 4. Add it to the current view but send behind button
             self.view.addSubview((self.pageViewController?.view)!)
-            self.view.sendSubview(toBack: (self.pageViewController?.view)!)
+            self.view.sendSubviewToBack((self.pageViewController?.view)!)
         }
     }
     

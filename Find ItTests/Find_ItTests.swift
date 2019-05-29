@@ -7,7 +7,6 @@
 //
 
 import XCTest
-@testable import Find_It
 
 class Find_ItTests: XCTestCase {
     

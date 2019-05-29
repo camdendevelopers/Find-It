@@ -49,8 +49,8 @@ class PhoneViewController: UIViewController, UITextFieldDelegate {
         UIApplication.shared.statusBarStyle = .default
         
         // 2. Remove observers for keyboard
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK:- IBActions for class
@@ -131,17 +131,17 @@ class PhoneViewController: UIViewController, UITextFieldDelegate {
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(PhoneViewController.keyboardWillShow(notification :)), name:NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(PhoneViewController.keyboardWillHide(notification:)), name:NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(PhoneViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(PhoneViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
     }
     
-    func keyboardWillShow(notification: Notification) {
+    @objc func keyboardWillShow(notification: Notification) {
         
         // 1. Check that notification dictionary is available
         if let userInfo = notification.userInfo{
             
             // 2. Obtain keyboard size and predictive search height
-            if let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
+            if let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
                 
                 if self.phoneTextField.frame.maxY > (self.view.frame.height - keyboardSize.height){
                     // 3. Animate the text fields up
@@ -159,7 +159,7 @@ class PhoneViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    func keyboardWillHide(notification: Notification) {
+    @objc func keyboardWillHide(notification: Notification) {
         UIView.animate(withDuration: 0.5) {
             self.phoneTextFieldBottomConstraint.constant = 204
         }
@@ -174,7 +174,7 @@ class PhoneViewController: UIViewController, UITextFieldDelegate {
         self.nextButton.layer.masksToBounds = true
     }
     
-    func screenTapped(){
+    @objc func screenTapped(){
         
         // 1. If screen is tapped, resign keyboard for all text fields
         self.phoneTextField.resignFirstResponder()

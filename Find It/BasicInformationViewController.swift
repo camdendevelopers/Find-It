@@ -64,8 +64,8 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         UIApplication.shared.statusBarStyle = .default
         
         // 2. Remove observers for keyboard
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK:- IBActions for class
@@ -141,7 +141,7 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         profileImageView.layer.masksToBounds = true
     }
     
-    func imageViewTapped(){
+    @objc func imageViewTapped(){
         
         // 1. Check which ilastName is currently being displayed
         if DeviceType.IS_IPHONE_5 || DeviceType.IS_IPHONE_4_OR_LESS {
@@ -193,9 +193,9 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     func openCamera(){
         
         // 1. Check that user has camera
-        if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)){
+        if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)){
             // 2. If yes, display
-            imagePicker.sourceType = UIImagePickerControllerSourceType.camera
+            imagePicker.sourceType = UIImagePickerController.SourceType.camera
             
             self .present(imagePicker, animated: true, completion: nil)
         }else{
@@ -206,17 +206,20 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     
     func openGallery(){
         // 1. Display users library
-        imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
         self.present(imagePicker, animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         // 1. Assign the image info to a dictionary
         let imageInfo = info as [String : AnyObject]?
         
         // 2. Set the image view to the selected image
-        self.profileImageView.image = info[UIImagePickerControllerEditedImage] as? UIImage
-        self.imageSelected = info[UIImagePickerControllerEditedImage] as? UIImage
+        self.profileImageView.image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as? UIImage
+        self.imageSelected = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as? UIImage
         
         // 3. Dismiss the picker
         picker.dismiss(animated: true, completion: nil)
@@ -225,8 +228,8 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         DispatchQueue.global(qos: .userInitiated).async {
             
             // Create variables
-            let image = imageInfo?[UIImagePickerControllerOriginalImage] as? UIImage
-            let imageData = UIImageJPEGRepresentation(image!, 0.8)
+            let image = imageInfo?[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
+            let imageData = image!.jpegData(compressionQuality: 0.8)
             let metadata = FIRStorageMetadata()
             let imagePath = FIRAuth.auth()!.currentUser!.uid + ".jpg"
             metadata.contentType = "image/jpeg"
@@ -276,7 +279,7 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         self.view.addGestureRecognizer(screenTapRecognizer)
     }
     
-    func screenTapped(){
+    @objc func screenTapped(){
         
         // 1. If screen is tapped, resign keyboard for all text fields
         self.firstNameTextField.resignFirstResponder()
@@ -295,17 +298,17 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(BasicInformationViewController.keyboardWillShow(notification :)), name:NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(BasicInformationViewController.keyboardWillHide(notification:)), name:NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(BasicInformationViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(BasicInformationViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
     }
     
-    func keyboardWillShow(notification: Notification) {
+    @objc func keyboardWillShow(notification: Notification) {
         
         // 1. Check that notification dictionary is available
         if let userInfo = notification.userInfo{
             
             // 2. Obtain keyboard size and predictive search height
-            if let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
+            if let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
                 
                 if self.lastNameTextField.frame.maxY > (self.view.frame.height - keyboardSize.height){
                     // 3. Animate the text fields up
@@ -323,9 +326,19 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         }
     }
     
-    func keyboardWillHide(notification: Notification) {
+    @objc func keyboardWillHide(notification: Notification) {
         UIView.animate(withDuration: 0.5) {
             self.lastNameTextFieldBottomConstraint.constant = 120
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
 }

@@ -8,7 +8,6 @@
 
 import UIKit
 import Firebase
-import FacebookLogin
 import SDWebImage
 import NVActivityIndicatorView
 
@@ -176,24 +175,24 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
     func showAlertView (){
         
         // 1. Create alert to be displayed
-        let alert:UIAlertController=UIAlertController(title: "Choose Image", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+        let alert:UIAlertController=UIAlertController(title: "Choose Image", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
         
         // 2. Create button that will open camera
-        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.default)
+        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertAction.Style.default)
         {
             UIAlertAction in
             self.openCamera()
         }
         
         // 3. Create button that will open gallery
-        let galleryAction = UIAlertAction(title: "Gallery", style: UIAlertActionStyle.default)
+        let galleryAction = UIAlertAction(title: "Gallery", style: UIAlertAction.Style.default)
         {
             UIAlertAction in
             self.openGallery()
         }
         
         // 4. Create button that will cancel action
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         {
             UIAlertAction in
         }
@@ -215,9 +214,9 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
     func openCamera(){
         
         // 1. Check that user has camera
-        if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)){
+        if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera)){
             // 2. If yes, display
-            imagePicker.sourceType = UIImagePickerControllerSourceType.camera
+            imagePicker.sourceType = UIImagePickerController.SourceType.camera
             
             self .present(imagePicker, animated: true, completion: nil)
         }else{
@@ -232,17 +231,20 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
     
     func openGallery(){
         // 1. Display users library
-        imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
         self.present(imagePicker, animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         // 1. Assign the image info to a dictionary
         let imageInfo = info as [String : AnyObject]?
         
         // 2. Set the image view to the selected image
-        self.profileImageView.image = info[UIImagePickerControllerEditedImage] as? UIImage
-        self.imageSelected = info[UIImagePickerControllerEditedImage] as? UIImage
+        self.profileImageView.image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as? UIImage
+        self.imageSelected = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.editedImage)] as? UIImage
         
         // 3. Dismiss the picker
         picker.dismiss(animated: true, completion: nil)
@@ -251,8 +253,8 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
         DispatchQueue.global(qos: .userInitiated).async {
             
             // Create variables
-            let image = imageInfo?[UIImagePickerControllerOriginalImage] as? UIImage
-            let imageData = UIImageJPEGRepresentation(image!, 0.8)
+            let image = imageInfo?[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
+            let imageData = image!.jpegData(compressionQuality: 0.8)
             let metadata = FIRStorageMetadata()
             let imagePath = FIRAuth.auth()!.currentUser!.uid + ".jpg"
             metadata.contentType = "image/jpeg"
@@ -297,7 +299,7 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
         self.view.addGestureRecognizer(screenTapRecognizer)
     }
     
-    func screenTapped(){
+    @objc func screenTapped(){
         
         // 1. If screen is tapped, resign keyboard for all text fields
         self.cityTextField.resignFirstResponder()
@@ -324,7 +326,7 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
         navigationController?.navigationBar.isOpaque = true
         
         navigationController?.navigationBar.barTintColor = kColorFF7D7D
-        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.font.rawValue: UIFont(name: "HalisR-Black", size: 16)!, NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
         
     }
     
@@ -396,4 +398,20 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
         // 3. Add it to view
         self.view.addSubview(self.activityIndicator!)
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

@@ -155,7 +155,7 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
    
     
     // Override to support editing the table view.
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
         // 1. If user swipes to delete
         if editingStyle == .delete {
@@ -218,12 +218,12 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
                 
                 // Add it to lost items array and insert in lost section
                 self.lostItems.insert(item, at: 0)
-                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: TableViewSections.lost.rawValue)], with: UITableViewRowAnimation.middle)
+                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: TableViewSections.lost.rawValue)], with: UITableView.RowAnimation.middle)
             }else if status == ItemStatus.okay.rawValue && Utilities.isItemInArray(item: item, array: self.foundItems) == false{
                 
                 // Add it to lost items array and insert in lost section
                 self.foundItems.insert(item, at: 0)
-                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: TableViewSections.found.rawValue)], with: UITableViewRowAnimation.middle)
+                self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: TableViewSections.found.rawValue)], with: UITableView.RowAnimation.middle)
             }
         })
         
@@ -237,7 +237,7 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         navigationController?.navigationBar.barTintColor = kColor4990E2
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.isOpaque = true
-        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.font.rawValue: UIFont(name: "HalisR-Black", size: 16)!, NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
         tabBarController?.tabBar.barTintColor = UIColor.white
     }
     
@@ -274,7 +274,7 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         self.getTags()
     }
     
-    func didRefresh(refreshControl: UIRefreshControl){
+    @objc func didRefresh(refreshControl: UIRefreshControl){
         self.getTags()
         self.itemsTableView.reloadData()
         self.refreshControl?.endRefreshing()
@@ -309,4 +309,10 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
             }
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

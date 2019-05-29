@@ -82,8 +82,8 @@ class ConfirmAddTagViewController: UIViewController {
         DispatchQueue.global(qos: .userInitiated).async {
             
             // Create variables
-            let image = self.imageInfo?[UIImagePickerControllerOriginalImage] as? UIImage
-            let imageData = UIImageJPEGRepresentation(image!, 0.8)
+            let image = self.imageInfo?[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
+            let imageData = image!.jpegData(compressionQuality: 0.8)
             let metadata = FIRStorageMetadata()
             let imagePath = FIRAuth.auth()!.currentUser!.uid + "/\(itemID).jpg"
             metadata.contentType = "image/jpeg"
@@ -125,7 +125,7 @@ class ConfirmAddTagViewController: UIViewController {
         self.itemImageView.layer.masksToBounds = true
         
         // 2. Update UI with users details from previous page
-        self.itemImageView.image = self.imageInfo?[UIImagePickerControllerOriginalImage] as? UIImage
+        self.itemImageView.image = self.imageInfo?[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
         self.itemNameLabel.text = itemNameText!
         self.itemDescriptionLabel.text = itemDescriptionText!
         self.successView.isHidden = true
@@ -156,21 +156,32 @@ class ConfirmAddTagViewController: UIViewController {
     func setupBars(){
         let leftButton:UIButton = UIButton()
         leftButton.setImage(UIImage(named: "backward-icon-white") , for: .normal)
-        leftButton.addTarget(self, action: #selector(ConfirmAddTagViewController.backPressed), for: UIControlEvents.touchUpInside)
+        leftButton.addTarget(self, action: #selector(ConfirmAddTagViewController.backPressed), for: UIControl.Event.touchUpInside)
         leftButton.imageView?.contentMode = .scaleAspectFit
         leftButton.frame = CGRect(x: 0, y: 0, width: 83, height: 30)
-        leftButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
+        leftButton.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
         
         let barButton = UIBarButtonItem(customView: leftButton)
         self.navigationItem.leftBarButtonItem = barButton
         
         navigationController?.navigationBar.barTintColor = kColor4990E2
-        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.font.rawValue: UIFont(name: "HalisR-Black", size: 16)!, NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
         
     }
     
-    func backPressed(){
+    @objc func backPressed(){
         self.navigationController?.popViewController(animated: true)
     }
     
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

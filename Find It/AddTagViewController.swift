@@ -62,8 +62,8 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         UIApplication.shared.statusBarStyle = .default
         
         // 2. Remove observers for keyboard
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     // MARK:- IBActions
@@ -103,7 +103,7 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         itemImageView.addGestureRecognizer(tapImageRecognizer)
     }
     
-    func imageViewTapped(){
+    @objc func imageViewTapped(){
         
         // 1. Check which device is being used
         if DeviceType.IS_IPHONE_5 || DeviceType.IS_IPHONE_4_OR_LESS{
@@ -115,24 +115,24 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     func showAlertView (){
         // 1. Create alert to be displayed
-        let alert:UIAlertController=UIAlertController(title: "Choose Image", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+        let alert:UIAlertController=UIAlertController(title: "Choose Image", message: nil, preferredStyle: UIAlertController.Style.actionSheet)
         
         // 2. Create button that will open camera
-        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.default)
+        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertAction.Style.default)
         {
             UIAlertAction in
             self.openCamera()
         }
         
         // 3. Create button that will open gallery
-        let gallaryAction = UIAlertAction(title: "Gallery", style: UIAlertActionStyle.default)
+        let gallaryAction = UIAlertAction(title: "Gallery", style: UIAlertAction.Style.default)
         {
             UIAlertAction in
             self.openGallery()
         }
         
         // 4. Create button that will cancel action
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel)
         {
             UIAlertAction in
         }
@@ -153,9 +153,9 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     func openCamera(){
         
         // 1. Check that user has camera
-        if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerControllerSourceType.camera))
+        if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerController.SourceType.camera))
         {
-            imagePicker.sourceType = UIImagePickerControllerSourceType.camera
+            imagePicker.sourceType = UIImagePickerController.SourceType.camera
             imagePicker.cameraCaptureMode = .photo
             imagePicker.modalPresentationStyle = .fullScreen
             self.present(imagePicker, animated: true, completion: nil)
@@ -172,15 +172,18 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     func openGallery(){
         
         // 1. Open gallery
-        imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        imagePicker.sourceType = UIImagePickerController.SourceType.photoLibrary
         self.present(imagePicker, animated: true, completion: nil)
     }
     
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+// Local variable inserted by Swift 4.2 migrator.
+let info = convertFromUIImagePickerControllerInfoKeyDictionary(info)
+
         
         // 1. Assign info to class image infor
         self.imageInfo = info as [String: AnyObject]
-        self.itemImageView.image = info[UIImagePickerControllerOriginalImage] as? UIImage
+        self.itemImageView.image = info[convertFromUIImagePickerControllerInfoKey(UIImagePickerController.InfoKey.originalImage)] as? UIImage
         self.addItemPlaceholderImageView.isHidden = true
         
         // 2. Return to app
@@ -248,17 +251,17 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     func initializeKeyboardNotifications(){
         
         // 1. Add notification obeservers that will alert app when keyboard displays
-        NotificationCenter.default.addObserver(self, selector: #selector(AddTagViewController.keyboardWillShow(notification :)), name:NSNotification.Name.UIKeyboardWillShow, object: self.view.window)
-        NotificationCenter.default.addObserver(self, selector: #selector(AddTagViewController.keyboardWillHide(notification:)), name:NSNotification.Name.UIKeyboardWillHide, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(AddTagViewController.keyboardWillShow(notification :)), name:UIResponder.keyboardWillShowNotification, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(AddTagViewController.keyboardWillHide(notification:)), name:UIResponder.keyboardWillHideNotification, object: self.view.window)
     }
     
-    func keyboardWillShow(notification: Notification) {
+    @objc func keyboardWillShow(notification: Notification) {
         
         // 1. Check that notification dictionary is available
         if let userInfo = notification.userInfo{
             
             // 2. Obtain keyboard size and predictive search height
-            if let keyboardSize = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
+            if let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue, let offset = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue{
                 
                 if self.itemDescriptionTextField.frame.maxY > (self.view.frame.height - keyboardSize.height){
                     // 3. Animate the text fields up
@@ -278,7 +281,7 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         }
     }
     
-    func keyboardWillHide(notification: Notification) {
+    @objc func keyboardWillHide(notification: Notification) {
         UIView.animate(withDuration: 0.5) {
             self.itemDescriptionTextFieldBottomConstraint.constant = 128
         }
@@ -293,7 +296,7 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         self.view.addGestureRecognizer(screenTapRecognizer)
     }
     
-    func screenTapped(){
+    @objc func screenTapped(){
         
         // 1. If screen is tapped, resign keyboard for all text fields
         self.itemNameTextField.resignFirstResponder()
@@ -307,7 +310,7 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         navigationController?.navigationBar.isOpaque = true
         
         navigationController?.navigationBar.barTintColor = kColor4990E2
-        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = [.font: UIFont(name: "HalisR-Black", size: 16)!, .foregroundColor: UIColor.white]
     }
 
     // MARK: - Navigation
@@ -321,4 +324,20 @@ class AddTagViewController: UIViewController, UITextFieldDelegate, UIImagePicker
             }
         }
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKeyDictionary(_ input: [UIImagePickerController.InfoKey: Any]) -> [String: Any] {
+	return Dictionary(uniqueKeysWithValues: input.map {key, value in (key.rawValue, value)})
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertFromUIImagePickerControllerInfoKey(_ input: UIImagePickerController.InfoKey) -> String {
+	return input.rawValue
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }

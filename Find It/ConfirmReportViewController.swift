@@ -153,9 +153,9 @@ class ConfirmReportViewController: UIViewController {
         let leftButton:UIButton = UIButton()
         leftButton.setImage(UIImage(named: "backward-icon-white") , for: .normal)
         leftButton.imageView?.contentMode = .scaleAspectFit
-        leftButton.addTarget(self, action: #selector(ConfirmReportViewController.backPressed), for: UIControlEvents.touchUpInside)
+        leftButton.addTarget(self, action: #selector(ConfirmReportViewController.backPressed), for: UIControl.Event.touchUpInside)
         leftButton.frame = CGRect(x: 0, y: 0, width: 83, height: 30)
-        leftButton.contentHorizontalAlignment = UIControlContentHorizontalAlignment.left
+        leftButton.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
         
         let barButton = UIBarButtonItem(customView: leftButton)
         self.navigationItem.leftBarButtonItem = barButton
@@ -163,11 +163,11 @@ class ConfirmReportViewController: UIViewController {
         navigationController?.navigationBar.isTranslucent = false
         navigationController?.navigationBar.isOpaque = true
         navigationController?.navigationBar.barTintColor = kColorE3CC00
-        navigationController?.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont(name: "HalisR-Black", size: 16)!, NSForegroundColorAttributeName: UIColor.white]
+        navigationController?.navigationBar.titleTextAttributes = convertToOptionalNSAttributedStringKeyDictionary([NSAttributedString.Key.font.rawValue: UIFont(name: "HalisR-Black", size: 16)!, NSAttributedString.Key.foregroundColor.rawValue: UIColor.white])
         
     }
     
-    func backPressed(){
+    @objc func backPressed(){
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -183,4 +183,10 @@ class ConfirmReportViewController: UIViewController {
         // 3. Add it to view
         self.view.addSubview(self.activityIndicator!)
     }
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToOptionalNSAttributedStringKeyDictionary(_ input: [String: Any]?) -> [NSAttributedString.Key: Any]? {
+	guard let input = input else { return nil }
+	return Dictionary(uniqueKeysWithValues: input.map { key, value in (NSAttributedString.Key(rawValue: key), value)})
 }
