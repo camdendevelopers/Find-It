@@ -38,7 +38,6 @@ class MainViewController: UIViewController, UIPageViewControllerDelegate, UIPage
                 self.newTutorialViewController(2),
                 self.newTutorialViewController(3)]
     }()
- 
     
     //Class IBOutlets
     @IBOutlet weak var pageControl: UIPageControl!

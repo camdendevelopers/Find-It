@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 import Firebase
 import FirebaseAuth
 
@@ -43,6 +44,9 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         
         // 5. Setup recognizers
         setupRecognizers()
+        
+        // 6. If Facebook sign up load user information
+        loadUser()
     
     }
     
@@ -67,12 +71,12 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     // MARK:- IBActions for class
     @IBAction func nextButtonPressed(_ sender: Any) {
         // 1. Create local variables of text fields text
-        let firstName = firstNameTextField.text
-        let lastName = lastNameTextField.text
+        let firstName = firstNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let lastName = lastNameTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
         // 2. Check if textfields are empty
         guard firstName != "", lastName != "" else {
-            present(Utilities.showErrorAlert(inDict: ["title": "Oops", "message": "You need to have details on both fields"]), animated: true, completion: nil)
+            self.present(Utilities.showErrorAlert(inDict: EmptyTextFields), animated: true, completion: nil)
             return
         }
         
@@ -93,7 +97,7 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
         
         // 1. Check if there is a network connection
         guard Reachability.isConnectedToNetwork() else{
-            print("Not connected to internet")
+            self.present(Utilities.showErrorAlert(inDict: NoNetworkConnection), animated: true, completion: nil)
             return
         }
 
@@ -104,14 +108,17 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
             // 4. If they are facbook users, they have default information
             if self.isFacebookAuth! {
                 let urlString = value?["profileImageURL"] as? String
-                let firstName = value?["firstName"] as? String
+                let name = (value?["firstName"] as? String)?.components(separatedBy: " ")
+    
+                let firstName = name?.first!
+                let lastName = name?.last!
                 
                 self.firstNameTextField.text = firstName!
-                DispatchQueue.main.async(execute: {
-                    let url = NSURL(string: urlString!)
-                    let data = NSData(contentsOf: url! as URL)
-                    self.profileImageView.image = UIImage(data: data! as Data)!
-                })
+                self.lastNameTextField.text = lastName!
+                
+                self.profileImageView.sd_setShowActivityIndicatorView(true)
+                self.profileImageView.sd_setIndicatorStyle(.gray)
+                self.profileImageView.sd_setImage(with: URL(string: urlString!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.progressiveDownload)
             }else{
                 
                 // 5. If not, they must provide all information
@@ -124,10 +131,14 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     func setupImageView(){
         
         // 1. Create a recognizer for image
-        let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddTagViewController.imageViewTapped))
+        let tapImageRecognizer = UITapGestureRecognizer(target: self, action: #selector(BasicInformationViewController.imageViewTapped))
         profileImageView.image = UIImage(named: "default_image_icon")
         profileImageView.isUserInteractionEnabled = true
-        profileImageView.addGestureRecognizer(tapImageRecognizer)
+        self.profileImageView.addGestureRecognizer(tapImageRecognizer)
+        
+        profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2
+        profileImageView.clipsToBounds = true
+        profileImageView.layer.masksToBounds = true
     }
     
     func imageViewTapped(){
@@ -144,30 +155,29 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
     func showAlertView(){
         
         // 1. Create alert to be displayed
-        let alert:UIAlertController=UIAlertController(title: "Choose Image", message: nil, preferredStyle: UIAlertControllerStyle.actionSheet)
+        let alert:UIAlertController = UIAlertController(title: "Choose Image", message: nil, preferredStyle: .actionSheet)
         
         // 2. Create button that will open camera
-        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.default)
+        let cameraAction = UIAlertAction(title: "Camera", style: .default)
         {
             UIAlertAction in
             self.openCamera()
         }
         
         // 3. Create button that will open gallery
-        let galleryAction = UIAlertAction(title: "Gallery", style: UIAlertActionStyle.default)
+        let galleryAction = UIAlertAction(title: "Gallery", style: .default)
         {
             UIAlertAction in
             self.openGallery()
         }
         
         // 4. Create button that will cancel action
-        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.cancel)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         {
             UIAlertAction in
         }
         
         // 5.  Add the actions
-        
         alert.addAction(cameraAction)
         alert.addAction(galleryAction)
         alert.addAction(cancelAction)
@@ -190,11 +200,7 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
             self .present(imagePicker, animated: true, completion: nil)
         }else{
             // 3. If not, alert user
-            let alert = UIAlertController(title: "Warning", message: "You don't have a camera", preferredStyle: .alert)
-            let action = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alert.addAction(action)
-            
-            self.present(alert, animated: true, completion: nil)
+            self.present(Utilities.showErrorAlert(inDict: NoCameraAvailable), animated: true, completion: nil)
         }
     }
     
@@ -257,6 +263,7 @@ class BasicInformationViewController: UIViewController, UITextFieldDelegate, UII
             lastNameTextField.becomeFirstResponder()
         }else{
             lastNameTextField.resignFirstResponder()
+            self.nextButtonPressed(self)
         }
         return true
     }

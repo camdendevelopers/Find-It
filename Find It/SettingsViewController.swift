@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FacebookLogin
 import SDWebImage
+import NVActivityIndicatorView
 
 class SettingsViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate{
     
@@ -30,27 +31,32 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
     
     // Variables for class
     private var imagePicker =  UIImagePickerController()
-    private var imageSelected: UIImage?
+    private var imageSelected:UIImage?
+    private var activityIndicator:NVActivityIndicatorView?
+    private var loadingView:UIView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // 1. Load user details
+        // 1. Setup activity indicator
+        setupActivityIndicator()
+        
+        // 2. Load user details
         loadUser()
         
-        // 2. Setup image view
+        // 3. Setup image view
         setupImageView()
         
-        // 3. Setup bars
+        // 4. Setup bars
         setupBars()
         
-        // 4. Setup button
+        // 5. Setup button
         setupButton()
         
-        // 5. Setup text fields
+        // 6. Setup text fields
         setupTextFields()
         
-        // 6. Setup recognizers
+        // 7. Setup recognizers
         setupRecognizers()
     }
     
@@ -72,6 +78,7 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
             try DataService.dataService.AUTH_REF.signOut()
             
             // Return to main screen
+            UserDefaults.standard.set(nil, forKey: "uid")
             self.performSegue(withIdentifier: "LogoutSegue", sender: self)
         } catch let signOutError as NSError {
             
@@ -150,6 +157,10 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
         profileImageView.image = UIImage(named: "default_image_icon")
         profileImageView.isUserInteractionEnabled = false
         profileImageView.addGestureRecognizer(tapImageRecognizer)
+        
+        profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2
+        profileImageView.clipsToBounds = true
+        profileImageView.layer.masksToBounds = true
     }
     
     func imageViewTapped(){
@@ -318,14 +329,21 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
     }
     
     func loadUser(){
+        // 1. Display loading view
+        loadingView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        loadingView?.backgroundColor = .black
+        loadingView?.alpha = 0.7
+        loadingView?.isHidden = false
+        self.view.addSubview(loadingView!)
+        self.activityIndicator?.startAnimating()
         
-        // 1. Check for network connectivity
+        // 2. Check for network connectivity
         guard Reachability.isConnectedToNetwork() else{
             print("Not connected to internet")
             return
         }
         
-        // 2. Retrive current user details
+        // 3. Retrive current user details
         DataService.dataService.CURRENT_USER_REF.observeSingleEvent(of: .value, with: { (snapshot) in
             let value = snapshot.value as? NSDictionary
             
@@ -350,9 +368,6 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
             }
             
             if let urlString = value?["profileImageURL"] as? String {
-                self.profileImageView.layer.cornerRadius = self.profileImageView.frame.size.height / 2
-                self.profileImageView.clipsToBounds = true
-                self.profileImageView.layer.masksToBounds = true
                 
                 if urlString != "" {
                     
@@ -364,6 +379,21 @@ class SettingsViewController: UIViewController, UIImagePickerControllerDelegate,
                     self.profileImageView.image =  UIImage(named: "default_image_icon_gray")!
                 }
             }
+            
+            self.loadingView?.isHidden = true
+            self.activityIndicator?.stopAnimating()
         })
+    }
+    
+    func setupActivityIndicator(){
+        // 1. Create a frame size for activity indicator
+        let height: CGFloat = 60
+        let frame = CGRect(x: (self.view.frame.width - height) / 2, y: (self.view.frame.height - height) / 2, width: height, height: height)
+        
+        // 2. Instantiate the activity indicator
+        self.activityIndicator = NVActivityIndicatorView(frame: frame, type: .squareSpin, color: UIColor.white, padding: 0)
+        
+        // 3. Add it to view
+        self.view.addSubview(self.activityIndicator!)
     }
 }

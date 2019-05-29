@@ -1,4 +1,4 @@
-# Beta - Find It
+# Final Release - Find It
 
  Find It is an application that allows users to create unique identifiers for their items and update them with their current contact information in the event that they are lost. People lose their things everyday by leaving them behind or misplacing them. While kind-hearted people might want to help return those items, it often is difficult because there is no way of identifying an owner or trust anyone who says it’s theirs. With Find It, you can always guarantee the ownership of an item because of the unique ID of the item and the verification of an item before you interact with anyone.
 
@@ -54,7 +54,7 @@ The following **additional** features are implemented:
   - Deleting the "Pods" folder with your current workspace open
   - Quit Xcode and open terminal
   - CD to your project folder and reinstall pods using 'pod install'
-  
+
 2. You can create an account of your own if you like but we have two example accounts with registered items if you would rather use those. Also we recommend you use these users if you want to try the "Reporting functionality"
 
     User 1: Micah Drennan

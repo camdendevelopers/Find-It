@@ -26,6 +26,7 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var emailDescriptionLabel: UILabel!
     @IBOutlet weak var passwordDescriptionLabel: UILabel!
     @IBOutlet weak var passwordTextFieldBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var forgotPasswordButton: UIButton!
     
     // MARK:- Variables for class
     var activityIndicator:NVActivityIndicatorView?
@@ -36,10 +37,10 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // 1. Setup activity indicator 
-        self.setupActivityIndicator()
+        setupActivityIndicator()
         
         // 2. Show activity indicator while app checks for current user
-        self.activityIndicator?.startAnimating()
+        activityIndicator?.startAnimating()
         
         // 3. Setup UI
         setupUI()
@@ -61,7 +62,6 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
             do {
                 try DataService.dataService.AUTH_REF.signOut()
                 
-                
             } catch let signOutError as NSError {
                 
                 // Error signing out
@@ -71,9 +71,11 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
             self.activityIndicator?.stopAnimating()
         }else{
             // 7. Perform action based on current user
-            if UserDefaults.standard.value(forKey: "uid") != nil && DataService.dataService.AUTH_REF.currentUser != nil && Reachability.isConnectedToNetwork(){
+            
+            if DataService.dataService.AUTH_REF.currentUser != nil && Reachability.isConnectedToNetwork(){
                 
                 //There is a current user previously logged in
+                UserDefaults.standard.set(DataService.dataService.AUTH_REF.currentUser?.uid, forKey: "uid")
                 self.performSegue(withIdentifier: "ToAppSegue", sender: self)
             }else{
                 //No current user found
@@ -94,11 +96,12 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
             
             self.view.backgroundColor = kColorFF7D7D
             self.authenticateButton.setTitleColor(kColorFF7D7D, for: .normal)
-            //self.facebookButton.setTitleColor(kColorFF7D7D, for: .normal)
             self.emailDescriptionLabel.textColor = kColorFDBFBF
             self.passwordDescriptionLabel.textColor = kColorFDBFBF
             self.emailUnderlineView.backgroundColor = kColorFDBFBF
             self.passwordUnderlineView.backgroundColor = kColorFDBFBF
+            
+            self.forgotPasswordButton.isHidden = true
         }else{
             facebookButton.setTitle("LOG IN WITH FB", for: .normal)
             authenticateButton.setTitle("LOG IN", for: .normal)
@@ -106,11 +109,12 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
             
             self.view.backgroundColor = kColor4990E2
             self.authenticateButton.setTitleColor(kColor4990E2, for: .normal)
-            //self.facebookButton.setTitleColor(kColor4990E2, for: .normal)
             self.emailDescriptionLabel.textColor = kColor87BEFE
             self.passwordDescriptionLabel.textColor = kColor87BEFE
             self.emailUnderlineView.backgroundColor = kColor87BEFE
             self.passwordUnderlineView.backgroundColor = kColor87BEFE
+            
+            self.forgotPasswordButton.isHidden = false
         }
     }
     
@@ -169,14 +173,14 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
     private func performFirebaseSignIn(){
         
         // 1.Create local variables with text from text fields
-        let email = emailTextField.text
-        let password = passwordTextField.text
+        let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
         // 2. Check there is network connection
         guard Reachability.isConnectedToNetwork() == true else {
             print("Internet connection FAILED")
             self.activityIndicator?.stopAnimating()
-            present(Utilities.showErrorAlert(inDict: noNetworkConnection), animated: true, completion: nil)
+            present(Utilities.showErrorAlert(inDict: NoNetworkConnection), animated: true, completion: nil)
             return
         }
         
@@ -231,27 +235,27 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
     
     private func performFirebaseSignUp(){
         // 1.Create local variables with text from text fields
-        let email = emailTextField.text
-        let password = passwordTextField.text
+        let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         
         // 2. Check there is network connection
         guard Reachability.isConnectedToNetwork() == true else {
-            print("Internet connection FAILED")
             self.activityIndicator?.stopAnimating()
-            present(Utilities.showErrorAlert(inDict: noNetworkConnection), animated: true, completion: nil)
+            present(Utilities.showErrorAlert(inDict: NoNetworkConnection), animated: true, completion: nil)
             return
         }
         
+        // 2. Check all textfields are filled out
         guard email != "", password != "" else {
             self.activityIndicator?.stopAnimating()
-            present(Utilities.showErrorAlert(inDict: ["title": "Couldn't Create Account", "message": "Fields cannot be left blank"]), animated: true, completion: nil)
+            present(Utilities.showErrorAlert(inDict: EmptyUserPasswordTextFields), animated: true, completion: nil)
             return
         }
         
         // 3.Check if all the entered information is valid from text fields
         guard Utilities.isValidEmail(string: email!) == true, Utilities.isValidPassword(string: password!) == true else {
             self.activityIndicator?.stopAnimating()
-            present(Utilities.showErrorAlert(inDict: ["title": "Couldn't Create Account", "message": "Invalid email or password"]), animated: true, completion: nil)
+            present(Utilities.showErrorAlert(inDict: InvalidUserPasswordTextFields), animated: true, completion: nil)
             return
         }
         
@@ -261,17 +265,18 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
                 // 5. Error found while creating user; will show alert view with information
                 self.activityIndicator?.stopAnimating()
                 
-                if errorCode == 17005{
+                switch errorCode {
+                case 17005:
                     self.present(Utilities.showErrorAlert(inDict: FIRAuthErrorCodeUserDisabled), animated: true, completion: nil)
-                } else if errorCode == 17006{
+                case 17006:
                     self.present(Utilities.showErrorAlert(inDict: FIRAuthErrorCodeOperationNotAllowed), animated: true, completion: nil)
-                } else if errorCode == 17007 {
+                case 17007:
                     self.present(Utilities.showErrorAlert(inDict: FIRAuthErrorCodeEmailAlreadyInUse), animated: true, completion: nil)
-                } else if errorCode == 17008{
+                case 17008:
                     self.present(Utilities.showErrorAlert(inDict: FIRAuthErrorCodeInvalidEmail), animated: true, completion: nil)
-                } else if errorCode == 17026{
+                case 17026:
                     self.present(Utilities.showErrorAlert(inDict: FIRAuthErrorCodeWeakPassword), animated: true, completion: nil)
-                }else{
+                default:
                     print(errorCode)
                 }
             }
@@ -292,8 +297,8 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
                 UserDefaults.standard.setValue(user.uid, forKey: "uid")
                 
                 // Go to next screen
-                self.performSegue(withIdentifier: "NewUserSegue", sender: self)
                 self.activityIndicator?.stopAnimating()
+                self.performSegue(withIdentifier: "NewUserSegue", sender: self)
             }
         })
     }
@@ -301,59 +306,56 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
     private func performFacebookSignIn(){
         // 1. Perform Facebook authentication
         DataService.dataService.FBAUTH_REF.logIn([ReadPermission.publicProfile,ReadPermission.email, ReadPermission.userFriends], viewController: self) { loginResult in
-            print(loginResult)
+        
             switch loginResult {
-            case .failed(let error):
+                
+            case .failed( _):
                 self.activityIndicator?.stopAnimating()
-                print("Facebook login failed. Error \(error)")
+                self.present(Utilities.showErrorAlert(inDict: AuthenticationError), animated: true, completion: nil)
+                
             case .cancelled:
                 self.activityIndicator?.stopAnimating()
-                print("Facebook login cancelled.")
+                
             case .success( _, _, let accessToken):
-                print("Logged in!")
                 let credential = FIRFacebookAuthProvider.credential(withAccessToken: accessToken.authenticationToken)
                 self.activityIndicator?.stopAnimating()
                 // 2. Sign in user
                 DataService.dataService.AUTH_REF.signIn(with: credential, completion: { (user, error) in
                     let user = user!
                     
-                    if let error = error{
-                        print("Login failed. \(error)")
-                    }else{
+                    if error != nil{
+                        self.present(Utilities.showErrorAlert(inDict: AuthenticationError), animated: true, completion: nil)
                         
+                    }else{
                         UserDefaults.standard.setValue(user.uid, forKey: "uid")
+                        self.activityIndicator?.stopAnimating()
                         self.performSegue(withIdentifier: "ToAppSegue", sender: nil)
                     }
                 })
             }
         }
-        
-        //self.performSegue(withIdentifier: "ToAppSegue", sender: nil)
     }
     
     private func performFacebookSignUp(){
         // 1. Call Firebase server to perform authentication through Facebook
-        
         DataService.dataService.FBAUTH_REF.logIn([ReadPermission.publicProfile,ReadPermission.email, ReadPermission.userFriends], viewController: self) { loginResult in
             
             switch loginResult {
                 
-            case .failed(let error):
+            case .failed( _):
                 self.activityIndicator?.stopAnimating()
-                print("Facebook login failed. Error \(error)")
+                self.present(Utilities.showErrorAlert(inDict: AuthenticationError), animated: true, completion: nil)
+                
             case .cancelled:
                 self.activityIndicator?.stopAnimating()
-                print("Facebook login cancelled.")
-            case .success( _, _, let accessToken):
                 
+            case .success( _, _, let accessToken):
                 let credential = FIRFacebookAuthProvider.credential(withAccessToken: accessToken.authenticationToken)
                 self.activityIndicator?.stopAnimating()
                 
                 FIRAuth.auth()?.signIn(with: credential, completion: { (user, error) in
-                    if let error = error{
-                        
-                        self.present(Utilities.showErrorAlert(inDict: FIRAuthErrorCodeInvalidCredential), animated: true, completion: nil)
-                        print("Login failed. \(error)")
+                    if error != nil{
+                        self.present(Utilities.showErrorAlert(inDict: AuthenticationError), animated: true, completion: nil)
                     }
                     
                     // 2. No error, create user
@@ -370,6 +372,7 @@ class AuthenticateViewController: UIViewController, UITextFieldDelegate {
                         
                          //3. Update user defaults and go to next screen
                          UserDefaults.standard.setValue(user.uid, forKey: "uid")
+                        self.activityIndicator?.stopAnimating()
                         self.performSegue(withIdentifier: "NewUserSegue", sender: self)
                     }
                 })

@@ -86,6 +86,7 @@ class PhoneViewController: UIViewController, UITextFieldDelegate {
         // 1. If you are at top text field and hit enter, go to the next one
         if textField == phoneTextField{
             phoneTextField.resignFirstResponder()
+            self.nextButtonPressed(self)
         }
         return true
     }

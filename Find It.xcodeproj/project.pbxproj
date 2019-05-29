@@ -23,6 +23,7 @@
 		8D38B0501E8461750081721B /* HalisR-Black.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8D38B04D1E8460F00081721B /* HalisR-Black.otf */; };
 		8D38B0511E8461780081721B /* HalisR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8D38B04F1E84614C0081721B /* HalisR-Regular.otf */; };
 		8D38B0531E846ED60081721B /* HalisR-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8D38B0521E846ED10081721B /* HalisR-Light.otf */; };
+		8D3B6F061EC7970C00ED0462 /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D3B6F051EC7970C00ED0462 /* ResetPasswordViewController.swift */; };
 		8D6477AF1E6E4E3C00341FD4 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6477AE1E6E4E3C00341FD4 /* SettingsViewController.swift */; };
 		8D6477B51E6E4F1800341FD4 /* AddTagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6477B41E6E4F1800341FD4 /* AddTagViewController.swift */; };
 		8D6477B81E6E4F2A00341FD4 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6477B61E6E4F2A00341FD4 /* Utilities.swift */; };
@@ -88,6 +89,7 @@
 		8D38B04E1E8461210081721B /* SF-Compact-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Compact-Text-Regular.otf"; sourceTree = "<group>"; };
 		8D38B04F1E84614C0081721B /* HalisR-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HalisR-Regular.otf"; sourceTree = "<group>"; };
 		8D38B0521E846ED10081721B /* HalisR-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "HalisR-Light.otf"; sourceTree = "<group>"; };
+		8D3B6F051EC7970C00ED0462 /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		8D6477AE1E6E4E3C00341FD4 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		8D6477B41E6E4F1800341FD4 /* AddTagViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddTagViewController.swift; sourceTree = "<group>"; };
 		8D6477B61E6E4F2A00341FD4 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
@@ -222,6 +224,7 @@
 				8D861A141E5E751E00BCD646 /* TutorialViewController.swift */,
 				8D1082531E5D0A7500F94393 /* MainViewController.swift */,
 				8D1082551E5D0A8200F94393 /* AuthenticateViewController.swift */,
+				8D3B6F051EC7970C00ED0462 /* ResetPasswordViewController.swift */,
 				8D7531461E786B7700984419 /* BasicInformationViewController.swift */,
 				8DD83A1D1E9C561100C074D9 /* PhoneViewController.swift */,
 				8D7531481E786B8200984419 /* AddressViewController.swift */,
@@ -351,7 +354,7 @@
 					8D10821F1E5CFF1A00F94393 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = KD674EGM5X;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					8D1082331E5CFF1A00F94393 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -567,6 +570,7 @@
 				8D1082581E5D0A9100F94393 /* MyTagsViewController.swift in Sources */,
 				8D6477BB1E6E4F3500341FD4 /* ConfirmAddTagViewController.swift in Sources */,
 				8D10825A1E5D0AA100F94393 /* ReportsViewController.swift in Sources */,
+				8D3B6F061EC7970C00ED0462 /* ResetPasswordViewController.swift in Sources */,
 				8D1835211E97073C00B4C875 /* SearchTagViewController.swift in Sources */,
 				8D7531491E786B8200984419 /* AddressViewController.swift in Sources */,
 				8D1835231E97074F00B4C875 /* ConfirmReportViewController.swift in Sources */,
@@ -732,13 +736,17 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = KD674EGM5X;
 				INFOPLIST_FILE = "Find It/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.camdevelopers.Find-It";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b0094348-f21d-4a55-877f-14b2644c8fec";
+				PROVISIONING_PROFILE_SPECIFIER = "Find It - Distribution";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -748,13 +756,17 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = KD674EGM5X;
 				INFOPLIST_FILE = "Find It/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.camdevelopers.Find-It";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b0094348-f21d-4a55-877f-14b2644c8fec";
+				PROVISIONING_PROFILE_SPECIFIER = "Find It - Distribution";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

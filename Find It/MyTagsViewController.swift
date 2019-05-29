@@ -45,24 +45,7 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         // Returns 2
         return tableViewHeaderTitles.count
     }
-    
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        
-        // 1. Switch between sections
-        switch section {
-        case TableViewSections.lost.rawValue:
-            
-            // If there are items in lost items array, return "LOST ITEMS"
-            return tableViewHeaderTitles[TableViewSections.lost.rawValue]
-        default:
-            
-            // If there are items in found items array, return "FOUND ITEMS"
-            return tableViewHeaderTitles[TableViewSections.found.rawValue]
-        }
-    }
  
-    
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         
         // 1. Make sure there is a header to show
@@ -80,7 +63,23 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
         header.addSubview(divider)
         
     }
- 
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
+        // 1. Switch between sections
+        switch section {
+        case TableViewSections.lost.rawValue:
+            
+            // If there are items in lost items array, return "LOST ITEMS"
+            return tableViewHeaderTitles[TableViewSections.lost.rawValue]
+        default:
+            
+            // If there are items in found items array, return "FOUND ITEMS"
+            return tableViewHeaderTitles[TableViewSections.found.rawValue]
+        }
+    }
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         // 1. Switch between section
@@ -141,17 +140,19 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
             
             cell.itemImageView.sd_setShowActivityIndicatorView(true)
             cell.itemImageView.sd_setIndicatorStyle(.gray)
-            cell.itemImageView.sd_setImage(with: URL(string: itemImageUrl!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.scaleDownLargeImages)
+            cell.itemImageView.sd_setImage(with: URL(string: itemImageUrl!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.cacheMemoryOnly)
         }
 
         return cell
     }
-    
+
     // Override to support conditional editing of the table view.
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         
         return true
     }
+    
+   
     
     // Override to support editing the table view.
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
@@ -218,7 +219,6 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
                 // Add it to lost items array and insert in lost section
                 self.lostItems.insert(item, at: 0)
                 self.itemsTableView.insertRows(at: [IndexPath(row: 0, section: TableViewSections.lost.rawValue)], with: UITableViewRowAnimation.middle)
-                
             }else if status == ItemStatus.okay.rawValue && Utilities.isItemInArray(item: item, array: self.foundItems) == false{
                 
                 // Add it to lost items array and insert in lost section
@@ -276,6 +276,7 @@ class MyTagsViewController: UIViewController, UITableViewDataSource, UITableView
     
     func didRefresh(refreshControl: UIRefreshControl){
         self.getTags()
+        self.itemsTableView.reloadData()
         self.refreshControl?.endRefreshing()
     }
     

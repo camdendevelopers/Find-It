@@ -31,7 +31,6 @@ class DataService {
     }
     
     func createNewAccount(uid: String, user: [String:Any]) {
-        // A User is born.
         USER_REF.child(uid).setValue(user)
     }
 }

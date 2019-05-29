@@ -9,18 +9,15 @@
 import Foundation
 import UIKit
 
-
-
 //MARK:- Client Side Error Messages
 let EmptyUserPasswordTextFields = ["title": "Could Not Sign In","message":"Email/password fields are empty."]
-let ChangeMemberTypeInformation = ["title": "Change Member Status", "message": "You can change status by typing in a different member code."]
-let EmptyEventFields = ["title": "Couldn't Create Event", "message": "Fields cannot be left blank."]
-let EmptySettingFields = ["title": "Couldn't Save Info", "message": "Fields cannot be left blank."]
-let EventCancelledWithFields = ["title": "Event Details Were Typed", "message": "Are you sure you want to cancel?"]
-let MemberCodeChanged = ["title": "Important", "message": "Changing your member status will clear your current points. Are you sure you want to continue?"]
-let InvalidMemberCode = ["title": "Error", "message": "The code you typed was incorrect. Please try again."]
+let EmptyTextFields = ["title": "Oops","message":"Make sure sure to fill out all text fields to continue"]
+let InvalidUserPasswordTextFields = ["title": "Could Not Create Account", "message": "The email or password is invalid. Please try again."]
 let IPhoneTryUpload = ["title": "Can't Add Custom Image", "message": "Sorry, changing image is not available on this phone."]
-let noNetworkConnection = ["title": "Couldn't Log You In", "message": "Your phone isn't connected to the internet, make sure you have a working connection and try again later."]
+let NoNetworkConnection = ["title": "Error", "message": "Your phone isn't connected to the internet, make sure you have a working connection and try again later."]
+let NoCameraAvailable = ["title": "Warning", "message": "You don't have a camera."]
+let AuthenticationError = ["title":"Error", "message":"Something went wrong with Facebook authentication. Please try again."]
+let ResetInstructionsSent = ["title":"Hooray", "message":"We sent you an email to reset your password."]
 
 //MARK:- Firebase Error Code Messages
 let FIRAuthErrorCodeInvalidCustomToken                      = 17000
@@ -53,7 +50,7 @@ let FIRAuthErrorCodeInternalError                           = 17999
 let FIRAuthErrorCodeInvalidCredential = ["title": "Could Not Sign In With Facebook", "message": "Error getting your information. Please try again later."]
 
 
-//MARK:- Colors and text for tutorial
+//MARK:- Colors
 let kColor4990E2 = UIColor(red: 73.0/255.0, green: 144.0/255.0, blue: 226.0/255.0, alpha: 1.0)
 let kColorFF7D7D = UIColor(red: 255.0/255.0, green: 125.0/255.0, blue: 125.0/255.0, alpha: 1.0)
 let kColorE3CC00 = UIColor(red: 227.0/255.0, green: 204.0/255.0, blue: 0.0/255.0, alpha: 1.0)
@@ -63,6 +60,7 @@ let kColor9B9B9B = UIColor(red: 155.0/255.0, green: 155.0/255.0, blue: 155.0/255
 let kColor4A4A4A = UIColor(red: 74.0/255.0, green: 74.0/255.0, blue: 74.0/255.0, alpha: 1.0)
 let kColorD8D8D8 = UIColor(red: 216.0/255.0, green: 216.0/255.0, blue: 216.0/255.0, alpha: 1.0)
 
+//MARK:- Titles for tutorial
 let titleText0 = "TAG YOUR ITEM"
 let descriptionText0 = "Get a unique ID and attach it to an item, and link it in the app"
 
@@ -76,14 +74,4 @@ let titleText3 = "FIND LOST ITEM"
 let descriptionText3 = "Get notified of the location of your lost item when it is found"
 
 
-//MARK:- Enums
-enum ItemStatus: String {
-    case okay = "in-possesion"
-    case lost = "lost"
-    case found = "found"
-}
 
-enum TableViewSections: Int {
-    case lost = 0
-    case found = 1
-}

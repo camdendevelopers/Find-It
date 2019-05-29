@@ -78,7 +78,7 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
         DataService.dataService.CURRENT_USER_REF.child("uid").setValue(UserDefaults.standard.value(forKey: "uid") as! String)
 
         // 4. Go to next screen
-        performSegue(withIdentifier: "RegistrationCompleteSegue", sender: self)
+        self.performSegue(withIdentifier: "RegistrationCompleteSegue", sender: self)
     }
     
     @IBAction func backButtonPressed(_ sender: Any) {
@@ -104,6 +104,7 @@ class AddressViewController: UIViewController,UITextFieldDelegate, UIImagePicker
             stateTextField.becomeFirstResponder()
         }else{
             stateTextField.resignFirstResponder()
+            self.finishButtonPressed(self)
         }
         return true
     }

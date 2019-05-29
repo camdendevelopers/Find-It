@@ -49,45 +49,43 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
         let cell = tableView.dequeueReusableCell(withIdentifier: "reportCell", for: indexPath) as! ReportCustomTableViewCell
         let row = indexPath.row
         
-        if reports.count != 0{
-            let report = reports[row]
-            let createdAt = report["createdAt"] as? String
-            let item = report["item"] as? NSDictionary
-            let itemID = item?["id"] as? String
-            let itemName = item?["name"] as? String
-            let itemImageURL = item?["itemImageURL"] as? String
-            let reportStatus = report["status"] as? String
+        
+        let report = reports[row]
+        let createdAt = report["createdAt"] as? String
+        let item = report["item"] as? NSDictionary
+        let itemID = item?["id"] as? String
+        let itemName = item?["name"] as? String
+        let itemImageURL = item?["itemImageURL"] as? String
+        let reportStatus = report["status"] as? String
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            cell.reportedAtLabel.text = Utilities.formatTimestamp(time: createdAt!)
             
-            DispatchQueue.global(qos: .userInitiated).async {
-                cell.reportedAtLabel.text = Utilities.formatTimestamp(time: createdAt!)
+            DispatchQueue.main.async {
+                cell.itemIdentificationLabel.text = itemID!
+                cell.itemNameLabel.text = itemName!
                 
-                DispatchQueue.main.async {
-                    cell.itemIdentificationLabel.text = itemID!
-                    cell.itemNameLabel.text = itemName!
-                    
-                    if reportStatus! == "lost"{
-                        cell.reportStatusLabel.text = "REPORTED"
-                        cell.reportStatusLabel.backgroundColor = kColorFF7D7D
-                    }else{
-                        cell.reportStatusLabel.text = "RETURNED"
-                        cell.reportStatusLabel.backgroundColor = kColor4990E2
-                    }
-                    
-                    cell.reportStatusLabel.layer.cornerRadius = 2
-                    cell.reportStatusLabel.clipsToBounds = true
-                    cell.reportStatusLabel.layer.masksToBounds = true
-                    
-                    cell.itemImageView.layer.cornerRadius = cell.itemImageView.frame.size.height / 2
-                    cell.itemImageView.clipsToBounds = true
-                    cell.itemImageView.layer.masksToBounds = true
-                    
-                    cell.itemImageView.sd_setShowActivityIndicatorView(true)
-                    cell.itemImageView.sd_setIndicatorStyle(.gray)
-                    cell.itemImageView.sd_setImage(with: URL(string: itemImageURL!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.scaleDownLargeImages)
+                if reportStatus! == "lost"{
+                    cell.reportStatusLabel.text = "REPORTED"
+                    cell.reportStatusLabel.backgroundColor = kColorFF7D7D
+                }else{
+                    cell.reportStatusLabel.text = "RETURNED"
+                    cell.reportStatusLabel.backgroundColor = kColor4990E2
                 }
+                
+                cell.reportStatusLabel.layer.cornerRadius = 2
+                cell.reportStatusLabel.clipsToBounds = true
+                cell.reportStatusLabel.layer.masksToBounds = true
+                
+                cell.itemImageView.layer.cornerRadius = cell.itemImageView.frame.size.height / 2
+                cell.itemImageView.clipsToBounds = true
+                cell.itemImageView.layer.masksToBounds = true
+                
+                cell.itemImageView.sd_setShowActivityIndicatorView(true)
+                cell.itemImageView.sd_setIndicatorStyle(.gray)
+                cell.itemImageView.sd_setImage(with: URL(string: itemImageURL!), placeholderImage: UIImage(named: "default_image_icon"), options: SDWebImageOptions.cacheMemoryOnly)
             }
         }
-        
         return cell
     }
     
@@ -104,7 +102,7 @@ class ReportsViewController: UIViewController, UITableViewDelegate, UITableViewD
             
             if Utilities.isItemInArray(item: report, array: self.reports) == false {
                 self.reports.insert(report, at: 0)
-                self.reportsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.top)
+                self.reportsTableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: UITableViewRowAnimation.middle)
             }
         })
     }

@@ -53,7 +53,10 @@ class ConfirmReportViewController: UIViewController {
     @IBAction func reportButtonPressed(_ sender: Any) {
         // 1. Block user interaction and show indicator
         self.view.isUserInteractionEnabled = false
+        self.activityIndicator?.color = kColorE3CC00
+        self.activityIndicator?.type = .ballClipRotatePulse
         self.activityIndicator?.startAnimating()
+        
         
         // 2. Create asynchronous call to Firebase to create a report
         DispatchQueue.global(qos: .userInitiated).async {
@@ -167,6 +170,7 @@ class ConfirmReportViewController: UIViewController {
     func backPressed(){
         self.navigationController?.popViewController(animated: true)
     }
+    
     
     func setupActivityIndicator(){
         // 1. Create a frame size for activity indicator
