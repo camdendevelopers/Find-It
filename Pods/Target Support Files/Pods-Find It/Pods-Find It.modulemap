@@ -1,6 +1,0 @@
-framework module Pods_Find_It {
-  umbrella header "Pods-Find It-umbrella.h"
-
-  export *
-  module * { export * }
-}
